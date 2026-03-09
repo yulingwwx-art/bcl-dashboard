@@ -170,6 +170,30 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
   border-radius: 12px; padding: 20px 24px; color: #f87171; font-size: 14px;
 }
 
+/* ── AI 分析師 ── */
+.ai-card { border-color: rgba(99,102,241,.25); }
+.ai-key-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid #e8edf8; }
+.ai-placeholder {
+  color: #9ca3af; font-size: 13px; padding: 20px 0; text-align: center;
+}
+.ai-loading {
+  color: #6366f1; font-size: 13px; padding: 20px 0; text-align: center;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.ai-section { margin-bottom: 16px; }
+.ai-section:last-child { margin-bottom: 0; }
+.ai-section-title {
+  font-size: 12px; font-weight: 800; color: #1a1d2e;
+  letter-spacing: .05em; margin-bottom: 8px;
+  padding-bottom: 6px; border-bottom: 1px solid #e8edf8;
+}
+.ai-section-body {
+  font-size: 13px; color: #4a5568; line-height: 1.8;
+  white-space: pre-wrap;
+}
+.ai-error { color: #ef4444; font-size: 13px; }
+
 @media (max-width: 900px) {
   .grid-4, .grid-3 { grid-template-columns: repeat(2,1fr); }
   .main { padding: 16px; }
@@ -361,6 +385,25 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
       </div>
     </div>
     <canvas id="lineChart" height="70"></canvas>
+  </div>
+
+  <!-- AI 分析師 -->
+  <div class="card ai-card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">🤖 AI 數據分析師</div>
+        <div class="card-sub">根據今日數據自動生成 · 每次重新整理重新分析</div>
+      </div>
+      <button class="btn-refresh" onclick="triggerAnalysis()" id="ai-btn">▶ 立即分析</button>
+    </div>
+    <div class="ai-key-row">
+      <span class="config-label" style="font-size:12px">🔑 Anthropic API Key</span>
+      <input class="config-input" id="apiKeyInput" type="password" placeholder="sk-ant-..." style="width:260px;font-size:12px">
+      <span style="font-size:11px;color:#9ca3af">※ 只存在記憶體，重新整理即清除</span>
+    </div>
+    <div id="ai-analysis" class="ai-placeholder">
+      輸入 API Key 後點擊「立即分析」💡
+    </div>
   </div>
 
 </div><!-- /main -->
@@ -613,6 +656,100 @@ function switchBar(mode, btn){
     document.getElementById("barTitle").textContent = "📊 三管道每日分組";
   }
   barChartObj.update();
+}
+
+function triggerAnalysis() {
+  const data = globalData;
+  if (!data.length) { alert("請先載入數據"); return; }
+  const cfg = globalConfig;
+  const daysInMonth = cfg.days_in_month || 31;
+  const lastEntry = data[data.length - 1];
+  const elapsed = parseInt(lastEntry.date.split("/")[1]);
+  const acc = data.reduce((s, r) => s + (r.total || 0), 0);
+  const prev7 = data.slice(-8, -1);
+  const a7total = prev7.length ? Math.round(prev7.reduce((s, r) => s + (r.total || 0), 0) / prev7.length) : 0;
+  const target = parseInt(document.getElementById("targetInput").value) || 2000;
+  runAIAnalysis(data, cfg, acc, a7total, elapsed, target);
+}
+
+
+async function runAIAnalysis(data, config, acc, a7total, elapsed, target) {
+  const analysisEl = document.getElementById("ai-analysis");
+  analysisEl.innerHTML = `<div class="ai-loading">🤖 分析中，請稍候…</div>`;
+
+  const daysInMonth = config.days_in_month || 31;
+  const remaining = daysInMonth - elapsed;
+  const prorated = Math.round(target / daysInMonth * elapsed);
+  const projected = acc + Math.round(a7total * remaining);
+  const dailyNeeded = Math.round((target - acc) / remaining);
+
+  // 整理最近數據
+  const last = data[data.length - 1];
+  const recentRows = data.slice(-8).map(r =>
+    `${r.date}：總計${r.total}（主動${r.ch_主動||0} 自辦${r.ch_自辦||0} 異業${r.ch_異業||0}）`
+  ).join("\n");
+
+  const prompt = `你是 Benesse Taiwan 經營戰略組的數據分析師，專注於 BCL（LINE綁定會員）績效分析。
+請根據以下數據，以繁體中文撰寫簡潔的分析報告，格式分三段：
+
+【數據摘要】一段話說明目前績效狀況
+【課題】2-3點具體問題或值得注意的趨勢
+【下一步建議】2-3點可操作的行動建議
+
+數據如下：
+- 分析日期：${last.date}（前一天）
+- 前一天總量：${last.total} 人（主動${last.ch_主動||0} 自辦${last.ch_自辦||0} 異業${last.ch_異業||0}）
+- 前7日均值：${a7total} 人/天
+- 本月累計：${acc} 人（已過${elapsed}天）
+- 本月目標：${target} 人
+- 進度預計目標：${prorated} 人 → 達成率 ${(acc/prorated*100).toFixed(1)}%
+- 後續每日需達標：${dailyNeeded} 人/天
+- 月底預估落點：${projected} 人（${projected >= target ? "預估達標" : "預估不足"}）
+
+近期每日明細：
+${recentRows}
+
+請注意：
+- 主動管道（SHOPLINE/OA綁定）前7均${Math.round(data.slice(-8,-1).reduce((s,r)=>s+(r.ch_主動||0),0)/7)} 人，昨天僅${last.ch_主動||0}人
+- 自辦管道（育兒活動/舞台劇）前7均${Math.round(data.slice(-8,-1).reduce((s,r)=>s+(r.ch_自辦||0),0)/7)} 人，昨天${last.ch_自辦||0}人
+- 異業管道（品牌合作）前7均${Math.round(data.slice(-8,-1).reduce((s,r)=>s+(r.ch_異業||0),0)/7)} 人，昨天${last.ch_異業||0}人
+
+語氣：專業、簡潔、重點突出，每段不超過100字。`;
+
+  try {
+    const apiKey = document.getElementById("apiKeyInput").value.trim();
+    if (!apiKey) {
+      analysisEl.innerHTML = '<div class="ai-error">⚠️ 請先輸入 Anthropic API Key</div>';
+      return;
+    }
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    const json = await resp.json();
+    const text = json.content?.[0]?.text || "無法取得分析結果";
+
+    // 格式化輸出
+    const formatted = text
+      .replace(/【數據摘要】/g, '<div class="ai-section"><div class="ai-section-title">📊 數據摘要</div><div class="ai-section-body">')
+      .replace(/【課題】/g, '</div></div><div class="ai-section"><div class="ai-section-title">⚠️ 課題</div><div class="ai-section-body">')
+      .replace(/【下一步建議】/g, '</div></div><div class="ai-section"><div class="ai-section-title">🎯 下一步建議</div><div class="ai-section-body">')
+      + '</div></div>';
+
+    analysisEl.innerHTML = formatted;
+  } catch(e) {
+    analysisEl.innerHTML = `<div class="ai-error">⚠️ 分析失敗：${e.message}</div>`;
+  }
 }
 
 // Start
