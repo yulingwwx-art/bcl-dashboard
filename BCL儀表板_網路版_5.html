@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCL 績效監控 · Benesse Taiwan</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg2: #161b27;
+  --bg3: #1c2333;
+  --border: rgba(255,255,255,0.08);
+  --text: #e8eaf0;
+  --muted: #6b7280;
+  --accent: #f97316;
+  --blue: #6366f1;
+  --green: #10b981;
+  --purple: #a78bfa;
+  --red: #ef4444;
+  --yellow: #fbbf24;
+  --font: 'Noto Sans TC', sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── Loading ── */
+#loading {
+  position: fixed; inset: 0; background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  z-index: 999;
+}
+.loader-tiger { font-size: 56px; animation: bounce 1s infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+.loader-text { font-size: 14px; color: var(--muted); letter-spacing: .1em; }
+.loader-bar { width: 200px; height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.loader-fill { height: 100%; width: 0; background: var(--accent); border-radius: 2px; animation: fill 1.8s ease-in-out infinite; }
+@keyframes fill { 0%{width:0} 70%{width:100%} 100%{width:100%} }
+
+/* ── Header ── */
+.header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 32px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+.header-brand { display: flex; align-items: center; gap: 14px; }
+.brand-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, #f97316, #fbbf24);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; box-shadow: 0 4px 14px rgba(249,115,22,.4);
+}
+.brand-name { font-size: 16px; font-weight: 900; color: var(--text); }
+.brand-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; font-family: var(--mono); }
+.header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tag {
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border);
+}
+.tag-orange { border-color: rgba(249,115,22,.5); color: var(--accent); background: rgba(249,115,22,.08); }
+.tag-blue   { border-color: rgba(99,102,241,.5); color: #818cf8; background: rgba(99,102,241,.08); }
+.tag-green  { border-color: rgba(16,185,129,.5); color: var(--green); background: rgba(16,185,129,.08); }
+.tag-red    { border-color: rgba(239,68,68,.5); color: var(--red); background: rgba(239,68,68,.08); }
+
+/* ── Sync bar ── */
+.syncbar {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 10px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.sync-info { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+.sync-info span { color: var(--text); font-weight: 600; }
+.btn-refresh {
+  background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.4);
+  color: #818cf8; border-radius: 8px; padding: 6px 16px;
+  font-size: 12px; font-weight: 700; cursor: pointer; transition: all .2s;
+  font-family: var(--font);
+}
+.btn-refresh:hover { background: rgba(99,102,241,.3); }
+
+/* ── Main ── */
+.main { padding: 28px 32px; display: flex; flex-direction: column; gap: 24px; max-width: 1400px; margin: 0 auto; }
+
+.section-title {
+  font-size: 10px; font-weight: 700; color: var(--blue);
+  letter-spacing: .15em; text-transform: uppercase; font-family: var(--mono);
+  padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+/* ── KPI Grid ── */
+.grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+
+.kpi {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px 22px;
+  transition: border-color .2s, transform .2s;
+  position: relative; overflow: hidden;
+}
+.kpi:hover { border-color: rgba(255,255,255,.18); transform: translateY(-2px); }
+.kpi::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--kpi-color, var(--blue));
+}
+.kpi-label { font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.kpi-value { font-size: 28px; font-weight: 900; color: var(--text); letter-spacing: -.03em; font-family: var(--mono); }
+.kpi-unit  { font-size: 13px; color: var(--muted); font-weight: 400; margin-left: 2px; }
+.kpi-row   { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.kpi-sub   { font-size: 11px; color: var(--muted); }
+
+.badge {
+  font-size: 11px; font-weight: 700; border-radius: 8px; padding: 2px 9px;
+  font-family: var(--mono);
+}
+.badge-up   { background: rgba(16,185,129,.15); color: #34d399; }
+.badge-down { background: rgba(239,68,68,.15); color: #f87171; }
+.badge-neu  { background: rgba(107,114,128,.15); color: var(--muted); }
+.badge-warn { background: rgba(251,191,36,.15); color: var(--yellow); }
+
+/* ── Channel Cards ── */
+.ch-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.ch-row:last-child { border: none; padding-bottom: 0; }
+.ch-name { font-size: 12px; color: var(--muted); font-weight: 600; }
+.ch-val  { font-size: 18px; font-weight: 900; font-family: var(--mono); color: var(--text); }
+.ch-cmp  { display: flex; align-items: center; gap: 6px; }
+.ch-avg  { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+
+/* ── Chart Cards ── */
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+}
+.card-head { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.card-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.card-sub   { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.toggle { display: flex; gap: 6px; }
+.tbtn { padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); cursor: pointer; font-size: 11px; font-weight: 600; background: transparent; transition: all .2s; font-family: var(--font); }
+.tbtn.active { background: var(--bg3); border-color: rgba(255,255,255,.2); color: var(--text); }
+.tbtn:not(.active) { color: var(--muted); }
+
+/* ── Target config ── */
+.config-strip {
+  background: var(--bg2); border: 1px solid rgba(99,102,241,.3);
+  border-radius: 16px; padding: 18px 24px;
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.config-label { font-size: 13px; color: var(--muted); font-weight: 600; }
+.config-input {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 14px; font-size: 16px;
+  font-weight: 700; color: var(--text); width: 130px; outline: none;
+  font-family: var(--mono);
+}
+.config-input:focus { border-color: var(--blue); }
+.config-btn {
+  background: var(--blue); color: #fff; border: none;
+  border-radius: 8px; padding: 8px 20px; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: opacity .2s; font-family: var(--font);
+}
+.config-btn:hover { opacity: .85; }
+
+/* ── Error ── */
+.error-box {
+  background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3);
+  border-radius: 12px; padding: 20px 24px; color: #f87171; font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .grid-4, .grid-3 { grid-template-columns: repeat(2,1fr); }
+  .main { padding: 16px; }
+  .header, .syncbar { padding: 12px 16px; }
+}
+@media (max-width: 500px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="loader-tiger">🐯</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+  <div class="loader-text">載入最新數據中…</div>
+</div>
+
+<div id="app" style="display:none">
+
+<div class="header">
+  <div class="header-brand">
+    <div class="brand-icon">🐯</div>
+    <div>
+      <div class="brand-name">BCL 績效監控儀表板</div>
+      <div class="brand-sub">Benesse Taiwan · 經營戰略組</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="tag tag-orange" id="tag-date">—</span>
+    <span class="tag tag-blue" id="tag-progress">—</span>
+    <span class="tag tag-green" id="tag-status">—</span>
+  </div>
+</div>
+
+<div class="syncbar">
+  <span class="sync-info">最後同步：<span id="lastSync">—</span></span>
+  <span class="sync-info">資料筆數：<span id="dataCount">—</span> 天</span>
+  <button class="btn-refresh" onclick="loadData()">↺ 重新整理</button>
+</div>
+
+<div class="main">
+
+  <!-- 本月目標設定 -->
+  <div class="config-strip">
+    <span class="config-label">📌 本月目標</span>
+    <input class="config-input" id="targetInput" type="number" value="2000">
+    <button class="config-btn" onclick="recalc()">更新試算</button>
+    <span class="kpi-sub" style="color:var(--muted);font-size:11px">※ 試算用，不影響 Excel</span>
+  </div>
+
+  <!-- ① 前一天 + 本月累計 -->
+  <div>
+    <div class="section-title">① 前一天 BCL 總量 vs 前7天平均</div>
+    <div class="grid-2">
+      <div class="kpi" style="--kpi-color:var(--accent)">
+        <div class="kpi-label">前一天 BCL 總量</div>
+        <div><span class="kpi-value" id="k1-val">—</span><span class="kpi-unit">人</span></div>
+        <div class="kpi-row">
+          <span class="kpi-sub">前7日均：<span id="k1-avg" style="color:var(--text);font-weight:700">—</span> 人</span>
+          <span class="badge" id="k1-badge">—</span>
+        </div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--blue)">
+        <div class="kpi-label">本月累計實績</div>
+        <div><span class="kpi-value" id="k-acc">—</span><span class="kpi-unit">人</span></div>
+        <div class="kpi-row">
+          <span class="kpi-sub" id="k-acc-sub">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 三管道 -->
+  <div>
+    <div class="section-title">② 各管道前一天 vs 前7天平均</div>
+    <div class="grid-3">
+      <div class="kpi" style="--kpi-color:var(--accent)">
+        <div class="kpi-label">🟠 主動</div>
+        <div><span class="kpi-value" id="ch-主動-val">—</span><span class="kpi-unit">人</span></div>
+        <div class="ch-row">
+          <span class="ch-name">前7日均</span>
+          <div class="ch-cmp">
+            <span class="ch-avg" id="ch-主動-avg">— 人</span>
+            <span class="badge" id="ch-主動-badge">—</span>
+          </div>
+        </div>
+        <div class="kpi-sub" style="margin-top:8px;font-size:10px;color:var(--muted)">SHOPLINE · OA綁定 · 官網</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--green)">
+        <div class="kpi-label">🟢 自辦</div>
+        <div><span class="kpi-value" id="ch-自辦-val">—</span><span class="kpi-unit">人</span></div>
+        <div class="ch-row">
+          <span class="ch-name">前7日均</span>
+          <div class="ch-cmp">
+            <span class="ch-avg" id="ch-自辦-avg">— 人</span>
+            <span class="badge" id="ch-自辦-badge">—</span>
+          </div>
+        </div>
+        <div class="kpi-sub" style="margin-top:8px;font-size:10px;color:var(--muted)">育兒知識王 · 四季 · 舞台劇</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--purple)">
+        <div class="kpi-label">🟣 異業</div>
+        <div><span class="kpi-value" id="ch-異業-val">—</span><span class="kpi-unit">人</span></div>
+        <div class="ch-row">
+          <span class="ch-name">前7日均</span>
+          <div class="ch-cmp">
+            <span class="ch-avg" id="ch-異業-avg">— 人</span>
+            <span class="badge" id="ch-異業-badge">—</span>
+          </div>
+        </div>
+        <div class="kpi-sub" style="margin-top:8px;font-size:10px;color:var(--muted)">六甲村 · 永生 · 明治 · 婦幼展</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③④⑤⑥ 目標追蹤 -->
+  <div>
+    <div class="section-title">③④⑤⑥ 本月目標追蹤</div>
+    <div class="grid-4">
+      <div class="kpi" style="--kpi-color:var(--blue)">
+        <div class="kpi-label">③ 本月目標</div>
+        <div><span class="kpi-value" id="k3">—</span><span class="kpi-unit">人</span></div>
+        <div class="kpi-row"><span class="badge badge-neu">手動設定</span></div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--blue)">
+        <div class="kpi-label">④ 進度預計目標</div>
+        <div><span class="kpi-value" id="k4">—</span><span class="kpi-unit">人</span></div>
+        <div class="kpi-sub" id="k4sub" style="margin-top:6px">—</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--green)">
+        <div class="kpi-label">⑤ 達成率</div>
+        <div><span class="kpi-value" id="k5r">—</span><span class="kpi-unit">%</span></div>
+        <div class="kpi-row"><span class="badge" id="k5badge">—</span></div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--accent)">
+        <div class="kpi-label">⑥ 後續每日需達標</div>
+        <div><span class="kpi-value" id="k6">—</span><span class="kpi-unit">人/天</span></div>
+        <div class="kpi-row">
+          <span class="kpi-sub">前7均 <span id="k6avg" style="color:var(--text);font-weight:700">—</span> 人</span>
+          <span class="badge" id="k6badge">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑦ 月底預估 -->
+  <div>
+    <div class="section-title">⑦ 月底預估落點</div>
+    <div class="grid-2">
+      <div class="kpi" style="--kpi-color:var(--blue)">
+        <div class="kpi-label">⑦ 月底預估（以前7均推估）</div>
+        <div><span class="kpi-value" id="k7">—</span><span class="kpi-unit">人</span></div>
+        <div class="kpi-row"><span class="badge" id="k7badge">—</span></div>
+        <div class="kpi-sub" id="k7sub" style="margin-top:6px">—</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--border); background:var(--bg3)">
+        <div class="kpi-label">試算參數</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+          <div><div style="font-size:10px;color:var(--muted)">本月實績</div><div style="font-size:18px;font-weight:900;font-family:var(--mono)" id="p-acc">—</div></div>
+          <div><div style="font-size:10px;color:var(--muted)">剩餘天數</div><div style="font-size:18px;font-weight:900;font-family:var(--mono)" id="p-rem">—</div></div>
+          <div><div style="font-size:10px;color:var(--muted)">前7日均值</div><div style="font-size:18px;font-weight:900;font-family:var(--mono)" id="p-avg">—</div></div>
+          <div><div style="font-size:10px;color:var(--muted)">已過天數</div><div style="font-size:18px;font-weight:900;font-family:var(--mono)" id="p-elapsed">—</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 圖表 -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title" id="barTitle">📊 每日 BCL 總量</div>
+        <div class="card-sub">🟠 最新一天　🔵 其他　<span style="color:var(--blue)">— — 前7均</span></div>
+      </div>
+      <div class="toggle">
+        <button class="tbtn active" onclick="switchBar('total',this)">總量</button>
+        <button class="tbtn" onclick="switchBar('channel',this)">管道分組</button>
+      </div>
+    </div>
+    <canvas id="barChart" height="70"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">📈 三管道每日趨勢</div>
+        <div class="card-sub">主動 / 自辦 / 異業</div>
+      </div>
+    </div>
+    <canvas id="lineChart" height="70"></canvas>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbyU7VmaG8hYVk3wmoV-KB-yJN7SLoMjMjMXwg-1lxPtpXsdIY3-pwT0FxID9sFWI1-Q3Q/exec";
+
+let globalData = [];
+let globalConfig = {};
+let barChartObj = null;
+let lineChartObj = null;
+
+function fmt(n){ return Math.round(n).toLocaleString(); }
+function pct(a,b){ return b===0?"—":(a/b*100).toFixed(1)+"%"; }
+function diff(a,b){ const d=a-b; return (d>=0?"▲ +":"▼ ")+fmt(Math.abs(d))+" 人"; }
+
+function badge(val, ref){
+  const d = val - ref;
+  const p = ref===0 ? 0 : (d/ref*100);
+  const cls = d>=0 ? "badge-up" : "badge-down";
+  const arrow = d>=0 ? "▲" : "▼";
+  return `<span class="badge ${cls}">${arrow} ${Math.abs(p).toFixed(0)}%</span>`;
+}
+
+async function loadData(){
+  document.getElementById("loading").style.display = "flex";
+  document.getElementById("app").style.display = "none";
+  try {
+    const r = await fetch(API + "?t=" + Date.now());
+    const json = await r.json();
+    globalData = json.data || [];
+    globalConfig = json.config || {};
+    document.getElementById("lastSync").textContent = new Date().toLocaleString("zh-TW");
+    document.getElementById("dataCount").textContent = globalData.length;
+    render();
+  } catch(e){
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    document.querySelector(".main").insertAdjacentHTML("afterbegin",
+      `<div class="error-box">⚠️ 無法載入資料：${e.message}<br>請確認 Google Sheets API 已正確部署。</div>`);
+  }
+}
+
+function render(){
+  const data = globalData;
+  if(!data.length) return;
+
+  // 統一日期格式：不管是 "3/8" 或 "2026-03-08T..." 都轉成 "M/D"
+  data.forEach(r => {
+    const d = r.date;
+    if (typeof d === "string" && d.includes("T")) {
+      // ISO 格式：取 UTC+8 的月/日
+      const dt = new Date(d);
+      r.date = (dt.getUTCMonth()+1) + "/" + dt.getUTCDate();
+    } else if (typeof d === "string" && d.includes("-")) {
+      const parts = d.split("-");
+      r.date = parseInt(parts[1]) + "/" + parseInt(parts[2]);
+    }
+  });
+
+  // Sort by date
+  data.sort((a,b) => {
+    const pa = a.date.split("/").map(Number);
+    const pb = b.date.split("/").map(Number);
+    return pa[0]*31+pa[1] - (pb[0]*31+pb[1]);
+  });
+
+  const last = data[data.length-1];
+  const prev7 = data.slice(-8,-1); // 前7天（不含最新一天）
+  const avg7 = (arr,k) => arr.length ? arr.reduce((s,r)=>s+(r[k]||0),0)/arr.length : 0;
+
+  const a7total = Math.round(avg7(prev7,"total"));
+  const a7主動  = avg7(prev7,"ch_主動");
+  const a7自辦  = avg7(prev7,"ch_自辦");
+  const a7異業  = avg7(prev7,"ch_異業");
+
+  // Header tags
+  document.getElementById("tag-date").textContent = "前一天：" + last.date;
+  const cfg = globalConfig;
+  const daysInMonth = cfg.days_in_month || 31;
+  const month = cfg.month || new Date().getMonth()+1;
+  // elapsed = 最後一筆日期的「日」（例如 3/8 → 8天已過）
+  const lastDateParts = last.date.split("/").map(Number);
+  const elapsed = lastDateParts[1];
+  const remaining = daysInMonth - elapsed;
+  document.getElementById("tag-progress").textContent = `${month}月 已過 ${elapsed} 天 / 共 ${daysInMonth} 天`;
+
+  // ① Total
+  document.getElementById("k1-val").textContent = fmt(last.total);
+  document.getElementById("k1-avg").textContent = fmt(a7total);
+  document.getElementById("k1-badge").outerHTML = badge(last.total, a7total).replace('class="badge','id="k1-badge" class="badge');
+
+  // Accumulate
+  const acc = data.reduce((s,r)=>s+(r.total||0),0);
+  document.getElementById("k-acc").textContent = fmt(acc);
+  document.getElementById("k-acc-sub").textContent = `每日均值 ${(acc/elapsed).toFixed(1)} 人`;
+
+  // ② Channels
+  [["主動",last.ch_主動,a7主動],["自辦",last.ch_自辦,a7自辦],["異業",last.ch_異業,a7異業]].forEach(([ch,val,avg])=>{
+    document.getElementById(`ch-${ch}-val`).textContent = fmt(val||0);
+    document.getElementById(`ch-${ch}-avg`).textContent = avg.toFixed(1)+" 人";
+    const el = document.getElementById(`ch-${ch}-badge`);
+    const d = (val||0)-avg; const p = avg===0?0:(d/avg*100);
+    el.className = "badge "+(d>=0?"badge-up":"badge-down");
+    el.textContent = (d>=0?"▲ +":"▼ ")+Math.abs(p).toFixed(0)+"%";
+  });
+
+  recalcWithData(acc, a7total, elapsed, daysInMonth, remaining);
+  renderCharts(data, a7total);
+
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("app").style.display = "block";
+
+  // status tag
+  const target = parseInt(document.getElementById("targetInput").value)||2000;
+  const prorated = Math.round(target/daysInMonth*elapsed);
+  const statusEl = document.getElementById("tag-status");
+  if(acc >= prorated){ statusEl.className="tag tag-green"; statusEl.textContent="進度 ✅ 超前"; }
+  else { statusEl.className="tag tag-red"; statusEl.textContent="進度 ⚠️ 落後"; }
+}
+
+function recalc(){
+  const data = globalData;
+  if(!data.length) return;
+  const cfg = globalConfig;
+  const daysInMonth = cfg.days_in_month || 31;
+  const lastEntry = data[data.length-1];
+  const elapsed = parseInt(lastEntry.date.split("/")[1]);
+  const remaining = daysInMonth - elapsed;
+  const prev7 = data.slice(-8,-1);
+  const a7total = prev7.length ? Math.round(prev7.reduce((s,r)=>s+(r.total||0),0)/prev7.length) : 0;
+  const acc = data.reduce((s,r)=>s+(r.total||0),0);
+  recalcWithData(acc, a7total, elapsed, daysInMonth, remaining);
+}
+
+function recalcWithData(acc, a7total, elapsed, daysInMonth, remaining){
+  const target = parseInt(document.getElementById("targetInput").value)||2000;
+  const prorated = Math.round(target/daysInMonth*elapsed);
+  const dailyNeeded = remaining>0 ? Math.round((target-acc)/remaining) : 0;
+  const projected = acc + Math.round(a7total*remaining);
+  const rate = prorated===0 ? 0 : (acc/prorated*100);
+  const projDiff = projected - target;
+
+  document.getElementById("k3").textContent = fmt(target);
+  document.getElementById("k4").textContent = fmt(prorated);
+  document.getElementById("k4sub").textContent = `${fmt(target)} ÷ ${daysInMonth}天 × ${elapsed}天`;
+  document.getElementById("k5r").textContent = rate.toFixed(1);
+  const k5b = document.getElementById("k5badge");
+  const diffVal = acc - prorated;
+  k5b.className = "badge "+(diffVal>=0?"badge-up":"badge-down");
+  k5b.textContent = (diffVal>=0?"▲ 超前 +":"▼ 落後 ")+fmt(Math.abs(diffVal))+" 人";
+
+  document.getElementById("k6").textContent = fmt(dailyNeeded);
+  document.getElementById("k6avg").textContent = fmt(a7total);
+  const k6b = document.getElementById("k6badge");
+  k6b.className = "badge "+(dailyNeeded<=a7total?"badge-up":"badge-warn");
+  k6b.textContent = dailyNeeded<=a7total ? "✅ 可達標" : "⚠️ 需加速";
+
+  document.getElementById("k7").textContent = fmt(projected);
+  document.getElementById("k7sub").textContent = `${fmt(acc)} + ${fmt(a7total)}均 × ${remaining}天`;
+  const k7b = document.getElementById("k7badge");
+  k7b.className = "badge "+(projDiff>=0?"badge-up":"badge-down");
+  k7b.textContent = (projDiff>=0?"▲ 預估超標 +":"▼ 預估不足 ")+fmt(Math.abs(projDiff))+" 人";
+
+  document.getElementById("p-acc").textContent = fmt(acc)+" 人";
+  document.getElementById("p-rem").textContent = remaining+" 天";
+  document.getElementById("p-avg").textContent = fmt(a7total)+" 人";
+  document.getElementById("p-elapsed").textContent = elapsed+" 天";
+}
+
+const avgLinePlugin = {
+  id:"avgLine",
+  afterDraw(chart){
+    const avg = chart._avgVal; if(!avg) return;
+    const {ctx,chartArea,scales} = chart;
+    const y = scales.y.getPixelForValue(avg);
+    ctx.save();
+    ctx.setLineDash([6,4]); ctx.strokeStyle="rgba(99,102,241,.7)"; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(chartArea.left,y); ctx.lineTo(chartArea.right,y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle="rgba(99,102,241,.9)"; ctx.font="bold 10px DM Mono, monospace";
+    ctx.fillText("前7均 "+avg, chartArea.right-72, y-5);
+    ctx.restore();
+  }
+};
+Chart.register(avgLinePlugin);
+
+function renderCharts(data, a7total){
+  const labels  = data.map(r=>r.date);
+  const totals  = data.map(r=>r.total||0);
+  const 主動d   = data.map(r=>r.ch_主動||0);
+  const 自辦d   = data.map(r=>r.ch_自辦||0);
+  const 異業d   = data.map(r=>r.ch_異業||0);
+  const lastIdx = data.length-1;
+
+  const barColors = totals.map((_,i)=>i===lastIdx?"#f97316":"#3f4a7d");
+
+  if(barChartObj) barChartObj.destroy();
+  barChartObj = new Chart(document.getElementById("barChart").getContext("2d"),{
+    type:"bar",
+    data:{ labels, datasets:[{label:"UID",data:totals,backgroundColor:barColors,borderRadius:6}] },
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7280",font:{size:11}}},
+        y:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7280"}}
+      }
+    }
+  });
+  barChartObj._avgVal = a7total;
+  barChartObj._data = {labels,totals,主動d,自辦d,異業d,lastIdx,a7total};
+
+  if(lineChartObj) lineChartObj.destroy();
+  lineChartObj = new Chart(document.getElementById("lineChart").getContext("2d"),{
+    type:"line",
+    data:{labels, datasets:[
+      {label:"主動",data:主動d,borderColor:"#f97316",backgroundColor:"transparent",borderWidth:2,pointRadius:3,pointBackgroundColor:"#f97316",tension:.35},
+      {label:"自辦",data:自辦d,borderColor:"#10b981",backgroundColor:"transparent",borderWidth:2,pointRadius:3,pointBackgroundColor:"#10b981",tension:.35},
+      {label:"異業",data:異業d,borderColor:"#a78bfa",backgroundColor:"transparent",borderWidth:2,pointRadius:3,pointBackgroundColor:"#a78bfa",tension:.35},
+    ]},
+    options:{
+      responsive:true,
+      plugins:{legend:{labels:{color:"#9ca3af",font:{size:12}}}},
+      scales:{
+        x:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7280",font:{size:11}}},
+        y:{min:0,grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7280"}}
+      }
+    }
+  });
+}
+
+function switchBar(mode, btn){
+  document.querySelectorAll(".tbtn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  if(!barChartObj || !barChartObj._data) return;
+  const d = barChartObj._data;
+  if(mode==="total"){
+    barChartObj.data.datasets = [{label:"UID",data:d.totals,backgroundColor:d.totals.map((_,i)=>i===d.lastIdx?"#f97316":"#3f4a7d"),borderRadius:6}];
+    barChartObj._avgVal = d.a7total;
+    document.getElementById("barTitle").textContent = "📊 每日 BCL 總量";
+  } else {
+    barChartObj.data.datasets = [
+      {label:"主動",data:d.主動d,backgroundColor:d.主動d.map((_,i)=>i===d.lastIdx?"#ea580c":"rgba(249,115,22,.35)"),borderRadius:6,stack:"s"},
+      {label:"自辦",data:d.自辦d,backgroundColor:d.自辦d.map((_,i)=>i===d.lastIdx?"#059669":"rgba(16,185,129,.35)"),borderRadius:6,stack:"s"},
+      {label:"異業",data:d.異業d,backgroundColor:d.異業d.map((_,i)=>i===d.lastIdx?"#7c3aed":"rgba(167,139,250,.35)"),borderRadius:6,stack:"s"},
+    ];
+    barChartObj._avgVal = null;
+    document.getElementById("barTitle").textContent = "📊 三管道每日分組";
+  }
+  barChartObj.update();
+}
+
+// Start
+loadData();
+</script>
+</body>
+</html>
