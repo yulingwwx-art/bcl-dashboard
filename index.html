@@ -409,6 +409,19 @@ function render(){
   const data = globalData;
   if(!data.length) return;
 
+  // 統一日期格式：不管是 "3/8" 或 "2026-03-08T..." 都轉成 "M/D"
+  data.forEach(r => {
+    const d = r.date;
+    if (typeof d === "string" && d.includes("T")) {
+      // ISO 格式：轉換為台灣時間 UTC+8
+      const dt = new Date(new Date(d).getTime() + 8*60*60*1000);
+      r.date = (dt.getUTCMonth()+1) + "/" + dt.getUTCDate();
+    } else if (typeof d === "string" && d.includes("-")) {
+      const parts = d.split("-");
+      r.date = parseInt(parts[1]) + "/" + parseInt(parts[2]);
+    }
+  });
+
   // Sort by date
   data.sort((a,b) => {
     const pa = a.date.split("/").map(Number);
@@ -430,7 +443,9 @@ function render(){
   const cfg = globalConfig;
   const daysInMonth = cfg.days_in_month || 31;
   const month = cfg.month || new Date().getMonth()+1;
-  const elapsed = data.length;
+  // elapsed = 最後一筆日期的「日」（例如 3/8 → 8天已過）
+  const lastDateParts = last.date.split("/").map(Number);
+  const elapsed = lastDateParts[1];
   const remaining = daysInMonth - elapsed;
   document.getElementById("tag-progress").textContent = `${month}月 已過 ${elapsed} 天 / 共 ${daysInMonth} 天`;
 
@@ -473,7 +488,8 @@ function recalc(){
   if(!data.length) return;
   const cfg = globalConfig;
   const daysInMonth = cfg.days_in_month || 31;
-  const elapsed = data.length;
+  const lastEntry = data[data.length-1];
+  const elapsed = parseInt(lastEntry.date.split("/")[1]);
   const remaining = daysInMonth - elapsed;
   const prev7 = data.slice(-8,-1);
   const a7total = prev7.length ? Math.round(prev7.reduce((s,r)=>s+(r.total||0),0)/prev7.length) : 0;
