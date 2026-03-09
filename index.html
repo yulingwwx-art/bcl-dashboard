@@ -365,6 +365,22 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
     <canvas id="lineChart" height="70"></canvas>
   </div>
 
+
+  <!-- 月份趨勢 -->
+  <div>
+    <div class="section-title">📅 2504–2603 每月 BCL 新增</div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">📅 每月 BCL 新增趨勢</div>
+          <div class="card-sub" id="monthly-sub">從 Excel 同步後自動顯示</div>
+        </div>
+      </div>
+      <canvas id="monthlyChart" height="70"></canvas>
+      <div id="monthly-table" style="margin-top:20px;display:grid;grid-template-columns:repeat(6,1fr);gap:8px"></div>
+    </div>
+  </div>
+
 </div><!-- /main -->
 </div><!-- /app -->
 
@@ -396,6 +412,7 @@ async function loadData(){
     const json = await r.json();
     globalData = json.data || [];
     globalConfig = json.config || {};
+    globalConfig.monthly = json.monthly || [];
     document.getElementById("lastSync").textContent = new Date().toLocaleString("zh-TW");
     document.getElementById("dataCount").textContent = globalData.length;
     render();
@@ -473,6 +490,7 @@ function render(){
 
   recalcWithData(acc, a7total, elapsed, daysInMonth, remaining);
   renderCharts(data, a7total);
+  renderMonthlyChart(globalConfig.monthly || []);
 
   document.getElementById("loading").style.display = "none";
   document.getElementById("app").style.display = "block";
@@ -618,6 +636,53 @@ function switchBar(mode, btn){
 }
 
 
+
+
+function renderMonthlyChart(monthly) {
+  if (!monthly || !monthly.length) return;
+
+  const labels = monthly.map(r => r.month);
+  const values = monthly.map(r => r.total || 0);
+  const maxVal = Math.max(...values);
+  const colors = values.map(v => v === maxVal ? "#f97316" : "#6366f1");
+
+  // Update sub
+  const total = values.reduce((a,b)=>a+b,0);
+  const avg = Math.round(total / values.length);
+  document.getElementById("monthly-sub").textContent =
+    `合計 ${fmt(total)} 人｜月均 ${fmt(avg)} 人｜共 ${values.length} 個月`;
+
+  // Bar chart
+  if (window.monthlyChartObj) window.monthlyChartObj.destroy();
+  window.monthlyChartObj = new Chart(
+    document.getElementById("monthlyChart").getContext("2d"), {
+    type: "bar",
+    data: { labels, datasets: [{
+      label: "BCL 新增",
+      data: values,
+      backgroundColor: colors,
+      borderRadius: 6
+    }]},
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: "rgba(0,0,0,.04)" }, ticks: { color: "#9ca3af", font: { size: 11 } } },
+        y: { grid: { color: "rgba(0,0,0,.04)" }, ticks: { color: "#9ca3af" } }
+      }
+    }
+  });
+
+  // Mini table
+  const tableEl = document.getElementById("monthly-table");
+  tableEl.innerHTML = monthly.map(r => {
+    const isMax = r.total === maxVal;
+    return `<div style="background:${isMax?"rgba(249,115,22,.08)":"#f8f9fc"};border:1px solid ${isMax?"rgba(249,115,22,.3)":"#e8edf8"};border-radius:10px;padding:10px 12px;text-align:center">
+      <div style="font-size:10px;color:#9ca3af;font-weight:700;margin-bottom:4px">${r.month}</div>
+      <div style="font-size:16px;font-weight:900;color:${isMax?"#f97316":"#1a1d2e"};font-family:'DM Mono',monospace">${fmt(r.total)}</div>
+    </div>`;
+  }).join("");
+}
 
 // Start
 loadData();
