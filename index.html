@@ -8,12 +8,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 :root {
-  --bg: #0f1117;
-  --bg2: #161b27;
-  --bg3: #1c2333;
-  --border: rgba(255,255,255,0.08);
-  --text: #e8eaf0;
-  --muted: #6b7280;
+  --bg: #f4f6fb;
+  --bg2: #ffffff;
+  --bg3: #f0f2f8;
+  --border: rgba(0,0,0,0.08);
+  --text: #1a1d2e;
+  --muted: #9ca3af;
   --accent: #f97316;
   --blue: #6366f1;
   --green: #10b981;
@@ -24,11 +24,11 @@
   --mono: 'DM Mono', monospace;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+body { font-family: var(--font); background: var(--bg);  color: var(--text); min-height: 100vh; }
 
 /* ── Loading ── */
 #loading {
-  position: fixed; inset: 0; background: var(--bg);
+  position: fixed; inset: 0; background: var(--bg); 
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
   z-index: 999;
 }
@@ -97,11 +97,11 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 
 .kpi {
   background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 16px; padding: 20px 22px;
+  border-radius: 16px; padding: 20px 22px; box-shadow: 0 2px 12px rgba(0,0,0,.06);
   transition: border-color .2s, transform .2s;
   position: relative; overflow: hidden;
 }
-.kpi:hover { border-color: rgba(255,255,255,.18); transform: translateY(-2px); }
+.kpi:hover { border-color: rgba(0,0,0,.2); transform: translateY(-2px); }
 .kpi::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
   background: var(--kpi-color, var(--blue));
@@ -539,10 +539,10 @@ const avgLinePlugin = {
     const {ctx,chartArea,scales} = chart;
     const y = scales.y.getPixelForValue(avg);
     ctx.save();
-    ctx.setLineDash([6,4]); ctx.strokeStyle="rgba(99,102,241,.7)"; ctx.lineWidth=1.5;
+    ctx.setLineDash([6,4]); ctx.strokeStyle="rgba(99,102,241,.9)"; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.moveTo(chartArea.left,y); ctx.lineTo(chartArea.right,y); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle="rgba(99,102,241,.9)"; ctx.font="bold 10px DM Mono, monospace";
+    ctx.fillStyle="rgba(99,102,241,1)"; ctx.font="bold 10px DM Mono, monospace";
     ctx.fillText("前7均 "+avg, chartArea.right-72, y-5);
     ctx.restore();
   }
@@ -567,8 +567,8 @@ function renderCharts(data, a7total){
       responsive:true,
       plugins:{legend:{display:false}},
       scales:{
-        x:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7280",font:{size:11}}},
-        y:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7280"}}
+        x:{grid:{color:"rgba(0,0,0,.04)"},ticks:{color:"#9ca3af",font:{size:11}}},
+        y:{grid:{color:"rgba(0,0,0,.04)"},ticks:{color:"#9ca3af"}}
       }
     }
   });
@@ -587,8 +587,8 @@ function renderCharts(data, a7total){
       responsive:true,
       plugins:{legend:{labels:{color:"#9ca3af",font:{size:12}}}},
       scales:{
-        x:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7280",font:{size:11}}},
-        y:{min:0,grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7280"}}
+        x:{grid:{color:"rgba(0,0,0,.04)"},ticks:{color:"#9ca3af",font:{size:11}}},
+        y:{min:0,grid:{color:"rgba(0,0,0,.04)"},ticks:{color:"#9ca3af"}}
       }
     }
   });
