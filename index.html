@@ -32,7 +32,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
   z-index: 999;
 }
-.loader-tiger { font-size: 56px; animation: bounce 1s infinite; }
+.loader-tiger { font-size: 56px; animation: bounce 1s infinite; display:flex; justify-content:center; }
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
 .loader-text { font-size: 14px; color: var(--muted); letter-spacing: .1em; }
 .loader-bar { width: 200px; height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
@@ -172,6 +172,10 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 
 
 
+/* ── 評分 bar ── */
+.score-bar-wrap { height:6px; background:#e8edf8; border-radius:4px; overflow:hidden; margin-top:12px; }
+.score-bar { height:100%; border-radius:4px; transition:width .6s ease, background .4s; }
+
 /* ── AI 分析 ── */
 .ai-placeholder { color:#9ca3af; font-size:15px; padding:28px 0; text-align:center; }
 .ai-loading { color:#6366f1; font-size:15px; padding:28px 0; text-align:center; animation:pulse 1.5s infinite; }
@@ -209,11 +213,9 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 .age-chip-label { font-size:11px; color:var(--muted); font-weight:600; }
 .age-chip-val { font-size:20px; font-weight:900; color:#6366f1; font-family:var(--mono); }
 .age-chip-pct { font-size:12px; color:var(--muted); margin-top:2px; }
-.age-gauge { flex:1; min-width:120px; }
-.age-gauge-bar { height:8px; background:#e8edf8; border-radius:4px; overflow:hidden; margin-top:6px; }
-.age-gauge-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,#6366f1,#a78bfa); transition:width .6s ease; }
 
 @media (max-width: 900px) {
+  .grid-3 { grid-template-columns:1fr; }
   .grid-4, .grid-3 { grid-template-columns: repeat(2,1fr); }
   .main { padding: 16px; }
   .header, .syncbar { padding: 12px 16px; }
@@ -226,7 +228,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 <body>
 
 <div id="loading">
-  <div class="loader-tiger">🐯</div>
+  <div class="loader-tiger"><img src="https://www.benesse.com.tw/html/events/show/20summer/svg/img_chohoo.png" style="width:80px;height:80px;object-fit:contain"></div>
   <div class="loader-bar"><div class="loader-fill"></div></div>
   <div class="loader-text">載入最新數據中…</div>
 </div>
@@ -235,7 +237,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 
 <div class="header">
   <div class="header-brand">
-    <div class="brand-icon">🐯</div>
+    <div class="brand-icon"><img src="https://www.benesse.com.tw/html/events/show/20summer/svg/img_chohoo.png" style="width:36px;height:36px;object-fit:contain;vertical-align:middle"></div>
     <div>
       <div class="brand-name">BCL 績效監控儀表板</div>
       <div class="brand-sub">Benesse Taiwan · 經營戰略組</div>
@@ -297,10 +299,6 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
             <div class="age-chip-label">佔當日比例</div>
             <div class="age-chip-val" id="age-pct">—%</div>
           </div>
-          <div class="age-gauge">
-            <div style="font-size:12px;color:var(--muted);font-weight:600">比例視覺化</div>
-            <div class="age-gauge-bar"><div class="age-gauge-fill" id="age-bar" style="width:0%"></div></div>
-          </div>
         </div>
       </div>
       <div class="kpi" style="--kpi-color:#6366f1">
@@ -310,9 +308,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
           <span class="kpi-sub">前7均佔比：<span id="age-avg-pct" style="color:#1a1d2e;font-weight:700">—</span></span>
           <span class="badge" id="age-badge">—</span>
         </div>
-        <div class="kpi-sub" style="margin-top:8px;font-size:12px;color:var(--muted)">
-          0–24M 為核心目標月齡，代表最高 LTV 潛力族群
-        </div>
+        
       </div>
     </div>
   </div>
@@ -322,7 +318,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
     <div class="section-title">② 各管道前一天 vs 前7天平均</div>
     <div class="grid-3">
       <div class="kpi" style="--kpi-color:var(--accent)">
-        <div class="kpi-label">🟠 主動</div>
+        <div class="kpi-label">🟠 主動綁定</div>
         <div><span class="kpi-value" id="ch-主動-val">—</span><span class="kpi-unit">人</span></div>
         <div class="ch-row">
           <span class="ch-name">前7日均</span>
@@ -356,6 +352,49 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
           </div>
         </div>
         <div class="kpi-sub" style="margin-top:8px;font-size:10px;color:var(--muted)">六甲村 · 永生 · 明治 · 婦幼展</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 管道評分 -->
+  <div>
+    <div class="section-title">② 各管道綁定月齡評分 vs 前7天平均</div>
+    <div class="grid-3">
+      <div class="kpi" style="--kpi-color:var(--accent)">
+        <div class="kpi-label">🟠 主動綁定　評分</div>
+        <div><span class="kpi-value" id="sc-主動-val" style="color:var(--accent)">—</span><span class="kpi-unit">分</span></div>
+        <div class="ch-row">
+          <span class="ch-name">前7日均</span>
+          <div class="ch-cmp">
+            <span class="ch-avg" id="sc-主動-avg">— 分</span>
+            <span class="badge" id="sc-主動-badge">—</span>
+          </div>
+        </div>
+        <div class="score-bar-wrap"><div class="score-bar" id="sc-主動-bar"></div></div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--green)">
+        <div class="kpi-label">🟢 自辦　評分</div>
+        <div><span class="kpi-value" id="sc-自辦-val" style="color:var(--green)">—</span><span class="kpi-unit">分</span></div>
+        <div class="ch-row">
+          <span class="ch-name">前7日均</span>
+          <div class="ch-cmp">
+            <span class="ch-avg" id="sc-自辦-avg">— 分</span>
+            <span class="badge" id="sc-自辦-badge">—</span>
+          </div>
+        </div>
+        <div class="score-bar-wrap"><div class="score-bar" id="sc-自辦-bar"></div></div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--purple)">
+        <div class="kpi-label">🟣 異業　評分</div>
+        <div><span class="kpi-value" id="sc-異業-val" style="color:var(--purple)">—</span><span class="kpi-unit">分</span></div>
+        <div class="ch-row">
+          <span class="ch-name">前7日均</span>
+          <div class="ch-cmp">
+            <span class="ch-avg" id="sc-異業-avg">— 分</span>
+            <span class="badge" id="sc-異業-badge">—</span>
+          </div>
+        </div>
+        <div class="score-bar-wrap"><div class="score-bar" id="sc-異業-bar"></div></div>
       </div>
     </div>
   </div>
@@ -543,13 +582,17 @@ ${recentRows}
 
 每段不超過100字，語氣專業簡潔。
 
-重要：請直接從【數據摘要】開始，不要有任何標題、前言或額外說明。格式必須嚴格如下：
+重要：請直接從【數據摘要】開始，不要有任何標題、前言或額外說明。條列項目每條必須獨立一行。格式必須嚴格如下：
 【數據摘要】
-（內容）
+（一段話）
 【課題】
-（內容）
+1. （第一點）
+2. （第二點）
+3. （第三點）
 【下一步建議】
-（內容）`;
+1. （第一點）
+2. （第二點）
+3. （第三點）`;
 
 
   fetch("https://api.anthropic.com/v1/messages", {
@@ -575,19 +618,29 @@ ${recentRows}
     }
 
     function formatBody(txt, cls) {
-      // Number bullets → styled items
-      const lines = txt.split("\n").map(l=>l.trim()).filter(l=>l);
+      // Split on numbered patterns: "1." "2." "3." even if inline
+      let lines = txt.split("\n").map(l=>l.trim()).filter(l=>l);
+
+      // If still one chunk, try splitting on inline numbers like "。2." or "。2、"
       if (lines.length <= 1) {
-        // Highlight numbers in summary
+        lines = txt.split(/(?=\d[\.\、]\s)/).map(l=>l.trim()).filter(l=>l);
+      }
+      // Last resort: split on 。followed by digit
+      if (lines.length <= 1) {
+        lines = txt.replace(/。(\d)/g, '。\n$1').split("\n").map(l=>l.trim()).filter(l=>l);
+      }
+
+      if (lines.length <= 1) {
+        // Summary paragraph - highlight numbers
         const highlighted = txt.trim()
           .replace(/(\d[\d,]+\s*人)/g,'<span class="ai-num ai-num-blue">$1</span>')
           .replace(/(\d+\.?\d*%)/g,'<span class="ai-num ai-num-orange">$1</span>');
-        return `<div class="ai-item-text">${highlighted}</div>`;
+        return `<div class="ai-item-text" style="text-align:left;line-height:1.9">${highlighted}</div>`;
       }
-      return lines.map((l,i) => {
-        const numMatch = l.match(/^[\d]+[\.、]?\s*/);
-        const txt2 = numMatch ? l.slice(numMatch[0].length) : l;
-        const highlighted = txt2
+
+      return lines.map((l, i) => {
+        const clean = l.replace(/^[\d]+[\.\、]\s*/, '').trim();
+        const highlighted = clean
           .replace(/(\d[\d,]+\s*人)/g,'<span class="ai-num">$1</span>')
           .replace(/(\d+\.?\d*%)/g,'<span class="ai-num">$1</span>');
         return `<div class="ai-item"><span class="ai-item-num">${i+1}.</span><span class="ai-item-text">${highlighted}</span></div>`;
@@ -703,7 +756,6 @@ function render(){
 
     document.getElementById("age-val").textContent = fmt(ageVal);
     document.getElementById("age-pct").textContent = agePct.toFixed(1)+"%";
-    document.getElementById("age-bar").style.width = Math.min(agePct,100)+"%";
     document.getElementById("age-avg-val").textContent = a7age.toFixed(1);
     document.getElementById("age-avg-pct").textContent = a7agePct.toFixed(1)+"%均";
     const ageDiff = ageVal - a7age;
@@ -720,6 +772,38 @@ function render(){
     const d = (val||0)-avg; const p = avg===0?0:(d/avg*100);
     el.className = "badge "+(d>=0?"badge-up":"badge-down");
     el.textContent = (d>=0?"▲ +":"▼ ")+Math.abs(p).toFixed(0)+"%";
+  });
+
+  // ② 管道評分
+  const a7sc主動 = avg7(prev7,"sc_主動");
+  const a7sc自辦 = avg7(prev7,"sc_自辦");
+  const a7sc異業 = avg7(prev7,"sc_異業");
+
+  [["主動",last.sc_主動,a7sc主動],["自辦",last.sc_自辦,a7sc自辦],["異業",last.sc_異業,a7sc異業]].forEach(([ch,val,avg7v])=>{
+    const v = val||0;
+    const a = avg7v||0;
+    document.getElementById(`sc-${ch}-val`).textContent = v.toFixed(1);
+    document.getElementById(`sc-${ch}-avg`).textContent = a.toFixed(1)+" 分";
+
+    // Badge: relative to 7-day avg ±5%
+    const badge = document.getElementById(`sc-${ch}-badge`);
+    const ratio = a===0 ? 1 : v/a;
+    let bClass, bText;
+    if (ratio >= 1.05)      { bClass="badge-up";   bText="▲ 優於均值"; }
+    else if (ratio >= 0.95) { bClass="badge-warn";  bText="≈ 持平"; }
+    else                    { bClass="badge-down";  bText="▼ 低於均值"; }
+    badge.className = "badge "+bClass;
+    badge.textContent = bText;
+
+    // Score bar: max=12, color by ratio
+    const barEl = document.getElementById(`sc-${ch}-bar`);
+    const pct = Math.min(v/12*100, 100);
+    let barColor;
+    if (ratio >= 1.05)      barColor = "#22c55e";
+    else if (ratio >= 0.95) barColor = "#f97316";
+    else                    barColor = "#ef4444";
+    barEl.style.width  = pct+"%";
+    barEl.style.background = barColor;
   });
 
   recalcWithData(acc, a7total, elapsed, daysInMonth, remaining);
@@ -780,7 +864,6 @@ function recalcWithData(acc, a7total, elapsed, daysInMonth, remaining){
   const k7b = document.getElementById("k7badge");
   k7b.className = "badge "+(projDiff>=0?"badge-up":"badge-down");
   k7b.textContent = (projDiff>=0?"▲ 預估超標 +":"▼ 預估不足 ")+fmt(Math.abs(projDiff))+" 人";
-
   document.getElementById("p-acc").textContent = fmt(acc)+" 人";
   document.getElementById("p-rem").textContent = remaining+" 天";
   document.getElementById("p-avg").textContent = fmt(a7total)+" 人";
