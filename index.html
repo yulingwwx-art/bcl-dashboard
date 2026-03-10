@@ -53,7 +53,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
   display: flex; align-items: center; justify-content: center;
   font-size: 22px; box-shadow: 0 4px 14px rgba(249,115,22,.4);
 }
-.brand-name { font-size: 16px; font-weight: 900; color: var(--text); }
+.brand-name { font-size: 18px; font-weight: 900; color: var(--text); }
 .brand-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; font-family: var(--mono); }
 .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .tag {
@@ -70,7 +70,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
   background: var(--bg2); border-bottom: 1px solid var(--border);
   padding: 10px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
 }
-.sync-info { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+.sync-info { font-size: 13px; color: var(--muted); font-family: var(--mono); }
 .sync-info span { color: var(--text); font-weight: 600; }
 .btn-refresh {
   background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.4);
@@ -84,7 +84,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 .main { padding: 28px 32px; display: flex; flex-direction: column; gap: 24px; max-width: 1400px; margin: 0 auto; }
 
 .section-title {
-  font-size: 10px; font-weight: 700; color: var(--blue);
+  font-size: 12px; font-weight: 700; color: var(--blue);
   letter-spacing: .15em; text-transform: uppercase; font-family: var(--mono);
   padding-bottom: 10px; border-bottom: 1px solid var(--border);
   margin-bottom: 4px;
@@ -106,14 +106,14 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
   background: var(--kpi-color, var(--blue));
 }
-.kpi-label { font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.kpi-label { font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
 .kpi-value { font-size: 28px; font-weight: 900; color: var(--text); letter-spacing: -.03em; font-family: var(--mono); }
-.kpi-unit  { font-size: 13px; color: var(--muted); font-weight: 400; margin-left: 2px; }
+.kpi-unit  { font-size: 16px; color: var(--muted); font-weight: 400; margin-left: 2px; }
 .kpi-row   { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-.kpi-sub   { font-size: 11px; color: var(--muted); }
+.kpi-sub   { font-size: 13px; color: var(--muted); }
 
 .badge {
-  font-size: 11px; font-weight: 700; border-radius: 8px; padding: 2px 9px;
+  font-size: 13px; font-weight: 700; border-radius: 8px; padding: 2px 9px;
   font-family: var(--mono);
 }
 .badge-up   { background: rgba(16,185,129,.15); color: #34d399; }
@@ -124,10 +124,10 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 /* ── Channel Cards ── */
 .ch-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
 .ch-row:last-child { border: none; padding-bottom: 0; }
-.ch-name { font-size: 12px; color: var(--muted); font-weight: 600; }
-.ch-val  { font-size: 18px; font-weight: 900; font-family: var(--mono); color: var(--text); }
+.ch-name { font-size: 13px; color: var(--muted); font-weight: 600; }
+.ch-val  { font-size: 22px; font-weight: 900; font-family: var(--mono); color: var(--text); }
 .ch-cmp  { display: flex; align-items: center; gap: 6px; }
-.ch-avg  { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+.ch-avg  { font-size: 13px; color: var(--muted); font-family: var(--mono); }
 
 /* ── Chart Cards ── */
 .card {
@@ -135,8 +135,8 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
   border-radius: 16px; padding: 24px;
 }
 .card-head { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-.card-title { font-size: 14px; font-weight: 700; color: var(--text); }
-.card-sub   { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.card-title { font-size: 16px; font-weight: 700; color: var(--text); }
+.card-sub   { font-size: 13px; color: var(--muted); margin-top: 3px; }
 
 .toggle { display: flex; gap: 6px; }
 .tbtn { padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); cursor: pointer; font-size: 11px; font-weight: 600; background: transparent; transition: all .2s; font-family: var(--font); }
@@ -171,6 +171,26 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 }
 
 
+
+/* ── AI 分析 ── */
+.ai-placeholder { color:#9ca3af; font-size:14px; padding:24px 0; text-align:center; }
+.ai-loading { color:#6366f1; font-size:14px; padding:24px 0; text-align:center; animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.ai-section { margin-bottom:18px; }
+.ai-section:last-child { margin-bottom:0; }
+.ai-section-title { font-size:13px; font-weight:800; color:#1a1d2e; padding-bottom:8px; border-bottom:1px solid #e8edf8; margin-bottom:10px; }
+.ai-section-body { font-size:14px; color:#4a5568; line-height:1.9; white-space:pre-wrap; }
+.ai-error { color:#ef4444; font-size:13px; }
+
+/* ── 8M~24M 月齡指標 ── */
+.age-strip { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
+.age-chip { text-align:center; }
+.age-chip-label { font-size:11px; color:var(--muted); font-weight:600; }
+.age-chip-val { font-size:20px; font-weight:900; color:#6366f1; font-family:var(--mono); }
+.age-chip-pct { font-size:12px; color:var(--muted); margin-top:2px; }
+.age-gauge { flex:1; min-width:120px; }
+.age-gauge-bar { height:8px; background:#e8edf8; border-radius:4px; overflow:hidden; margin-top:6px; }
+.age-gauge-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,#6366f1,#a78bfa); transition:width .6s ease; }
 
 @media (max-width: 900px) {
   .grid-4, .grid-3 { grid-template-columns: repeat(2,1fr); }
@@ -225,7 +245,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 
   <!-- ① 前一天 + 本月累計 -->
   <div>
-    <div class="section-title">① 前一天 BCL 總量 vs 前7天平均</div>
+    <div class="section-title">① 前一天 BCL 總量 vs 前7天平均　＋　8M–24M 月齡</div>
     <div class="grid-2">
       <div class="kpi" style="--kpi-color:var(--accent)">
         <div class="kpi-label">前一天 BCL 總量</div>
@@ -240,6 +260,37 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
         <div><span class="kpi-value" id="k-acc">—</span><span class="kpi-unit">人</span></div>
         <div class="kpi-row">
           <span class="kpi-sub" id="k-acc-sub">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ① 8M~24M 月齡 -->
+  <div id="age-section" style="display:none">
+    <div class="grid-2">
+      <div class="kpi" style="--kpi-color:#6366f1">
+        <div class="kpi-label">🎯 8M–24M 前一天收集數</div>
+        <div><span class="kpi-value" id="age-val" style="color:#6366f1">—</span><span class="kpi-unit">人</span></div>
+        <div class="age-strip">
+          <div class="age-chip">
+            <div class="age-chip-label">佔當日比例</div>
+            <div class="age-chip-val" id="age-pct">—%</div>
+          </div>
+          <div class="age-gauge">
+            <div style="font-size:12px;color:var(--muted);font-weight:600">比例視覺化</div>
+            <div class="age-gauge-bar"><div class="age-gauge-fill" id="age-bar" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="kpi" style="--kpi-color:#6366f1">
+        <div class="kpi-label">📊 8M–24M vs 前7日平均</div>
+        <div><span class="kpi-value" id="age-avg-val" style="color:#6366f1">—</span><span class="kpi-unit">人</span></div>
+        <div class="kpi-row">
+          <span class="kpi-sub">前7均佔比：<span id="age-avg-pct" style="color:#1a1d2e;font-weight:700">—</span></span>
+          <span class="badge" id="age-badge">—</span>
+        </div>
+        <div class="kpi-sub" style="margin-top:8px;font-size:12px;color:var(--muted)">
+          8–24M 為核心目標月齡，代表最高 LTV 潛力族群
         </div>
       </div>
     </div>
@@ -285,6 +336,25 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
         </div>
         <div class="kpi-sub" style="margin-top:8px;font-size:10px;color:var(--muted)">六甲村 · 永生 · 明治 · 婦幼展</div>
       </div>
+    </div>
+  </div>
+
+  <!-- AI 分析 -->
+  <div>
+    <div class="section-title">🤖 AI 數據解讀</div>
+    <div class="card" style="border-color:rgba(99,102,241,.25)">
+      <div class="card-head">
+        <div>
+          <div class="card-title">🤖 AI 數據分析師</div>
+          <div class="card-sub">根據今日數據自動生成摘要、課題與建議</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input class="config-input" id="apiKeyInput" type="password" placeholder="sk-ant-api-key..." style="width:220px;font-size:12px">
+          <button class="btn-refresh" onclick="triggerAnalysis()">▶ 立即分析</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">※ API Key 只存在記憶體，不會儲存或外傳</div>
+      <div id="ai-analysis" class="ai-placeholder">輸入 Anthropic API Key 後點擊「立即分析」💡</div>
     </div>
   </div>
 
@@ -404,6 +474,67 @@ function badge(val, ref){
   return `<span class="badge ${cls}">${arrow} ${Math.abs(p).toFixed(0)}%</span>`;
 }
 
+function triggerAnalysis() {
+  const data = globalData; if (!data.length) { alert("請先載入數據"); return; }
+  const cfg = globalConfig;
+  const daysInMonth = cfg.days_in_month || 31;
+  const last = data[data.length-1];
+  const elapsed = parseInt(last.date.split("/")[1]);
+  const acc = data.reduce((s,r)=>s+(r.total||0),0);
+  const prev7 = data.slice(-8,-1);
+  const a7total = prev7.length ? Math.round(prev7.reduce((s,r)=>s+(r.total||0),0)/prev7.length) : 0;
+  const target = parseInt(document.getElementById("targetInput").value)||2000;
+  const remaining = daysInMonth - elapsed;
+  const dailyNeeded = Math.round((target-acc)/remaining);
+  const projected = acc + Math.round(a7total*remaining);
+
+  const ageVal = last.age_8_24 || 0;
+  const agePct = last.total ? (ageVal/last.total*100).toFixed(1) : 0;
+  const a7age = prev7.length ? (prev7.reduce((s,r)=>s+(r.age_8_24||0),0)/prev7.length).toFixed(1) : 0;
+
+  const apiKey = document.getElementById("apiKeyInput").value.trim();
+  if (!apiKey) { document.getElementById("ai-analysis").innerHTML = '<div class="ai-error">⚠️ 請先輸入 Anthropic API Key（格式：sk-ant-...）</div>'; return; }
+
+  const analysisEl = document.getElementById("ai-analysis");
+  analysisEl.innerHTML = '<div class="ai-loading">🤖 AI 分析中，請稍候…</div>';
+
+  const recentRows = data.slice(-8).map(r=>`${r.date}：總計${r.total}人（主動${r.ch_主動||0} 自辦${r.ch_自辦||0} 異業${r.ch_異業||0}）8~24M:${r.age_8_24||"N/A"}`).join("\n");
+
+  const prompt = `你是 Benesse Taiwan 經營戰略組的 BCL 數據分析師。請根據以下數據，用繁體中文撰寫簡潔報告，分三段：
+
+【數據摘要】一段話說明整體績效狀況（含8~24M月齡表現）
+【課題】2-3個具體問題或值得注意趨勢
+【下一步建議】2-3個可操作建議
+
+數據：
+- 分析日期：${last.date}
+- 前一天總量：${last.total}人（主動${last.ch_主動||0} 自辦${last.ch_自辦||0} 異業${last.ch_異業||0}）
+- 前一天 8~24M：${ageVal}人（佔${agePct}%）
+- 前7日均：${a7total}人/天，8~24M均：${a7age}人
+- 本月累計：${acc}人（已過${elapsed}天）/ 目標：${target}人
+- 達成率：${((acc/Math.round(target/daysInMonth*elapsed))*100).toFixed(1)}%
+- 月底預估：${projected}人（${projected>=target?"預估達標":"預估不足"}）
+- 後續每日需達標：${dailyNeeded}人/天
+
+近期明細：
+${recentRows}
+
+每段不超過100字，語氣專業簡潔。`;
+
+  fetch("https://api.anthropic.com/v1/messages", {
+    method:"POST",
+    headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})
+  }).then(r=>r.json()).then(json=>{
+    const text = json.content?.[0]?.text || "無法取得分析結果";
+    analysisEl.innerHTML = text
+      .replace(/【數據摘要】/g,'<div class="ai-section"><div class="ai-section-title">📊 數據摘要</div><div class="ai-section-body">')
+      .replace(/【課題】/g,'</div></div><div class="ai-section"><div class="ai-section-title">⚠️ 課題</div><div class="ai-section-body">')
+      .replace(/【下一步建議】/g,'</div></div><div class="ai-section"><div class="ai-section-title">🎯 下一步建議</div><div class="ai-section-body">')
+      +'</div></div>';
+  }).catch(e=>{ analysisEl.innerHTML=`<div class="ai-error">⚠️ 分析失敗：${e.message}</div>`; });
+}
+
 async function loadData(){
   document.getElementById("loading").style.display = "flex";
   document.getElementById("app").style.display = "none";
@@ -413,6 +544,7 @@ async function loadData(){
     globalData = json.data || [];
     globalConfig = json.config || {};
     globalConfig.monthly = json.monthly || [];
+    // age data embedded in daily rows
     document.getElementById("lastSync").textContent = new Date().toLocaleString("zh-TW");
     document.getElementById("dataCount").textContent = globalData.length;
     render();
@@ -477,6 +609,27 @@ function render(){
   const acc = data.reduce((s,r)=>s+(r.total||0),0);
   document.getElementById("k-acc").textContent = fmt(acc);
   document.getElementById("k-acc-sub").textContent = `每日均值 ${(acc/elapsed).toFixed(1)} 人`;
+
+  // ① 8M~24M
+  if (last.age_8_24 !== undefined) {
+    document.getElementById("age-section").style.display = "block";
+    const ageVal  = last.age_8_24 || 0;
+    const agePct  = last.total ? (ageVal/last.total*100) : 0;
+    const prev7age = prev7.map(r=>r.age_8_24||0);
+    const a7age    = prev7age.length ? prev7age.reduce((s,v)=>s+v,0)/prev7age.length : 0;
+    const prev7pct = prev7.map((r,i)=> r.total ? (r.age_8_24||0)/r.total*100 : 0);
+    const a7agePct = prev7pct.length ? prev7pct.reduce((s,v)=>s+v,0)/prev7pct.length : 0;
+
+    document.getElementById("age-val").textContent = fmt(ageVal);
+    document.getElementById("age-pct").textContent = agePct.toFixed(1)+"%";
+    document.getElementById("age-bar").style.width = Math.min(agePct,100)+"%";
+    document.getElementById("age-avg-val").textContent = a7age.toFixed(1);
+    document.getElementById("age-avg-pct").textContent = a7agePct.toFixed(1)+"%均";
+    const ageDiff = ageVal - a7age;
+    const ageBadge = document.getElementById("age-badge");
+    ageBadge.className = "badge "+(ageDiff>=0?"badge-up":"badge-down");
+    ageBadge.textContent = (ageDiff>=0?"▲ +":"▼ ")+Math.abs(ageDiff).toFixed(0)+" 人";
+  }
 
   // ② Channels
   [["主動",last.ch_主動,a7主動],["自辦",last.ch_自辦,a7自辦],["異業",last.ch_異業,a7異業]].forEach(([ch,val,avg])=>{
