@@ -186,7 +186,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 .ai-block-summary .ai-block-title { color:#4338ca; }
 .ai-block-issue   .ai-block-title { color:#c2410c; }
 .ai-block-action  .ai-block-title { color:#15803d; }
-.ai-block-body { font-size:14px; line-height:1.85; }
+.ai-block-body { font-size:14px; line-height:1.85; text-align:left; }
 .ai-block-summary .ai-block-body { color:#3730a3; }
 .ai-block-issue   .ai-block-body { color:#9a3412; }
 .ai-block-action  .ai-block-body { color:#166534; }
@@ -196,7 +196,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 .ai-block-summary .ai-item-num { color:#6366f1; }
 .ai-block-issue   .ai-item-num { color:#f97316; }
 .ai-block-action  .ai-item-num { color:#22c55e; }
-.ai-item-text { font-size:14px; }
+.ai-item-text { font-size:14px; text-align:left; }
 .ai-num { font-weight:900; font-size:15px; }
 .ai-num-blue   { color:#4338ca; }
 .ai-num-orange { color:#c2410c; }
@@ -214,6 +214,7 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 .age-gauge-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,#6366f1,#a78bfa); transition:width .6s ease; }
 
 @media (max-width: 900px) {
+  .grid-3 { grid-template-columns:1fr; }
   .grid-4, .grid-3 { grid-template-columns: repeat(2,1fr); }
   .main { padding: 16px; }
   .header, .syncbar { padding: 12px 16px; }
@@ -412,20 +413,26 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
   <!-- ⑦ 月底預估 -->
   <div>
     <div class="section-title">⑦ 月底預估落點</div>
-    <div class="grid-2">
+    <div class="grid-3">
       <div class="kpi" style="--kpi-color:var(--blue)">
-        <div class="kpi-label">⑦ 月底預估（以前7均推估）</div>
+        <div class="kpi-label">⑦ᵃ 月底預估（前7日均）</div>
         <div><span class="kpi-value" id="k7">—</span><span class="kpi-unit">人</span></div>
         <div class="kpi-row"><span class="badge" id="k7badge">—</span></div>
         <div class="kpi-sub" id="k7sub" style="margin-top:6px">—</div>
+      </div>
+      <div class="kpi" style="--kpi-color:#f97316">
+        <div class="kpi-label">⑦ᵇ 月底預估（前3日均）</div>
+        <div><span class="kpi-value" id="k7b" style="color:#f97316">—</span><span class="kpi-unit">人</span></div>
+        <div class="kpi-row"><span class="badge" id="k7bbadge">—</span></div>
+        <div class="kpi-sub" id="k7bsub" style="margin-top:6px">—</div>
       </div>
       <div class="kpi" style="--kpi-color:var(--border); background:var(--bg3)">
         <div class="kpi-label">試算參數</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
           <div><div style="font-size:10px;color:var(--muted)">本月實績</div><div style="font-size:18px;font-weight:900;font-family:var(--mono)" id="p-acc">—</div></div>
           <div><div style="font-size:10px;color:var(--muted)">剩餘天數</div><div style="font-size:18px;font-weight:900;font-family:var(--mono)" id="p-rem">—</div></div>
-          <div><div style="font-size:10px;color:var(--muted)">前7日均值</div><div style="font-size:18px;font-weight:900;font-family:var(--mono)" id="p-avg">—</div></div>
-          <div><div style="font-size:10px;color:var(--muted)">已過天數</div><div style="font-size:18px;font-weight:900;font-family:var(--mono)" id="p-elapsed">—</div></div>
+          <div><div style="font-size:10px;color:var(--muted)">前7日均</div><div style="font-size:18px;font-weight:900;font-family:var(--mono)" id="p-avg">—</div></div>
+          <div><div style="font-size:10px;color:var(--muted)">前3日均</div><div style="font-size:18px;font-weight:900;font-family:var(--mono)" id="p-avg3">—</div></div>
         </div>
       </div>
     </div>
@@ -541,7 +548,16 @@ function triggerAnalysis() {
 近期明細：
 ${recentRows}
 
-每段不超過100字，語氣專業簡潔。`;
+每段不超過100字，語氣專業簡潔。
+
+重要：請直接從【數據摘要】開始，不要有任何標題、前言或額外說明。格式必須嚴格如下：
+【數據摘要】
+（內容）
+【課題】
+（內容）
+【下一步建議】
+（內容）`;
+
 
   fetch("https://api.anthropic.com/v1/messages", {
     method:"POST",
@@ -551,8 +567,12 @@ ${recentRows}
     const raw = json.content?.[0]?.text || "";
     if (!raw) { analysisEl.innerHTML='<div class="ai-error">⚠️ 無法取得分析結果</div>'; return; }
 
-    // Strip markdown bold markers
-    const text = raw.replace(/\*\*/g,'').replace(/\*/g,'');
+    // Strip markdown artifacts (##, **, *, leading whitespace lines)
+    const text = raw
+      .replace(/^##[^\n]*\n?/gm, '')
+      .replace(/\*\*/g, '')
+      .replace(/\*/g, '')
+      .trim();
 
     function parseBlock(t, startTag, endTag) {
       const s = t.indexOf(startTag);
@@ -736,10 +756,12 @@ function recalc(){
   const a7total = prev7.length ? Math.round(prev7.reduce((s,r)=>s+(r.total||0),0)/prev7.length) : 0;
   const tMonth2 = globalConfig.month || new Date().getMonth()+1;
   const acc = data.filter(r=>parseInt((r.date||"").split("/")[0])===tMonth2).reduce((s,r)=>s+(r.total||0),0);
-  recalcWithData(acc, a7total, elapsed, daysInMonth, remaining);
+  const prev3 = data.slice(-4,-1);
+  const a3total = prev3.length ? Math.round(prev3.reduce((s,r)=>s+(r.total||0),0)/prev3.length) : a7total;
+  recalcWithData(acc, a7total, a3total, elapsed, daysInMonth, remaining);
 }
 
-function recalcWithData(acc, a7total, elapsed, daysInMonth, remaining){
+function recalcWithData(acc, a7total, a3total, elapsed, daysInMonth, remaining){
   const target = parseInt(document.getElementById("targetInput").value)||2500;
   const prorated = Math.round(target/daysInMonth*elapsed);
   const dailyNeeded = remaining>0 ? Math.round((target-acc)/remaining) : 0;
@@ -768,10 +790,19 @@ function recalcWithData(acc, a7total, elapsed, daysInMonth, remaining){
   k7b.className = "badge "+(projDiff>=0?"badge-up":"badge-down");
   k7b.textContent = (projDiff>=0?"▲ 預估超標 +":"▼ 預估不足 ")+fmt(Math.abs(projDiff))+" 人";
 
+  // ⑦ᵇ 前3日均推估
+  const projected3 = acc + Math.round(a3total*remaining);
+  const projDiff3 = projected3 - target;
+  document.getElementById("k7b").textContent = fmt(projected3);
+  document.getElementById("k7bsub").textContent = `${fmt(acc)} + ${fmt(a3total)}均 × ${remaining}天`;
+  const k7bb = document.getElementById("k7bbadge");
+  k7bb.className = "badge "+(projDiff3>=0?"badge-up":"badge-down");
+  k7bb.textContent = (projDiff3>=0?"▲ 預估超標 +":"▼ 預估不足 ")+fmt(Math.abs(projDiff3))+" 人";
+
   document.getElementById("p-acc").textContent = fmt(acc)+" 人";
   document.getElementById("p-rem").textContent = remaining+" 天";
   document.getElementById("p-avg").textContent = fmt(a7total)+" 人";
-  document.getElementById("p-elapsed").textContent = elapsed+" 天";
+  document.getElementById("p-avg3").textContent = fmt(a3total)+" 人";
 }
 
 const avgLinePlugin = {
