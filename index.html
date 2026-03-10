@@ -173,14 +173,35 @@ body { font-family: var(--font); background: var(--bg);  color: var(--text); min
 
 
 /* ── AI 分析 ── */
-.ai-placeholder { color:#9ca3af; font-size:14px; padding:24px 0; text-align:center; }
-.ai-loading { color:#6366f1; font-size:14px; padding:24px 0; text-align:center; animation:pulse 1.5s infinite; }
+.ai-placeholder { color:#9ca3af; font-size:15px; padding:28px 0; text-align:center; }
+.ai-loading { color:#6366f1; font-size:15px; padding:28px 0; text-align:center; animation:pulse 1.5s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-.ai-section { margin-bottom:18px; }
-.ai-section:last-child { margin-bottom:0; }
-.ai-section-title { font-size:13px; font-weight:800; color:#1a1d2e; padding-bottom:8px; border-bottom:1px solid #e8edf8; margin-bottom:10px; }
-.ai-section-body { font-size:14px; color:#4a5568; line-height:1.9; white-space:pre-wrap; }
-.ai-error { color:#ef4444; font-size:13px; }
+.ai-blocks { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+@media(max-width:900px){ .ai-blocks { grid-template-columns:1fr; } }
+.ai-block { border-radius:14px; padding:18px 20px; }
+.ai-block-summary { background:#f0f4ff; border:1.5px solid #c7d2fe; }
+.ai-block-issue   { background:#fff7ed; border:1.5px solid #fed7aa; }
+.ai-block-action  { background:#f0fdf4; border:1.5px solid #bbf7d0; }
+.ai-block-title { font-size:13px; font-weight:800; letter-spacing:.05em; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+.ai-block-summary .ai-block-title { color:#4338ca; }
+.ai-block-issue   .ai-block-title { color:#c2410c; }
+.ai-block-action  .ai-block-title { color:#15803d; }
+.ai-block-body { font-size:14px; line-height:1.85; }
+.ai-block-summary .ai-block-body { color:#3730a3; }
+.ai-block-issue   .ai-block-body { color:#9a3412; }
+.ai-block-action  .ai-block-body { color:#166534; }
+.ai-item { display:flex; gap:8px; margin-bottom:8px; align-items:flex-start; }
+.ai-item:last-child { margin-bottom:0; }
+.ai-item-num { font-size:13px; font-weight:900; min-width:20px; margin-top:1px; }
+.ai-block-summary .ai-item-num { color:#6366f1; }
+.ai-block-issue   .ai-item-num { color:#f97316; }
+.ai-block-action  .ai-item-num { color:#22c55e; }
+.ai-item-text { font-size:14px; }
+.ai-num { font-weight:900; font-size:15px; }
+.ai-num-blue   { color:#4338ca; }
+.ai-num-orange { color:#c2410c; }
+.ai-num-green  { color:#15803d; }
+.ai-error { color:#ef4444; font-size:14px; }
 
 /* ── 0~24M 月齡指標 ── */
 .age-strip { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
@@ -480,7 +501,8 @@ function triggerAnalysis() {
   const daysInMonth = cfg.days_in_month || 31;
   const last = data[data.length-1];
   const elapsed = parseInt(last.date.split("/")[1]);
-  const acc = data.reduce((s,r)=>s+(r.total||0),0);
+  const tMonth3 = globalConfig.month || new Date().getMonth()+1;
+  const acc = data.filter(r=>parseInt((r.date||"").split("/")[0])===tMonth3).reduce((s,r)=>s+(r.total||0),0);
   const prev7 = data.slice(-8,-1);
   const a7total = prev7.length ? Math.round(prev7.reduce((s,r)=>s+(r.total||0),0)/prev7.length) : 0;
   const target = parseInt(document.getElementById("targetInput").value)||2500;
@@ -526,12 +548,57 @@ ${recentRows}
     headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
     body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})
   }).then(r=>r.json()).then(json=>{
-    const text = json.content?.[0]?.text || "無法取得分析結果";
-    analysisEl.innerHTML = text
-      .replace(/【數據摘要】/g,'<div class="ai-section"><div class="ai-section-title">📊 數據摘要</div><div class="ai-section-body">')
-      .replace(/【課題】/g,'</div></div><div class="ai-section"><div class="ai-section-title">⚠️ 課題</div><div class="ai-section-body">')
-      .replace(/【下一步建議】/g,'</div></div><div class="ai-section"><div class="ai-section-title">🎯 下一步建議</div><div class="ai-section-body">')
-      +'</div></div>';
+    const raw = json.content?.[0]?.text || "";
+    if (!raw) { analysisEl.innerHTML='<div class="ai-error">⚠️ 無法取得分析結果</div>'; return; }
+
+    // Strip markdown bold markers
+    const text = raw.replace(/\*\*/g,'').replace(/\*/g,'');
+
+    function parseBlock(t, startTag, endTag) {
+      const s = t.indexOf(startTag);
+      const e = endTag ? t.indexOf(endTag) : t.length;
+      if (s === -1) return "";
+      return t.slice(s + startTag.length, e > s ? e : t.length).trim();
+    }
+
+    function formatBody(txt, cls) {
+      // Number bullets → styled items
+      const lines = txt.split("\n").map(l=>l.trim()).filter(l=>l);
+      if (lines.length <= 1) {
+        // Highlight numbers in summary
+        const highlighted = txt.trim()
+          .replace(/(\d[\d,]+\s*人)/g,'<span class="ai-num ai-num-blue">$1</span>')
+          .replace(/(\d+\.?\d*%)/g,'<span class="ai-num ai-num-orange">$1</span>');
+        return `<div class="ai-item-text">${highlighted}</div>`;
+      }
+      return lines.map((l,i) => {
+        const numMatch = l.match(/^[\d]+[\.、]?\s*/);
+        const txt2 = numMatch ? l.slice(numMatch[0].length) : l;
+        const highlighted = txt2
+          .replace(/(\d[\d,]+\s*人)/g,'<span class="ai-num">$1</span>')
+          .replace(/(\d+\.?\d*%)/g,'<span class="ai-num">$1</span>');
+        return `<div class="ai-item"><span class="ai-item-num">${i+1}.</span><span class="ai-item-text">${highlighted}</span></div>`;
+      }).join('');
+    }
+
+    const summary = parseBlock(text, '【數據摘要】', '【課題】');
+    const issue   = parseBlock(text, '【課題】', '【下一步建議】');
+    const action  = parseBlock(text, '【下一步建議】', null);
+
+    analysisEl.innerHTML = `<div class="ai-blocks">
+      <div class="ai-block ai-block-summary">
+        <div class="ai-block-title">📊 數據摘要</div>
+        <div class="ai-block-body">${formatBody(summary,'summary')}</div>
+      </div>
+      <div class="ai-block ai-block-issue">
+        <div class="ai-block-title">⚠️ 課題</div>
+        <div class="ai-block-body">${formatBody(issue,'issue')}</div>
+      </div>
+      <div class="ai-block ai-block-action">
+        <div class="ai-block-title">🎯 下一步建議</div>
+        <div class="ai-block-body">${formatBody(action,'action')}</div>
+      </div>
+    </div>`;
   }).catch(e=>{ analysisEl.innerHTML=`<div class="ai-error">⚠️ 分析失敗：${e.message}</div>`; });
 }
 
@@ -605,8 +672,9 @@ function render(){
   document.getElementById("k1-avg").textContent = fmt(a7total);
   document.getElementById("k1-badge").outerHTML = badge(last.total, a7total).replace('class="badge','id="k1-badge" class="badge');
 
-  // Accumulate
-  const acc = data.reduce((s,r)=>s+(r.total||0),0);
+  // Accumulate — 只算當月資料
+  const thisMonthData = data.filter(r => parseInt((r.date||"").split("/")[0]) === month);
+  const acc = thisMonthData.reduce((s,r)=>s+(r.total||0),0);
   document.getElementById("k-acc").textContent = fmt(acc);
   document.getElementById("k-acc-sub").textContent = `每日均值 ${(acc/elapsed).toFixed(1)} 人`;
 
@@ -666,7 +734,8 @@ function recalc(){
   const remaining = daysInMonth - elapsed;
   const prev7 = data.slice(-8,-1);
   const a7total = prev7.length ? Math.round(prev7.reduce((s,r)=>s+(r.total||0),0)/prev7.length) : 0;
-  const acc = data.reduce((s,r)=>s+(r.total||0),0);
+  const tMonth2 = globalConfig.month || new Date().getMonth()+1;
+  const acc = data.filter(r=>parseInt((r.date||"").split("/")[0])===tMonth2).reduce((s,r)=>s+(r.total||0),0);
   recalcWithData(acc, a7total, elapsed, daysInMonth, remaining);
 }
 
