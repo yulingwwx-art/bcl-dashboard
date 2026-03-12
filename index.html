@@ -961,8 +961,8 @@ function renderMonthlyChart(monthly) {
 
   const labels = monthly.map(r => r.month);
   const values = monthly.map(r => r.total || 0);
-  const maxVal = Math.max(...values);
-  const colors = values.map(v => v === maxVal ? "#f97316" : "#6366f1");
+  const lastIdx = values.length - 1; // 當月 = 最後一筆
+  const colors = values.map((_,i) => i === lastIdx ? "#f97316" : "#6366f1");
 
   // Update sub
   const total = values.reduce((a,b)=>a+b,0);
@@ -993,11 +993,11 @@ function renderMonthlyChart(monthly) {
 
   // Mini table
   const tableEl = document.getElementById("monthly-table");
-  tableEl.innerHTML = monthly.map(r => {
-    const isMax = r.total === maxVal;
-    return `<div style="background:${isMax?"rgba(249,115,22,.08)":"#f8f9fc"};border:1px solid ${isMax?"rgba(249,115,22,.3)":"#e8edf8"};border-radius:10px;padding:10px 12px;text-align:center">
+  tableEl.innerHTML = monthly.map((r, i) => {
+    const isCurrent = i === lastIdx;
+    return `<div style="background:${isCurrent?"rgba(249,115,22,.08)":"#f8f9fc"};border:1px solid ${isCurrent?"rgba(249,115,22,.3)":"#e8edf8"};border-radius:10px;padding:10px 12px;text-align:center">
       <div style="font-size:10px;color:#9ca3af;font-weight:700;margin-bottom:4px">${r.month}</div>
-      <div style="font-size:16px;font-weight:900;color:${isMax?"#f97316":"#1a1d2e"};font-family:'DM Mono',monospace">${fmt(r.total)}</div>
+      <div style="font-size:16px;font-weight:900;color:${isCurrent?"#f97316":"#1a1d2e"};font-family:'DM Mono',monospace">${fmt(r.total)}</div>
     </div>`;
   }).join("");
 }
