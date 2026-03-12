@@ -840,6 +840,7 @@ function recalcWithData(acc, a7total, elapsed, daysInMonth, remaining){
   const target = parseInt(document.getElementById("targetInput").value)||2500;
   const prorated = Math.round(target/daysInMonth*elapsed);
   const dailyNeeded = remaining>0 ? Math.round((target-acc)/remaining) : 0;
+  const alreadyMet = dailyNeeded <= 0;
   const projected = acc + Math.round(a7total*remaining);
   const rate = prorated===0 ? 0 : (acc/prorated*100);
   const projDiff = projected - target;
@@ -853,11 +854,11 @@ function recalcWithData(acc, a7total, elapsed, daysInMonth, remaining){
   k5b.className = "badge "+(diffVal>=0?"badge-up":"badge-down");
   k5b.textContent = (diffVal>=0?"▲ 超前 +":"▼ 落後 ")+fmt(Math.abs(diffVal))+" 人";
 
-  document.getElementById("k6").textContent = fmt(dailyNeeded);
+  document.getElementById("k6").textContent = alreadyMet ? "—" : fmt(dailyNeeded);
   document.getElementById("k6avg").textContent = fmt(a7total);
   const k6b = document.getElementById("k6badge");
-  k6b.className = "badge "+(dailyNeeded<=a7total?"badge-up":"badge-warn");
-  k6b.textContent = dailyNeeded<=a7total ? "✅ 可達標" : "⚠️ 需加速";
+  k6b.className = "badge badge-up";
+  k6b.textContent = alreadyMet ? "✅ 可達標" : (dailyNeeded<=a7total ? "✅ 可達標" : "⚠️ 需加速");
 
   document.getElementById("k7").textContent = fmt(projected);
   document.getElementById("k7sub").textContent = `${fmt(acc)} + ${fmt(a7total)}均 × ${remaining}天`;
