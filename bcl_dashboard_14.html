@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCL Intelligence Dashboard | Benesse Taiwan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  /* Google Material palette */
+  --gb:#4285F4;   /* Google Blue */
+  --gr:#DB4437;   /* Google Red */
+  --gy:#F4B400;   /* Google Yellow */
+  --gg2:#0F9D58;  /* Google Green */
+
+  --bg:#F8F9FA;   /* Google surface grey */
+  --card:#FFFFFF;
+  --border:#DADCE0; /* Google standard border */
+  --text:#202124;   /* Google near-black */
+  --muted:#5F6368;  /* Google secondary text */
+  --dim:#9AA0A6;    /* Google tertiary text */
+
+  /* Semantic aliases */
+  --teal:#4285F4;     /* use Google Blue */
+  --green:#0F9D58;
+  --amber:#F4B400;
+  --red:#DB4437;
+  --violet:#4285F4;   /* unify to Google Blue */
+
+  --fd:'Plus Jakarta Sans',sans-serif;
+  --fm:'DM Mono',monospace;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--fd);background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ─ HEADER ─ */
+.hd{background:#fff;border-bottom:1px solid var(--border);padding:0 36px;position:sticky;top:0;z-index:200;box-shadow:0 1px 3px rgba(60,64,67,.15)}
+.hd-top{display:flex;align-items:center;justify-content:space-between;height:56px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:34px;height:34px;background:#4285F4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.brand h1{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.1px}
+.brand p{font-size:11px;color:var(--muted);font-family:var(--fm);margin-top:1px}
+.badges{display:flex;gap:8px}
+.badge{font-family:var(--fm);font-size:11px;padding:4px 11px;border-radius:4px;border:1px solid var(--border);background:#fff}
+.bp{color:#1A73E8;border-color:#D2E3FC;background:#E8F0FE}
+.bd{color:var(--muted);border-color:var(--border)}
+
+/* ─ TAB NAV ─ */
+.tabs{display:flex;border-top:1px solid var(--border)}
+.tab{font-family:var(--fd);font-size:13px;font-weight:500;color:var(--muted);padding:11px 28px;border:none;background:none;cursor:pointer;position:relative;transition:color .15s;letter-spacing:0}
+.tab::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:#4285F4;border-radius:3px 3px 0 0;transform:scaleX(0);transition:transform .2s cubic-bezier(.4,0,.2,1)}
+.tab:hover{background:rgba(66,133,244,.06);color:#1A73E8}
+.tab.on{color:#1A73E8;font-weight:600}
+.tab.on::after{transform:scaleX(1)}
+
+/* ─ PANELS ─ */
+main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
+.panel{display:none}
+.panel.on{display:block;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─ GRID ─ */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+.gap{height:12px}
+
+/* ─ CARD ─ */
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:20px 24px;box-shadow:0 1px 2px rgba(60,64,67,.1)}
+.ct{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.cs{font-size:11px;color:var(--dim);font-family:var(--fm);margin-bottom:16px}
+
+/* ─ KPI CARD ─ */
+.kc{background:#fff;border:1px solid var(--border);border-radius:8px;padding:20px 22px;position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(60,64,67,.1);transition:box-shadow .15s,border-color .15s}
+.kc:hover{box-shadow:0 2px 8px rgba(60,64,67,.2);border-color:#BDBDBD}
+.kc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,transparent)}
+/* no radial gradient glow - cleaner Google look */
+.ki{font-size:20px;margin-bottom:10px}
+.kl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-family:var(--fm);margin-bottom:8px}
+.kv{font-family:var(--fm);font-size:32px;font-weight:400;letter-spacing:-1px;line-height:1;color:var(--text)}
+.ks{font-size:11px;color:var(--dim);margin-top:6px;line-height:1.5}
+.km{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+.kr{display:flex;align-items:center;gap:6px}
+.krl{font-size:10px;color:var(--dim);font-family:var(--fm);flex:1}
+.krv{font-family:var(--fm);font-size:12px;font-weight:500}
+.tag{font-size:10px;font-family:var(--fm);padding:2px 7px;border-radius:12px;white-space:nowrap;flex-shrink:0;font-weight:500}
+.up{color:#137333;background:#E6F4EA}
+.dn{color:#DB4437;background:#FCE8E6}
+.neu{color:var(--muted);background:#F1F3F4}
+.sw{height:34px;margin-top:10px}
+
+/* ─ CHANNEL DAY CARD ─ */
+.ch-row{display:flex;flex-direction:column;gap:16px;margin-top:4px}
+.ch-item{}
+.ch-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.ch-name{font-size:12px;color:var(--muted);font-family:var(--fm)}
+.ch-right{display:flex;align-items:center;gap:10px}
+.ch-n{font-family:var(--fm);font-size:22px;font-weight:400;letter-spacing:-.5px}
+.ch-bar{height:6px;background:#F1F3F4;border-radius:3px;overflow:hidden}
+.ch-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.ch-hint{font-size:10px;color:var(--dim);font-family:var(--fm);margin-top:4px}
+
+/* ─ TARGET ─ */
+.tgt-inp{width:88px;font-family:var(--fm);font-size:16px;font-weight:500;color:var(--text);background:#E8F0FE;border:1px solid #D2E3FC;border-radius:4px;padding:5px 8px;outline:none;text-align:right;transition:border-color .15s}
+.tgt-inp:focus{border-color:#4285F4;background:#fff}
+.tgt-main{background:#F8F9FA;border:1px solid var(--border);border-radius:8px;padding:16px 18px;margin:14px 0}
+.tgt-rows{display:flex;flex-direction:column;gap:10px}
+.tgt-row{display:flex;justify-content:space-between;align-items:center}
+.tgt-lbl{font-size:12px;color:var(--muted)}
+.tgt-val{font-family:var(--fm);font-size:14px;font-weight:700}
+.progbar{height:6px;background:#E8EAED;border-radius:3px;overflow:hidden;margin:4px 0}
+.progfill{height:100%;border-radius:3px;background:#4285F4;transition:width .7s ease}
+
+/* ─ QUALITY BAR ─ */
+.qr{margin-bottom:14px}
+.qt{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.qn{font-size:12px;color:var(--muted);font-weight:500}
+.qv{font-family:var(--fm);font-size:15px;font-weight:500}
+.qtrack{height:5px;background:#E8EAED;border-radius:3px;overflow:hidden}
+.qfill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.23,1,.32,1)}
+.vrow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.vl{font-size:11px;color:var(--muted);width:36px;flex-shrink:0;font-family:var(--fm)}
+.vt{flex:1;height:5px;background:#E8EAED;border-radius:3px;overflow:hidden}
+.vf{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.23,1,.32,1)}
+.vp{font-family:var(--fm);font-size:11px;width:40px;text-align:right}
+
+/* ─ AGE BAR ─ */
+.ab{display:flex;flex-direction:column;gap:10px}
+.ar{}.ar-top{display:flex;justify-content:space-between;margin-bottom:4px}
+.ar-l{font-size:11px;color:var(--muted)}
+.ar-v{font-family:var(--fm);font-size:12px;font-weight:500}
+.at{height:5px;background:#E8EAED;border-radius:3px;overflow:hidden}
+.af{height:100%;border-radius:3px;transition:width 1.2s ease}
+
+/* ─ TABLE ─ */
+.dtab{width:100%;border-collapse:collapse}
+.dtab th{text-align:left;padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);font-family:var(--fm);background:#F8F9FA}
+.dtab td{padding:10px 14px;font-size:12px;color:var(--text);border-bottom:1px solid var(--border)}
+.dtab tr:hover td{background:#F8F9FA}
+.dtab tr:last-child td{border-bottom:none}
+.chtag{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:600;font-family:var(--fm)}
+
+/* ─ AI ─ */
+.ai-w{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;box-shadow:0 1px 2px rgba(60,64,67,.1)}
+.ai-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:#F8F9FA;border-bottom:1px solid var(--border)}
+.aibg{background:#4285F4;color:#fff;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.5px;font-family:var(--fm)}
+.ai-body{display:grid;grid-template-columns:55% 45%;min-height:460px}
+.ai-lp{padding:22px;border-right:1px solid var(--border)}
+.ai-pl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1A73E8;font-family:var(--fm);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.ai-pl::before{content:'';width:6px;height:6px;background:#4285F4;border-radius:50%;animation:pd 2s ease-in-out infinite;flex-shrink:0}
+@keyframes pd{0%,100%{opacity:1}50%{opacity:.3}}
+.ait{font-size:13px;line-height:1.9;color:var(--text);white-space:pre-wrap}
+.ldots{display:flex;align-items:center;gap:5px}
+.ldots span{display:inline-block;width:5px;height:5px;background:#4285F4;border-radius:50%;animation:db 1.4s ease-in-out infinite}
+.ldots span:nth-child(2){animation-delay:.2s}.ldots span:nth-child(3){animation-delay:.4s}
+@keyframes db{0%,80%,100%{transform:scale(.5);opacity:.3}40%{transform:scale(1);opacity:1}}
+.ai-rp{display:flex;flex-direction:column}
+.chatmsg{flex:1;padding:18px;overflow-y:auto;max-height:380px;display:flex;flex-direction:column;gap:10px}
+.chatmsg::-webkit-scrollbar{width:3px}.chatmsg::-webkit-scrollbar-thumb{background:#DADCE0;border-radius:2px}
+.chemp{color:var(--dim);font-size:12px;text-align:center;padding:30px 0;font-family:var(--fm)}
+.bub{padding:10px 14px;border-radius:8px;font-size:12.5px;line-height:1.7;max-width:88%}
+.bub.user{background:#E8F0FE;border:1px solid #D2E3FC;color:#1A73E8;align-self:flex-end;border-radius:8px 8px 2px 8px}
+.bub.ai{background:#F8F9FA;border:1px solid var(--border);color:var(--text);align-self:flex-start;border-radius:8px 8px 8px 2px}
+.qbar{padding:12px 18px 4px;display:flex;flex-wrap:wrap;gap:6px}
+.qchip{background:#F8F9FA;border:1px solid var(--border);color:var(--muted);padding:5px 12px;border-radius:16px;font-size:11px;cursor:pointer;transition:all .15s;font-family:var(--fd)}
+.qchip:hover{background:#E8F0FE;border-color:#D2E3FC;color:#1A73E8}
+.ci-row{padding:12px 18px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.cin{flex:1;background:#F8F9FA;border:1px solid var(--border);color:var(--text);padding:9px 13px;border-radius:8px;font-size:12.5px;outline:none;font-family:var(--fd);transition:border-color .15s,background .15s}
+.cin:focus{border-color:#4285F4;background:#fff}.cin::placeholder{color:var(--dim)}
+.csend{background:#4285F4;color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s,box-shadow .15s}
+.csend:hover{background:#1A73E8;box-shadow:0 1px 3px rgba(66,133,244,.4)}.csend:disabled{opacity:.4;cursor:not-allowed}
+.regen{background:#fff;border:1px solid var(--border);color:var(--muted);padding:5px 13px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--fd);transition:all .15s}
+.regen:hover{background:#F8F9FA;border-color:#BDBDBD;color:var(--text)}
+
+.tg{color:#1A73E8}.gg{color:#0F9D58}.ag{color:#E37400}.rg{color:#DB4437}.mono{font-family:var(--fm)}
+@media(max-width:1100px){.g4,.g3{grid-template-columns:1fr 1fr}.g2,.g21{grid-template-columns:1fr}.ai-body{grid-template-columns:1fr}.ai-lp{border-right:none;border-bottom:1px solid var(--border)}}
+@media(max-width:680px){.g4,.g3,.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd-top">
+    <div class="brand">
+      <div class="logo">📡</div>
+      <div><h1>BCL Intelligence Dashboard</h1><p>Benesse Taiwan &nbsp;·&nbsp; 業務戰略組</p></div>
+    </div>
+    <div class="badges">
+      <span class="badge bp">FY25　2025/04 – 2026/03</span>
+      <span class="badge bd">資料截至 2026年3月25日</span>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab t0 on" onclick="sw(0)">📊 現況</button>
+    <button class="tab t1"    onclick="sw(1)">📈 趨勢</button>
+    <button class="tab t2"    onclick="sw(2)">✦ AI 建議</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ════════════════════════════
+     TAB 0 ── 現況
+════════════════════════════ -->
+<div class="panel on" id="p0">
+
+  <!-- AI 每日觀察摘要 -->
+  <div id="aibrief" style="background:#fff;border:1px solid #DADCE0;border-radius:8px;padding:18px 22px;margin-bottom:12px;box-shadow:0 1px 2px rgba(60,64,67,.1);position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#4285F4"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="background:#4285F4;color:#fff;padding:2px 9px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.5px;font-family:var(--fm)">✦ AI 每日觀察</span>
+        <span style="font-size:12px;font-weight:600;color:var(--text)">昨日與本月表現摘要</span>
+      </div>
+      <button class="regen" onclick="genBrief()" style="font-size:11px">🔄 重新生成</button>
+    </div>
+    <div id="briefbox">
+      <div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在生成今日觀察摘要...</span></div>
+    </div>
+  </div>
+
+  <!-- Row 1: Core KPIs (3欄，移除品質均分) -->
+  <div class="g3">
+
+    <!-- BCL 保有 -->
+    <div class="kc" style="--kc:#4285F4">
+      <div class="ki">🗂️</div>
+      <div class="kl">總 BCL 保有</div>
+      <div class="kv" id="k1">—</div>
+      <div class="km">
+        <div class="kr"><span class="krl">✅ 有效會員</span><span class="krv" style="color:#0F9D58">180,602</span><span class="tag up">66.7%</span></div>
+        <div class="kr"><span class="krl">⛔ 封鎖無效</span><span class="krv" style="color:#DB4437">90,248</span><span class="tag dn">33.3%</span></div>
+      </div>
+    </div>
+
+    <!-- FY25 新增 -->
+    <div class="kc" style="--kc:#F4B400">
+      <div class="ki">📈</div>
+      <div class="kl">FY25 新增綁定</div>
+      <div class="kv" id="k3">—</div>
+      <div class="ks">vs FY24 財年 20,757　▲ +55.6%</div>
+      <div class="sw"><canvas id="sparkline" height="34"></canvas></div>
+    </div>
+
+    <!-- 系統保有 -->
+    <div class="kc" style="--kc:#4285F4">
+      <div class="ki">🔋</div>
+      <div class="kl">系統保有 0～36 月齡</div>
+      <div class="kv" style="color:#4285F4">34,958</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+        <div style="flex:1;height:5px;background:#E8EAED;border-radius:3px;overflow:hidden"><div style="width:82.8%;height:100%;background:#4285F4;border-radius:3px"></div></div>
+        <span style="font-size:11px;font-family:var(--fm);color:#4285F4;white-space:nowrap">82.8%</span>
+      </div>
+      <div class="km" style="margin-top:8px">
+        <div class="kr"><span class="krl">✅ 有效可推播</span><span class="krv" style="color:#4285F4">28,960</span><span class="tag neu">立即可用</span></div>
+        <div class="kr"><span class="krl">⚠️ 無效封鎖</span><span class="krv">5,998</span><span class="tag dn">流失</span></div>
+      </div>
+    </div>
+
+  </div><!-- /g3 -->
+
+  <div class="gap"></div>
+
+  <!-- Row 2: 前一日 + 月目標 -->
+  <div class="g2">
+
+    <!-- 前一日各管道 -->
+    <div class="kc" style="--kc:#0F9D58">
+      <div class="ki">📡</div>
+      <div class="kl" data-slot="prev-date">前一日收集（3月25日）</div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:22px">
+        <span style="font-family:var(--fm);font-size:48px;font-weight:300;letter-spacing:-3px;color:var(--text)" data-slot="prev-total">119</span>
+        <span style="font-size:13px;color:var(--muted);font-family:var(--fm)">筆</span>
+      </div>
+      <div class="ch-row">
+        <div class="ch-item">
+          <div class="ch-top">
+            <span class="ch-name">主動（LINE OA）</span>
+            <div class="ch-right"><span class="ch-n" style="color:#4285F4" data-slot="act-n">34</span><span class="tag up" data-slot="act-tag">▲ +24.6%</span></div>
+          </div>
+          <div class="ch-bar"><div class="ch-fill" style="width:28.6%;background:#4285F4" data-slot="act-bar"></div></div>
+          <div class="ch-hint">前7日均 <span data-slot="act-avg7">27.3</span> 筆</div>
+        </div>
+        <div class="ch-item">
+          <div class="ch-top">
+            <span class="ch-name">自辦活動</span>
+            <div class="ch-right"><span class="ch-n" style="color:#0F9D58" data-slot="slf-n">85</span><span class="tag dn" data-slot="slf-tag">▼ −8.7%</span></div>
+          </div>
+          <div class="ch-bar"><div class="ch-fill" style="width:71.4%;background:#0F9D58" data-slot="slf-bar"></div></div>
+          <div class="ch-hint">前7日均 <span data-slot="slf-avg7">93.1</span> 筆</div>
+        </div>
+        <div class="ch-item">
+          <div class="ch-top">
+            <span class="ch-name">異業合作</span>
+            <div class="ch-right"><span class="ch-n" style="color:#F4B400" data-slot="prt-n">0</span><span class="tag dn" data-slot="prt-tag">▼ −100%</span></div>
+          </div>
+          <div class="ch-bar"><div class="ch-fill" style="width:0%;background:#F4B400" data-slot="prt-bar"></div></div>
+          <div class="ch-hint">前7日均 <span data-slot="prt-avg7">6.1</span> 筆</div>
+        </div>
+      </div>
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,.06)">
+        <div style="font-size:10px;color:var(--dim);font-family:var(--fm);letter-spacing:.1em;margin-bottom:8px">近30日合計趨勢</div>
+        <div style="height:48px"><canvas id="spark2" height="48"></canvas></div>
+      </div>
+    </div>
+
+    <!-- 本月目標追蹤 -->
+    <div class="kc" style="--kc:#4285F4">
+      <div class="ki">🎯</div>
+      <div class="kl">本月收集目標追蹤（3月）</div>
+
+      <div style="display:flex;align-items:center;gap:10px;margin:12px 0 0">
+        <span style="font-size:12px;color:var(--muted)">月目標</span>
+        <input id="monthTarget" type="number" value="2500" min="1" class="tgt-inp" oninput="recalc()"/>
+        <span style="font-size:12px;color:var(--muted)">筆</span>
+      </div>
+
+      <div class="tgt-main">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">本月累計（<span data-slot="month-days">3月 1–25 日</span>）</div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px">
+          <span style="font-family:var(--fm);font-size:42px;font-weight:300;color:#4285F4;letter-spacing:-2px" data-slot="month-total">5,098</span>
+          <span style="font-size:13px;color:var(--muted)">筆</span>
+        </div>
+        <div style="display:flex;gap:14px;font-size:11px;color:var(--muted);font-family:var(--fm)">
+          <span>主動 <b style="color:#4285F4" data-slot="month-act">1,128</b></span>
+          <span>自辦 <b style="color:#0F9D58" data-slot="month-slf">3,518</b></span>
+          <span>異業 <b style="color:#E37400" data-slot="month-prt">452</b></span>
+        </div>
+      </div>
+
+      <div class="tgt-rows">
+        <div class="tgt-row">
+          <span class="tgt-lbl">時間進度目標</span>
+          <span id="tgtTime" style="font-family:var(--fm);font-size:13px;font-weight:500;color:var(--text)">—</span>
+        </div>
+        <div>
+          <div class="tgt-row" style="margin-bottom:7px">
+            <span class="tgt-lbl">對時間進度達成率</span>
+            <span id="tgtTR" class="tgt-val">—</span>
+          </div>
+          <div class="progbar"><div id="tgtBar" class="progfill" style="width:0%"></div></div>
+        </div>
+        <div class="tgt-row">
+          <span class="tgt-lbl">對月目標達成率</span>
+          <span id="tgtMR" class="tgt-val">—</span>
+        </div>
+        <div class="tgt-row" style="padding-top:10px;border-top:1px solid rgba(0,0,0,.06)">
+          <span class="tgt-lbl">差異數（累計 vs 進度目標）</span>
+          <span id="tgtGap" class="tgt-val">—</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /p0 -->
+
+
+<!-- ════════════════════════════
+     TAB 1 ── 趨勢
+════════════════════════════ -->
+<div class="panel" id="p1">
+
+  <!-- 月度堆疊 -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="ct">FY25 各月綁定量（三大管道堆疊）</div>
+    <div class="cs">2025/04–2026/03 ｜ 全部為確認實際數據</div>
+    <canvas id="mchart" height="110"></canvas>
+  </div>
+
+  <!-- YoY + 月齡分布 -->
+  <div class="g21" style="margin-bottom:14px">
+
+    <!-- YoY -->
+    <div class="card">
+      <div class="ct">各月收集量比較（FY25 vs FY24）</div>
+      <div class="cs">柱狀 = 各月實際數量；折線 = YoY 增減率</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+        <div style="text-align:center;padding:12px 10px;background:rgba(66,133,244,.05);border:1px solid rgba(66,133,244,.12);border-radius:10px">
+          <div style="font-size:9px;color:var(--dim);font-family:var(--fm);letter-spacing:.1em;margin-bottom:5px">FY25 總量</div>
+          <div style="font-family:var(--fm);font-size:22px;font-weight:500;color:var(--text)">32,297</div>
+          <div style="font-size:11px;color:#0F9D58;font-family:var(--fm);margin-top:3px">▲ +55.6%</div>
+        </div>
+        <div style="text-align:center;padding:12px 10px;background:rgba(0,0,0,.02);border:1px solid var(--border);border-radius:10px">
+          <div style="font-size:9px;color:var(--dim);font-family:var(--fm);letter-spacing:.1em;margin-bottom:5px">FY24 基準</div>
+          <div style="font-family:var(--fm);font-size:22px;font-weight:500;color:var(--muted)">20,757</div>
+          <div style="font-size:11px;color:var(--dim);font-family:var(--fm);margin-top:3px">2404～2503</div>
+        </div>
+      </div>
+      <canvas id="yoychart" height="120"></canvas>
+    </div>
+
+    <!-- 本月月齡 + FY25月齡 -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card">
+        <div class="ct">本月月齡分布（3月）</div>
+        <div class="cs" data-slot="age-tot">2026/03 ｜ 5,098 筆 · 實際日度資料</div>
+        <div class="ab">
+          <div class="ar"><div class="ar-top"><span class="ar-l">🤰 孕期</span><span class="ar-v" style="color:#e17055"><span data-slot="age-pre-n">552</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-pre-pct">10.8%</span></span></div><div class="at"><div class="af" style="width:10.8%;background:#e17055" data-slot="age-pre-bar"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">🍼 0～36月</span><span class="ar-v" style="color:#4285F4"><span data-slot="age-036-n">3,046</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-036-pct">59.7%</span></span></div><div class="at"><div class="af" style="width:59.7%;background:#4285F4" data-slot="age-036-bar"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">🧒 36月+</span><span class="ar-v" style="color:#6c5ce7"><span data-slot="age-37-n">1,178</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-37-pct">23.1%</span></span></div><div class="at"><div class="af" style="width:23.1%;background:#6c5ce7" data-slot="age-37-bar"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">❓ 無生日</span><span class="ar-v" style="color:var(--muted)"><span data-slot="age-nb-n">322</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-nb-pct">6.3%</span></span></div><div class="at"><div class="af" style="width:6.3%;background:#b2bec3" data-slot="age-nb-bar"></div></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">FY25 月齡分布</div>
+        <div class="cs">全年 32,297 筆 · 日度資料加總</div>
+        <div class="ab">
+          <div class="ar"><div class="ar-top"><span class="ar-l">🤰 孕期</span><span class="ar-v" style="color:#e17055">5,230 <span style="color:var(--dim);font-weight:400;font-size:10px">16.2%</span></span></div><div class="at"><div class="af" style="width:16.2%;background:#e17055"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">🍼 0～36月</span><span class="ar-v" style="color:#0F9D58">17,753 <span style="color:var(--dim);font-weight:400;font-size:10px">55.0%</span></span></div><div class="at"><div class="af" style="width:55.0%;background:#0F9D58"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">🧒 36月+</span><span class="ar-v" style="color:#6c5ce7">6,619 <span style="color:var(--dim);font-weight:400;font-size:10px">20.5%</span></span></div><div class="at"><div class="af" style="width:20.5%;background:#6c5ce7"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">❓ 無生日</span><span class="ar-v" style="color:var(--muted)">2,695 <span style="color:var(--dim);font-weight:400;font-size:10px">8.3%</span></span></div><div class="at"><div class="af" style="width:8.3%;background:#b2bec3"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 歷年趨勢 + 出生年保有率 -->
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card"><div class="ct">歷年 BCL 綁定量</div><div class="cs">2020–2026（2026 為 YTD）</div><canvas id="ychart" height="150"></canvas></div>
+    <div class="card"><div class="ct">出生年保有率</div><div class="cs">各出生年已綁定 / 新生兒人口</div><canvas id="cchart" height="150"></canvas></div>
+  </div>
+
+  <!-- FY25 各月月齡分布 -->
+  <div class="card">
+    <div class="ct">FY25 各月月齡分布（堆疊）</div>
+    <div class="cs">每月收集結構 ｜ 孕期 · 0~36月 · 36月以上 · 無生日</div>
+    <canvas id="agedist" height="100"></canvas>
+  </div>
+
+</div><!-- /p1 -->
+
+
+<!-- ════════════════════════════
+     TAB 2 ── AI 建議
+════════════════════════════ -->
+<div class="panel" id="p2">
+
+  <!-- AI Insight -->
+  <div class="ai-w" style="margin-bottom:14px">
+    <div class="ai-hdr">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="aibg">✦ AI POWERED</span>
+        <span style="font-size:13px;font-weight:600;color:var(--text)">BCL 數據策略分析 · 自動生成供 GM 決策參考</span>
+      </div>
+      <button class="regen" onclick="genAI()">🔄 重新生成</button>
+    </div>
+    <div class="ai-body">
+      <div class="ai-lp">
+        <div class="ai-pl">策略洞察報告</div>
+        <div id="aibox">
+          <div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在分析 BCL 數據庫...</span></div>
+        </div>
+      </div>
+      <div class="ai-rp">
+        <div class="qbar">
+          <span class="qchip" onclick="qs('FY25最值得加碼投入的管道是哪個？請給具體建議')">最值得投入的管道？</span>
+          <span class="qchip" onclick="qs('異業合作品質偏低（4.55分）的主要原因與改善方向？')">異業品質改善？</span>
+          <span class="qchip" onclick="qs('自辦活動封鎖率34.4%偏高，可能原因與對策？')">自辦封鎖率偏高？</span>
+          <span class="qchip" onclick="qs('目前最緊急需要優先處理的三件事？')">最優先三件事？</span>
+          <span class="qchip" onclick="qs('3月無生日名單322筆佔6.3%，如何改善？')">無生日名單處理？</span>
+          <span class="qchip" onclick="qs('本月3月目標已超額達成203.9%，下月策略建議？')">下月策略建議？</span>
+        </div>
+        <div class="chatmsg" id="msgs"><div class="chemp">↑ 點選快速提問，或直接輸入問題</div></div>
+        <div class="ci-row">
+          <input class="cin" id="ci" placeholder="問 AI 關於 BCL 的任何策略問題..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sc()}"/>
+          <button class="csend" id="sb" onclick="sc()">送出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 管道明細表（輔助 AI 建議參考）-->
+  <div class="card">
+    <div class="ct">FY25 各來源管道比較</div>
+    <div class="cs">依品質均分排序 ｜ 可作為 AI 建議的佐證數據</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+      <div>
+        <div class="cs" style="margin-bottom:10px">管道品質得分</div>
+        <div class="qr"><div class="qt"><span class="qn">自辦活動</span><span class="qv gg">7.24</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#0F9D58" data-w="72.4"></div></div></div>
+        <div class="qr"><div class="qt"><span class="qn">主動（LINE OA）</span><span class="qv tg">5.50</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#4285F4" data-w="55.0"></div></div></div>
+        <div class="qr"><div class="qt"><span class="qn">異業合作</span><span class="qv ag">4.55</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#E37400" data-w="45.5"></div></div></div>
+        <div style="border-top:1px solid var(--border);margin:12px 0"></div>
+        <div class="qr"><div class="qt"><span class="qn" style="color:var(--muted)">整體均分</span><span class="qv" style="color:#DB4437">6.20</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#DB4437" data-w="62.0"></div></div></div>
+      </div>
+      <div>
+        <div class="cs" style="margin-bottom:10px">各管道有效率</div>
+        <div class="vrow"><span class="vl">主動</span><div class="vt"><div class="vf" style="width:0%;background:var(--teal)" data-w="86.2"></div></div><span class="vp tg">86.2%</span></div>
+        <div class="vrow"><span class="vl">異業</span><div class="vt"><div class="vf" style="width:0%;background:var(--amber)" data-w="76.4"></div></div><span class="vp ag">76.4%</span></div>
+        <div class="vrow"><span class="vl">自辦</span><div class="vt"><div class="vf" style="width:0%;background:var(--green)" data-w="65.6"></div></div><span class="vp gg">65.6%</span></div>
+        <div style="margin-top:14px;padding:9px 12px;background:rgba(219,68,55,.04);border:1px solid rgba(219,68,55,.12);border-radius:8px;font-size:11px;color:var(--muted)">⚠️ 自辦封鎖率 <span style="color:var(--red);font-family:var(--fm);font-weight:700">34.4%</span> 為三管道最高，需優先改善</div>
+      </div>
+    </div>
+    <table class="dtab">
+      <thead><tr><th>來源管道</th><th>分類</th><th>綁定數</th><th>佔比</th><th>品質均分</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+</div><!-- /p2 -->
+
+</main>
+
+<script>
+// <!-- BCL_DATA_START -->
+const BCL={
+  date:{y:2026,m:3,d:25,label:'2026年3月25日'},
+  prev:{
+    total:119,
+    act:34, slf:85, prt:0,
+    actCls:'up', slfCls:'dn', prtCls:'dn',
+    actRate:'▲ +24.6%', slfRate:'▼ −8.7%', prtRate:'▼ −100%',
+    actPct:28.6, slfPct:71.4, prtPct:0.0,
+    avg7act:27.3, avg7slf:93.1, avg7prt:6.1
+  },
+  month:{
+    total:5098, act:1128, slf:3518, prt:452,
+    days:25, daysInMonth:31,
+    age:{pre:552,a36:3046,a37:1178,nb:322,tot:5098,
+         prePct:'10.8%',a36Pct:'59.7%',a37Pct:'23.1%',nbPct:'6.3%',
+         preW:10.8,a36W:59.7,a37W:23.1,nbW:6.3}
+  },
+  spark30:[156,134,88,318,282,329,242,67,75,129,65,177,181,110,114,1318,351,196,252,238,102,147,117,82,99,175,196,107,110,119],
+  agedist:{
+    prenatal:[295,198,243,471,363,284,383,385,649,679,728,552],
+    age036:  [3738,739,800,1237,842,1120,1418,1099,1368,993,1353,3046],
+    age37:   [582,137,424,361,372,452,808,411,476,770,648,1178],
+    nobday:  [612,138,208,139,121,63,154,156,121,112,549,322]
+  }
+};
+// <!-- BCL_DATA_END -->
+
+const D={
+  totalBCL:270850,valid:180602,invalid:90248,
+  fy25Total:32297,fy25A:5394,fy25S:17935,fy25C:8968,
+  yearly:[{y:'2020',n:36569},{y:'2021',n:43743},{y:'2022',n:43066},{y:'2023',n:44888},{y:'2024',n:18248},{y:'2025',n:27170},{y:'2026*',n:10930}],
+  monthly:[
+    {m:'25/04',主動:340,自辦:3690,異業:1197,n:5227},{m:'25/05',主動:172,自辦:679,異業:361,n:1212},
+    {m:'25/06',主動:196,自辦:546,異業:933,n:1675},{m:'25/07',主動:231,自辦:842,異業:1135,n:2208},
+    {m:'25/08',主動:214,自辦:742,異業:742,n:1698},{m:'25/09',主動:219,自辦:1183,異業:517,n:1919},
+    {m:'25/10',主動:309,自辦:1927,異業:527,n:2763},{m:'25/11',主動:385,自辦:1173,異業:493,n:2051},
+    {m:'25/12',主動:492,自辦:1017,異業:1105,n:2614},{m:'26/01',主動:530,自辦:1392,異業:632,n:2554},
+    {m:'26/02',主動:1178,自辦:1226,異業:874,n:3278},{m:'26/03',主動:1128,自辦:3518,異業:452,n:5098}
+  ],
+  capture:[{y:'2023年生',b:135571,c:14754,r:10.9},{y:'2024年生',b:134856,c:13568,r:10.1},{y:'2025年生',b:107812,c:7712,r:7.2},{y:'2026年生',b:15246,c:3900,r:25.6}],
+  sources:[{n:'客服',ch:'自辦',cnt:114,q:8.68,note:'品質最高，量少'},{n:'LineOA',ch:'主動',cnt:779,q:7.30,note:'穩定高品質'},{n:'官網-Welcome',ch:'自辦',cnt:2540,q:6.60,note:'訂購轉化佳'},{n:'全管道',ch:'自辦',cnt:1367,q:5.86,note:'線下活動綜合'},{n:'六甲村',ch:'異業',cnt:1240,q:4.50,note:'通路合作穩定'},{n:'Happy Go',ch:'異業',cnt:72,q:4.50,note:'量少但穩定'},{n:'SHOPLINE',ch:'自辦',cnt:2075,q:3.47,note:'月齡分散需優化'},{n:'揆眾婦幼展',ch:'異業',cnt:529,q:3.50,note:'季節性展覽'},{n:'永生',ch:'異業',cnt:792,q:3.50,note:'藥妝通路'},{n:'芳茲',ch:'異業',cnt:314,q:3.50,note:'婦嬰通路'},{n:'聯盟網',ch:'異業',cnt:783,q:2.50,note:'數位廣告'},{n:'樂飛發票',ch:'異業',cnt:1451,q:1.90,note:'⚠️ 品質最低'}].sort((a,b)=>b.q-a.q)
+};
+
+// ── TABS ──
+const CI={};let cur=0;
+function sw(i){
+  document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('on',j===i));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('on',j===i));
+  cur=i;
+  setTimeout(()=>{
+    if(i===0&&!CI.sp){iSp();iSp2();}
+    if(i===1&&!CI.mc){iM();iY();iC();iYoY();iAgeDist();}
+    if(i===2){if(!CI.ai){genAI();CI.ai=1;}if(!CI.tb){iT();iT2();CI.tb=1;setTimeout(()=>{document.querySelectorAll('.qfill,.vf').forEach(el=>el.style.width=el.dataset.w+'%')},50);}}
+    Object.values(CI).forEach(c=>{try{if(c&&c.resize)c.resize()}catch(e){}});
+  },40);
+}
+
+// ── COUNTER ──
+function aN(id,t){const el=document.getElementById(id);if(!el)return;let c=0;const s=t/60,ti=setInterval(()=>{c=Math.min(c+s,t);el.textContent=Math.floor(c).toLocaleString('en-US');if(c>=t)clearInterval(ti)},20);}
+
+// ── CHARTS ──
+Chart.defaults.color='#6B7A99';Chart.defaults.font.family="'DM Mono',monospace";
+
+const spData=BCL.spark30.map(v=>Math.min(v,900));
+
+function iSp(){CI.sp=new Chart(document.getElementById('sparkline'),{type:'line',data:{labels:spData.map((_,i)=>i),datasets:[{data:spData,borderColor:'rgba(244,180,0,.8)',backgroundColor:'rgba(244,180,0,.1)',borderWidth:1.5,pointRadius:0,fill:true,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});}
+function iSp2(){CI.sp2=new Chart(document.getElementById('spark2'),{type:'line',data:{labels:spData.map((_,i)=>i),datasets:[{data:spData,borderColor:'rgba(15,157,88,.8)',backgroundColor:'rgba(15,157,88,.1)',borderWidth:2,pointRadius:0,fill:true,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});}
+
+function iM(){
+  CI.mc=new Chart(document.getElementById('mchart'),{type:'bar',data:{labels:D.monthly.map(d=>d.m),datasets:[
+    {label:'主動',data:D.monthly.map(d=>d.主動),backgroundColor:'rgba(66,133,244,.8)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:3,bottomRight:3},stack:'s'},
+    {label:'自辦',data:D.monthly.map(d=>d.自辦),backgroundColor:'rgba(15,157,88,.8)',borderWidth:0,borderRadius:0,stack:'s'},
+    {label:'異業',data:D.monthly.map(d=>d.異業),backgroundColor:'rgba(244,180,0,.85)',borderWidth:0,borderRadius:{topLeft:3,topRight:3,bottomLeft:0,bottomRight:0},stack:'s'}
+  ]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'top',align:'end',labels:{font:{size:11},padding:14,usePointStyle:true,pointStyle:'rect'}},tooltip:{mode:'index',intersect:false,callbacks:{title:c=>`${c[0].label}　合計 ${D.monthly[c[0].dataIndex].n.toLocaleString()} 筆`,label:c=>` ${c.dataset.label}：${c.raw.toLocaleString()} 筆（${(c.raw/D.monthly[c[0].dataIndex].n*100).toFixed(1)}%）`}}},scales:{x:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:11}},stacked:true},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{callback:v=>v.toLocaleString(),font:{size:11}},stacked:true}}}});
+}
+function iYoY(){
+  const lb=['04','05','06','07','08','09','10','11','12','01','02','03'];
+  const f5=[5227,1212,1675,2208,1698,1919,2763,2051,2614,2554,3278,5098];
+  const f4=[163,192,203,308,2466,4217,2899,3354,1152,1077,1831,2895];
+  const yoy=f5.map((n,i)=>parseFloat(((n/f4[i]-1)*100).toFixed(1)));
+  CI.yoy=new Chart(document.getElementById('yoychart'),{
+    type:'bar',
+    data:{
+      labels:lb,
+      datasets:[
+        {label:'FY25',data:f5,backgroundColor:'rgba(66,133,244,.7)',borderColor:'#4285F4',borderWidth:1,borderRadius:4,yAxisID:'y'},
+        {label:'FY24',data:f4,backgroundColor:'rgba(189,189,189,.5)',borderColor:'#BDBDBD',borderWidth:1,borderRadius:4,yAxisID:'y'},
+        {label:'YoY%',data:yoy,type:'line',borderColor:'#DB4437',backgroundColor:'transparent',borderWidth:2,pointBackgroundColor:yoy.map(v=>v>=0?'#0F9D58':'#DB4437'),pointRadius:4,pointHoverRadius:6,tension:.3,yAxisID:'y2'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:true,
+      plugins:{
+        legend:{position:'top',align:'end',labels:{font:{size:10},padding:12,usePointStyle:true}},
+        tooltip:{mode:'index',intersect:false,callbacks:{
+          title:c=>`${lb[c[0].dataIndex]}月`,
+          label:c=>{
+            if(c.dataset.label==='YoY%') return ` YoY：${c.raw>=0?'+':''}${c.raw}%`;
+            return ` ${c.dataset.label}：${c.raw.toLocaleString()} 筆`;
+          }
+        }}
+      },
+      scales:{
+        x:{grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{size:10},color:'#A0AABF'}},
+        y:{grid:{color:'rgba(0,0,0,.04)'},ticks:{callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v,font:{size:10}},position:'left'},
+        y2:{ticks:{callback:v=>v+'%',font:{size:10},color:'#DB4437'},position:'right',grid:{display:false}}
+      }
+    }
+  });
+}
+function iY(){CI.yc=new Chart(document.getElementById('ychart'),{type:'bar',data:{labels:D.yearly.map(d=>d.y),datasets:[{data:D.yearly.map(d=>d.n),backgroundColor:D.yearly.map((_,i)=>i===6?'rgba(66,133,244,.25)':i>=4?'rgba(66,133,244,.75)':'rgba(66,133,244,.35)'),borderColor:D.yearly.map((_,i)=>i>=4?'#4285F4':'rgba(66,133,244,.5)'),borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw.toLocaleString()} 筆`}}},scales:{x:{grid:{color:'#F1F3F4'},ticks:{font:{size:11}}},y:{grid:{color:'#F1F3F4'},ticks:{callback:v=>v>=1000?(v/1000)+'k':v,font:{size:11}}}}}});}
+function iC(){CI.cc=new Chart(document.getElementById('cchart'),{type:'bar',data:{labels:D.capture.map(d=>d.y),datasets:[{label:'已綁定數',data:D.capture.map(d=>d.c),backgroundColor:'rgba(66,133,244,.55)',borderColor:'#4285F4',borderWidth:1,borderRadius:4,yAxisID:'y'},{label:'保有率',data:D.capture.map(d=>d.r),type:'line',borderColor:'#E37400',backgroundColor:'rgba(244,180,0,.08)',borderWidth:2,pointBackgroundColor:'#E37400',pointRadius:5,tension:.4,yAxisID:'y2'}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'top',labels:{font:{size:10},padding:10}},tooltip:{callbacks:{label:c=>c.datasetIndex===1?` 保有率：${c.raw}%`:` 綁定數：${c.raw.toLocaleString()}`}}},scales:{x:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:10}}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{callback:v=>v.toLocaleString(),font:{size:10}}},y2:{ticks:{callback:v=>v+'%',color:'#E37400',font:{size:10}},position:'right',grid:{display:false},min:0,max:35}}}});}
+function iT(){
+  const cc={'主動':'#4285F4','自辦':'#0F9D58','異業':'#E37400'};
+  const qc=q=>q>=7?'#0F9D58':q>=5?'#4285F4':q>=3?'#E37400':'#DB4437';
+  document.getElementById('tbody').innerHTML=D.sources.map(s=>{
+    const c=cc[s.ch],q=qc(s.q),p=(s.cnt/D.fy25Total*100).toFixed(1),bw=(s.q/10*100).toFixed(0);
+    return `<tr><td style="font-weight:600">${s.n}</td><td><span class="chtag" style="background:${c}18;color:${c};border:1px solid ${c}33">${s.ch}</span></td><td style="font-family:var(--fm)">${s.cnt.toLocaleString()}</td><td style="font-family:var(--fm);color:var(--muted)">${p}%</td><td style="font-family:var(--fm);font-weight:600;color:${q}">${s.q.toFixed(2)}</td></tr>`;
+  }).join('');
+}
+function iT2(){setTimeout(()=>{document.querySelectorAll('.qfill,.vf').forEach(el=>el.style.width=el.dataset.w+'%')},80);}
+
+// ── TARGET ──
+function recalc(){
+  const tgt=parseInt(document.getElementById('monthTarget').value)||2500;
+  const act=BCL.month.total,dim=BCL.month.daysInMonth,el=BCL.month.days,tt=Math.round(tgt/dim*el);
+  const tr=(act/tt*100).toFixed(1),mr=(act/tgt*100).toFixed(1),gp=act-tt;
+  document.getElementById('tgtTime').textContent=tt.toLocaleString()+' 筆';
+  const rEl=document.getElementById('tgtTR');rEl.textContent=tr+'%';rEl.style.color=parseFloat(tr)>=100?'var(--green)':'var(--red)';
+  const mEl=document.getElementById('tgtMR');mEl.textContent=mr+'%';mEl.style.color=parseFloat(mr)>=100?'var(--green)':'var(--amber)';
+  const gEl=document.getElementById('tgtGap');gEl.textContent=(gp>=0?'+':'')+gp.toLocaleString()+' 筆';gEl.style.color=gp>=0?'var(--green)':'var(--red)';
+  document.getElementById('tgtBar').style.width=Math.min(act/tt*100,100)+'%';
+}
+
+// ── AI ──
+// ── 套用 BCL 每日資料到 DOM ──
+function applyBCLData(){
+  const b=BCL, p=b.prev, m=b.month, ma=m.age;
+
+  // Header 日期
+  document.querySelectorAll('.hbadge,.bd').forEach(el=>{
+    if(el.textContent.includes('資料截至')) el.textContent='資料截至 '+b.date.label;
+  });
+
+  // 前一日標題
+  const dTitle=document.querySelector('[data-slot="prev-date"]');
+  if(dTitle) dTitle.textContent=`前一日收集（${b.date.m}月${b.date.d}日）`;
+
+  // 前一日合計
+  const totEl=document.querySelector('[data-slot="prev-total"]');
+  if(totEl) totEl.textContent=p.total.toLocaleString('en-US');
+
+  // 主動
+  setChannel('act', p.act, p.actCls, p.actRate, p.actPct, p.avg7act);
+  // 自辦
+  setChannel('slf', p.slf, p.slfCls, p.slfRate, p.slfPct, p.avg7slf);
+  // 異業
+  setChannel('prt', p.prt, p.prtCls, p.prtRate, p.prtPct, p.avg7prt);
+
+  // 本月累計
+  const mTotEl=document.querySelector('[data-slot="month-total"]');
+  if(mTotEl) mTotEl.textContent=m.total.toLocaleString('en-US');
+  const mDayEl=document.querySelector('[data-slot="month-days"]');
+  if(mDayEl) mDayEl.textContent=`${b.date.m}月 1–${m.days} 日`;
+  setSlot('month-act', m.act.toLocaleString('en-US'));
+  setSlot('month-slf', m.slf.toLocaleString('en-US'));
+  setSlot('month-prt', m.prt.toLocaleString('en-US'));
+
+  // 本月月齡分布卡
+  setSlot('age-pre-n', ma.pre.toLocaleString('en-US'));
+  setSlot('age-pre-pct', ma.prePct);
+  setSlot('age-036-n', ma.a36.toLocaleString('en-US'));
+  setSlot('age-036-pct', ma.a36Pct);
+  setSlot('age-37-n', ma.a37.toLocaleString('en-US'));
+  setSlot('age-37-pct', ma.a37Pct);
+  setSlot('age-nb-n', ma.nb.toLocaleString('en-US'));
+  setSlot('age-nb-pct', ma.nbPct);
+  setSlot('age-tot', `2026/${String(b.date.m).padStart(2,'0')} ｜ ${ma.tot.toLocaleString('en-US')} 筆 · 實際日度資料`);
+
+  // 進度條寬度
+  setBarW('age-pre-bar', ma.preW);
+  setBarW('age-036-bar', ma.a36W);
+  setBarW('age-37-bar', ma.a37W);
+  setBarW('age-nb-bar', ma.nbW);
+}
+
+function setSlot(slot, val){
+  document.querySelectorAll('[data-slot="'+slot+'"]').forEach(el=>el.textContent=val);
+}
+function setBarW(slot, pct){
+  document.querySelectorAll('[data-slot="'+slot+'"]').forEach(el=>el.style.width=pct+'%');
+}
+function setChannel(ch, n, cls, rate, barPct, avg7){
+  setSlot(ch+'-n', n);
+  document.querySelectorAll('[data-slot="'+ch+'-tag"]').forEach(el=>{
+    el.className='tag '+cls;
+    el.textContent=rate;
+  });
+  setBarW(ch+'-bar', barPct);
+  setSlot(ch+'-avg7', avg7.toFixed(1));
+}
+
+const SYS=`你是 Benesse Taiwan 業務戰略組的 BCL 數據顧問，協助 GM（小沼和幸總經理）進行數據洞察與策略決策。
+
+BCL 關鍵指標（FY25：2025/04–2026/03）：
+【總量】歷史累積 270,850 筆（有效 66.7%，封鎖 33.3%）；系統可推播 28,960 筆
+【FY25新增】32,297 筆（vs FY24財年：20,757筆，年增+55.6%）
+【管道】自辦 55.5%（17,935）、異業 27.8%（8,968）、主動 16.7%（5,394）
+【品質均分】整體 6.20；自辦 7.24（最高）、主動 5.50、異業 4.55（最低）
+【有效率】主動 86.2%（最優）、異業 76.4%、自辦 65.6%（封鎖率34.4%偏高）
+【${BCL.date.m}月當月】累計${BCL.month.total.toLocaleString()}筆；孕期${BCL.month.age.pre}（${BCL.month.age.prePct}）/ 0-36月${BCL.month.age.a36}（${BCL.month.age.a36Pct}）/ 36月+${BCL.month.age.a37}（${BCL.month.age.a37Pct}）/ 無生日${BCL.month.age.nb}（${BCL.month.age.nbPct}）
+【月度目標】目標2,500，時間進度目標${Math.round(2500/BCL.month.daysInMonth*BCL.month.days).toLocaleString()}，已達成${(BCL.month.total/2500*100).toFixed(1)}%
+【前一日（${BCL.date.m}/${BCL.date.d}）】${BCL.prev.total}筆：主動${BCL.prev.act}（${BCL.prev.actRate}）/ 自辦${BCL.prev.slf}（${BCL.prev.slfRate}）/ 異業${BCL.prev.prt}（${BCL.prev.prtRate}）
+
+請用繁體中文回答，直接、精準、高管風格，數字要引用，控制在200字以內。`;
+
+async function genBrief(){
+  const box=document.getElementById('briefbox');
+  box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在生成今日觀察摘要...</span></div>`;
+  const p=BCL.prev, m=BCL.month, d=BCL.date;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYS,messages:[{role:'user',content:`請以「每日晨報」風格，用4個面向簡短分析，每點1-2句話，繁體中文，直接切入數字：
+
+📅 昨日表現（${d.m}/${d.d}）：昨日${p.total}筆好不好？主動${p.actRate}、自辦${p.slfRate}、異業${p.prtRate}各代表什麼
+📆 本月進展：${d.m}月累計${m.total.toLocaleString()}筆（${m.days}天），達成率${(m.total/2500*100).toFixed(1)}%，好在哪裡或要注意什麼
+⚠️ 需要關注：現在最值得注意的一個警訊
+✅ 建議行動：今天最應該做的一件事
+
+語氣直接，像給主管的30秒口頭簡報。`}]})});
+    const d2=await r.json();if(d2.error)throw new Error(d2.error.message);
+    box.innerHTML=`<div style="font-size:13px;line-height:1.85;color:var(--text)">${fmt(d2.content[0].text)}</div>`;
+  }catch(e){box.innerHTML=`<div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：${e.message}</div>`;}
+}
+
+async function genAI(){
+  const box=document.getElementById('aibox');
+  box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在分析 BCL 數據庫...</span></div>`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:'請生成給 GM 的 BCL 策略洞察報告，結構：\n🔍 三大關鍵發現（含數字佐證）\n⚠️ 兩大主要風險（直接點名問題）\n🚀 三個立即行動建議（具體可執行）\n語氣直接、高管級別，280字以內，繁體中文。'}]})});
+    const d=await r.json();if(d.error)throw new Error(d.error.message);
+    box.innerHTML=`<div class="ait">${fmt(d.content[0].text)}</div>`;
+  }catch(e){box.innerHTML=`<div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：${e.message}</div>`;}
+}
+let hist=[];
+async function sc(){
+  const inp=document.getElementById('ci'),btn=document.getElementById('sb');
+  const msg=inp.value.trim();if(!msg)return;inp.value='';btn.disabled=true;
+  addB('user',msg);hist.push({role:'user',content:msg});
+  const lid='l'+Date.now();addB('ai',`<div class="ldots"><span></span><span></span><span></span></div>`,lid);
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:SYS,messages:hist})});
+    const d=await r.json();const rep=d.content[0].text;
+    document.getElementById(lid).innerHTML=fmt(rep);hist.push({role:'assistant',content:rep});
+  }catch(e){document.getElementById(lid).innerHTML=`<span style="color:var(--red)">回覆失敗，請重試。</span>`;}
+  btn.disabled=false;document.getElementById('ci').focus();
+}
+function qs(t){document.getElementById('ci').value=t;sc();}
+function addB(role,content,id){const box=document.getElementById('msgs');box.querySelector('.chemp')?.remove();const el=document.createElement('div');el.className='bub '+role;if(id)el.id=id;el.innerHTML=content;box.appendChild(el);box.scrollTop=box.scrollHeight;}
+function fmt(t){return t.replace(/\*\*(.*?)\*\*/g,'<strong style="color:var(--text)">$1</strong>').replace(/\n/g,'<br>');}
+
+function iAgeDist(){
+  const lb=['25/04','25/05','25/06','25/07','25/08','25/09','25/10','25/11','25/12','26/01','26/02','26/03'];
+  const prenatal=BCL.agedist.prenatal;
+  const age036  =BCL.agedist.age036;
+  const age37   =BCL.agedist.age37;
+  const nobday  =BCL.agedist.nobday;
+  CI.ad=new Chart(document.getElementById('agedist'),{
+    type:'bar',
+    data:{
+      labels:lb,
+      datasets:[
+        {label:'孕期',      data:prenatal, backgroundColor:'rgba(225,112,85,.75)', borderWidth:0, borderRadius:{topLeft:0,topRight:0,bottomLeft:3,bottomRight:3}, stack:'s'},
+        {label:'0～36月齡', data:age036,   backgroundColor:'rgba(66,133,244,.75)',  borderWidth:0, borderRadius:0, stack:'s'},
+        {label:'36月以上',  data:age37,    backgroundColor:'rgba(108,92,231,.7)',   borderWidth:0, borderRadius:0, stack:'s'},
+        {label:'無生日',    data:nobday,   backgroundColor:'rgba(160,170,191,.65)', borderWidth:0, borderRadius:{topLeft:3,topRight:3,bottomLeft:0,bottomRight:0}, stack:'s'}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      plugins:{
+        legend:{position:'top', align:'end', labels:{font:{size:11}, padding:14, usePointStyle:true, pointStyle:'rect'}},
+        tooltip:{
+          mode:'index', intersect:false,
+          callbacks:{
+            title:c=>`${lb[c[0].dataIndex]}`,
+            label:c=>{
+              const total=prenatal[c[0].dataIndex]+age036[c[0].dataIndex]+age37[c[0].dataIndex]+nobday[c[0].dataIndex];
+              return ` ${c.dataset.label}：${c.raw.toLocaleString()} 筆（${(c.raw/total*100).toFixed(1)}%）`;
+            }
+          }
+        }
+      },
+      scales:{
+        x:{grid:{color:'#F1F3F4'}, ticks:{font:{size:11}}, stacked:true},
+        y:{grid:{color:'#F1F3F4'}, ticks:{callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v, font:{size:11}}, stacked:true}
+      }
+    }
+  });
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',()=>{
+  applyBCLData();
+  aN('k1',270850);aN('k3',32297);
+  recalc();
+  iSp();iSp2();
+  genBrief();
+});
+</script>
+</body>
+</html>
