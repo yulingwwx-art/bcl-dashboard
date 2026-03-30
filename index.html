@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0056)file:///C:/Users/138531/Downloads/bcl_dashboard_327.html -->
-<html lang="zh-TW"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BCL Intelligence Dashboard | Benesse Taiwan</title>
-<link href="./BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
-<script src="./BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{
   /* Google Material palette */
@@ -190,13 +190,13 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     </div>
     <div class="badges">
       <span class="badge bp">FY25　2025/04 – 2026/03</span>
-      <span class="badge bd">資料截至 2026年3月27日</span>
+      <span class="badge bd">資料截至 2026年3月25日</span>
     </div>
   </div>
   <nav class="tabs">
     <button class="tab t0 on" onclick="sw(0)">📊 現況</button>
-    <button class="tab t1" onclick="sw(1)">📈 趨勢</button>
-    <button class="tab t2" onclick="sw(2)">✦ AI 建議</button>
+    <button class="tab t1"    onclick="sw(1)">📈 趨勢</button>
+    <button class="tab t2"    onclick="sw(2)">✦ AI 建議</button>
   </nav>
 </header>
 
@@ -217,7 +217,9 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
       </div>
       <button class="regen" onclick="genBrief()" style="font-size:11px">🔄 重新生成</button>
     </div>
-    <div id="briefbox"><div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：Failed to fetch</div></div>
+    <div id="briefbox">
+      <div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在生成今日觀察摘要...</span></div>
+    </div>
   </div>
 
   <!-- Row 1: Core KPIs (3欄，移除品質均分) -->
@@ -227,7 +229,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     <div class="kc" style="--kc:#4285F4">
       <div class="ki">🗂️</div>
       <div class="kl">總 BCL 保有</div>
-      <div class="kv" id="k1">270,850</div>
+      <div class="kv" id="k1">—</div>
       <div class="km">
         <div class="kr"><span class="krl">✅ 有效會員</span><span class="krv" style="color:#0F9D58">180,602</span><span class="tag up">66.7%</span></div>
         <div class="kr"><span class="krl">⛔ 封鎖無效</span><span class="krv" style="color:#DB4437">90,248</span><span class="tag dn">33.3%</span></div>
@@ -238,9 +240,9 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     <div class="kc" style="--kc:#F4B400">
       <div class="ki">📈</div>
       <div class="kl">FY25 新增綁定</div>
-      <div class="kv" id="k3">32,297</div>
+      <div class="kv" id="k3">—</div>
       <div class="ks">vs FY24 財年 20,757　▲ +55.6%</div>
-      <div class="sw"><canvas id="sparkline" height="34" style="display: block; box-sizing: border-box; height: 34px; width: 442px;" width="442"></canvas></div>
+      <div class="sw"><canvas id="sparkline" height="34"></canvas></div>
     </div>
 
     <!-- 系統保有 -->
@@ -268,40 +270,40 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     <!-- 前一日各管道 -->
     <div class="kc" style="--kc:#0F9D58">
       <div class="ki">📡</div>
-      <div class="kl" data-slot="prev-date">前一日收集（3月27日）</div>
+      <div class="kl" data-slot="prev-date">前一日收集（3月25日）</div>
       <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:22px">
-        <span style="font-family:var(--fm);font-size:48px;font-weight:300;letter-spacing:-3px;color:var(--text)" data-slot="prev-total">69</span>
+        <span style="font-family:var(--fm);font-size:48px;font-weight:300;letter-spacing:-3px;color:var(--text)" data-slot="prev-total">119</span>
         <span style="font-size:13px;color:var(--muted);font-family:var(--fm)">筆</span>
       </div>
       <div class="ch-row">
         <div class="ch-item">
           <div class="ch-top">
             <span class="ch-name">主動（LINE OA）</span>
-            <div class="ch-right"><span class="ch-n" style="color:#4285F4" data-slot="act-n">14</span><span class="tag dn" data-slot="act-tag">▼ -41.7%</span></div>
+            <div class="ch-right"><span class="ch-n" style="color:#4285F4" data-slot="act-n">34</span><span class="tag up" data-slot="act-tag">▲ +24.6%</span></div>
           </div>
-          <div class="ch-bar"><div class="ch-fill" style="width: 20.3%; background: rgb(66, 133, 244);" data-slot="act-bar"></div></div>
-          <div class="ch-hint">前7日均 <span data-slot="act-avg7">23.9</span> 筆</div>
+          <div class="ch-bar"><div class="ch-fill" style="width:28.6%;background:#4285F4" data-slot="act-bar"></div></div>
+          <div class="ch-hint">前7日均 <span data-slot="act-avg7">27.3</span> 筆</div>
         </div>
         <div class="ch-item">
           <div class="ch-top">
             <span class="ch-name">自辦活動</span>
-            <div class="ch-right"><span class="ch-n" style="color:#0F9D58" data-slot="slf-n">39</span><span class="tag dn" data-slot="slf-tag">▼ -54.1%</span></div>
+            <div class="ch-right"><span class="ch-n" style="color:#0F9D58" data-slot="slf-n">85</span><span class="tag dn" data-slot="slf-tag">▼ −8.7%</span></div>
           </div>
-          <div class="ch-bar"><div class="ch-fill" style="width: 56.5%; background: rgb(15, 157, 88);" data-slot="slf-bar"></div></div>
-          <div class="ch-hint">前7日均 <span data-slot="slf-avg7">71.7</span> 筆</div>
+          <div class="ch-bar"><div class="ch-fill" style="width:71.4%;background:#0F9D58" data-slot="slf-bar"></div></div>
+          <div class="ch-hint">前7日均 <span data-slot="slf-avg7">93.1</span> 筆</div>
         </div>
         <div class="ch-item">
           <div class="ch-top">
             <span class="ch-name">異業合作</span>
-            <div class="ch-right"><span class="ch-n" style="color:#F4B400" data-slot="prt-n">16</span><span class="tag up" data-slot="prt-tag">▲ +166.7%</span></div>
+            <div class="ch-right"><span class="ch-n" style="color:#F4B400" data-slot="prt-n">0</span><span class="tag dn" data-slot="prt-tag">▼ −100%</span></div>
           </div>
-          <div class="ch-bar"><div class="ch-fill" style="width: 23.2%; background: rgb(244, 180, 0);" data-slot="prt-bar"></div></div>
-          <div class="ch-hint">前7日均 <span data-slot="prt-avg7">6.0</span> 筆</div>
+          <div class="ch-bar"><div class="ch-fill" style="width:0%;background:#F4B400" data-slot="prt-bar"></div></div>
+          <div class="ch-hint">前7日均 <span data-slot="prt-avg7">6.1</span> 筆</div>
         </div>
       </div>
       <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,.06)">
         <div style="font-size:10px;color:var(--dim);font-family:var(--fm);letter-spacing:.1em;margin-bottom:8px">近30日合計趨勢</div>
-        <div style="height:48px"><canvas id="spark2" height="48" width="692" style="display: block; box-sizing: border-box; height: 48px; width: 692px;"></canvas></div>
+        <div style="height:48px"><canvas id="spark2" height="48"></canvas></div>
       </div>
     </div>
 
@@ -312,42 +314,42 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
 
       <div style="display:flex;align-items:center;gap:10px;margin:12px 0 0">
         <span style="font-size:12px;color:var(--muted)">月目標</span>
-        <input id="monthTarget" type="number" value="2500" min="1" class="tgt-inp" oninput="recalc()">
+        <input id="monthTarget" type="number" value="2500" min="1" class="tgt-inp" oninput="recalc()"/>
         <span style="font-size:12px;color:var(--muted)">筆</span>
       </div>
 
       <div class="tgt-main">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">本月累計（<span data-slot="month-days">3月 1–27 日</span>）</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">本月累計（<span data-slot="month-days">3月 1–25 日</span>）</div>
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px">
-          <span style="font-family:var(--fm);font-size:42px;font-weight:300;color:#4285F4;letter-spacing:-2px" data-slot="month-total">5,287</span>
+          <span style="font-family:var(--fm);font-size:42px;font-weight:300;color:#4285F4;letter-spacing:-2px" data-slot="month-total">5,098</span>
           <span style="font-size:13px;color:var(--muted)">筆</span>
         </div>
         <div style="display:flex;gap:14px;font-size:11px;color:var(--muted);font-family:var(--fm)">
-          <span>主動 <b style="color:#4285F4" data-slot="month-act">1,142</b></span>
-          <span>自辦 <b style="color:#0F9D58" data-slot="month-slf">3,673</b></span>
-          <span>異業 <b style="color:#E37400" data-slot="month-prt">472</b></span>
+          <span>主動 <b style="color:#4285F4" data-slot="month-act">1,128</b></span>
+          <span>自辦 <b style="color:#0F9D58" data-slot="month-slf">3,518</b></span>
+          <span>異業 <b style="color:#E37400" data-slot="month-prt">452</b></span>
         </div>
       </div>
 
       <div class="tgt-rows">
         <div class="tgt-row">
           <span class="tgt-lbl">時間進度目標</span>
-          <span id="tgtTime" style="font-family:var(--fm);font-size:13px;font-weight:500;color:var(--text)">2,177 筆</span>
+          <span id="tgtTime" style="font-family:var(--fm);font-size:13px;font-weight:500;color:var(--text)">—</span>
         </div>
         <div>
           <div class="tgt-row" style="margin-bottom:7px">
             <span class="tgt-lbl">對時間進度達成率</span>
-            <span id="tgtTR" class="tgt-val" style="color: var(--green);">242.9%</span>
+            <span id="tgtTR" class="tgt-val">—</span>
           </div>
-          <div class="progbar"><div id="tgtBar" class="progfill" style="width: 100%;"></div></div>
+          <div class="progbar"><div id="tgtBar" class="progfill" style="width:0%"></div></div>
         </div>
         <div class="tgt-row">
           <span class="tgt-lbl">對月目標達成率</span>
-          <span id="tgtMR" class="tgt-val" style="color: var(--green);">211.5%</span>
+          <span id="tgtMR" class="tgt-val">—</span>
         </div>
         <div class="tgt-row" style="padding-top:10px;border-top:1px solid rgba(0,0,0,.06)">
           <span class="tgt-lbl">差異數（累計 vs 進度目標）</span>
-          <span id="tgtGap" class="tgt-val" style="color: var(--green);">+3,110 筆</span>
+          <span id="tgtGap" class="tgt-val">—</span>
         </div>
       </div>
     </div>
@@ -394,12 +396,12 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="card">
         <div class="ct">本月月齡分布（3月）</div>
-        <div class="cs" data-slot="age-tot">2026/03 ｜ 5,287 筆 · 實際日度資料</div>
+        <div class="cs" data-slot="age-tot">2026/03 ｜ 5,098 筆 · 實際日度資料</div>
         <div class="ab">
-          <div class="ar"><div class="ar-top"><span class="ar-l">🤰 孕期</span><span class="ar-v" style="color:#e17055"><span data-slot="age-pre-n">574</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-pre-pct">10.9%</span></span></div><div class="at"><div class="af" style="width: 10.9%; background: rgb(225, 112, 85);" data-slot="age-pre-bar"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">🍼 0～36月</span><span class="ar-v" style="color:#4285F4"><span data-slot="age-036-n">3,163</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-036-pct">59.8%</span></span></div><div class="at"><div class="af" style="width: 59.8%; background: rgb(66, 133, 244);" data-slot="age-036-bar"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">🧒 36月+</span><span class="ar-v" style="color:#6c5ce7"><span data-slot="age-37-n">1,223</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-37-pct">23.1%</span></span></div><div class="at"><div class="af" style="width:23.1%;background:#6c5ce7" data-slot="age-37-bar"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">❓ 無生日</span><span class="ar-v" style="color:var(--muted)"><span data-slot="age-nb-n">327</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-nb-pct">6.2%</span></span></div><div class="at"><div class="af" style="width: 6.2%; background: rgb(178, 190, 195);" data-slot="age-nb-bar"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">🤰 孕期</span><span class="ar-v" style="color:#e17055"><span data-slot="age-pre-n">552</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-pre-pct">10.8%</span></span></div><div class="at"><div class="af" style="width:10.8%;background:#e17055" data-slot="age-pre-bar"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">🍼 0～36月</span><span class="ar-v" style="color:#4285F4"><span data-slot="age-036-n">3,046</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-036-pct">59.7%</span></span></div><div class="at"><div class="af" style="width:59.7%;background:#4285F4" data-slot="age-036-bar"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">🧒 36月+</span><span class="ar-v" style="color:#6c5ce7"><span data-slot="age-37-n">1,178</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-37-pct">23.1%</span></span></div><div class="at"><div class="af" style="width:23.1%;background:#6c5ce7" data-slot="age-37-bar"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">❓ 無生日</span><span class="ar-v" style="color:var(--muted)"><span data-slot="age-nb-n">322</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-nb-pct">6.3%</span></span></div><div class="at"><div class="af" style="width:6.3%;background:#b2bec3" data-slot="age-nb-bar"></div></div></div>
         </div>
       </div>
       <div class="card">
@@ -454,16 +456,16 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
       </div>
       <div class="ai-rp">
         <div class="qbar">
-          <span class="qchip" onclick="qs(&#39;FY25最值得加碼投入的管道是哪個？請給具體建議&#39;)">最值得投入的管道？</span>
-          <span class="qchip" onclick="qs(&#39;異業合作品質偏低（4.55分）的主要原因與改善方向？&#39;)">異業品質改善？</span>
-          <span class="qchip" onclick="qs(&#39;自辦活動封鎖率34.4%偏高，可能原因與對策？&#39;)">自辦封鎖率偏高？</span>
-          <span class="qchip" onclick="qs(&#39;目前最緊急需要優先處理的三件事？&#39;)">最優先三件事？</span>
-          <span class="qchip" onclick="qs(&#39;3月無生日名單322筆佔6.3%，如何改善？&#39;)">無生日名單處理？</span>
-          <span class="qchip" onclick="qs(&#39;本月3月目標已超額達成203.9%，下月策略建議？&#39;)">下月策略建議？</span>
+          <span class="qchip" onclick="qs('FY25最值得加碼投入的管道是哪個？請給具體建議')">最值得投入的管道？</span>
+          <span class="qchip" onclick="qs('異業合作品質偏低（4.55分）的主要原因與改善方向？')">異業品質改善？</span>
+          <span class="qchip" onclick="qs('自辦活動封鎖率34.4%偏高，可能原因與對策？')">自辦封鎖率偏高？</span>
+          <span class="qchip" onclick="qs('目前最緊急需要優先處理的三件事？')">最優先三件事？</span>
+          <span class="qchip" onclick="qs('3月無生日名單322筆佔6.3%，如何改善？')">無生日名單處理？</span>
+          <span class="qchip" onclick="qs('本月3月目標已超額達成203.9%，下月策略建議？')">下月策略建議？</span>
         </div>
         <div class="chatmsg" id="msgs"><div class="chemp">↑ 點選快速提問，或直接輸入問題</div></div>
         <div class="ci-row">
-          <input class="cin" id="ci" placeholder="問 AI 關於 BCL 的任何策略問題..." onkeydown="if(event.key===&#39;Enter&#39;&amp;&amp;!event.shiftKey){event.preventDefault();sc()}">
+          <input class="cin" id="ci" placeholder="問 AI 關於 BCL 的任何策略問題..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sc()}"/>
           <button class="csend" id="sb" onclick="sc()">送出</button>
         </div>
       </div>
@@ -812,6 +814,5 @@ document.addEventListener('DOMContentLoaded',()=>{
   genBrief();
 });
 </script>
-
-
-</body></html>
+</body>
+</html>
