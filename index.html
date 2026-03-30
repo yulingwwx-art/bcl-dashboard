@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///C:/Users/138531/Downloads/bcl_github.html -->
+<!-- saved from url=(0051)file:///C:/Users/138531/Downloads/bcl_github_1.html -->
 <html lang="zh-TW"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BCL Intelligence Dashboard | Benesse Taiwan</title>
-<link href="./7BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
-<script src="./7BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
+<link href="./8BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
+<script src="./8BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
 <style>
 :root{
   /* Google Material palette */
@@ -194,9 +194,9 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     </div>
   </div>
   <nav class="tabs">
-    <button class="tab t0" onclick="sw(0)">📊 現況</button>
+    <button class="tab t0 on" onclick="sw(0)">📊 現況</button>
     <button class="tab t1" onclick="sw(1)">📈 趨勢</button>
-    <button class="tab t2 on" onclick="sw(2)">✦ AI 建議</button>
+    <button class="tab t2" onclick="sw(2)">✦ AI 建議</button>
   </nav>
 </header>
 
@@ -205,7 +205,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
 <!-- ════════════════════════════
      TAB 0 ── 現況
 ════════════════════════════ -->
-<div class="panel" id="p0">
+<div class="panel on" id="p0">
 
   <!-- AI 每日觀察摘要 -->
   <div id="aibrief" style="background:#fff;border:1px solid #DADCE0;border-radius:8px;padding:18px 22px;margin-bottom:12px;box-shadow:0 1px 2px rgba(60,64,67,.1);position:relative;overflow:hidden">
@@ -240,7 +240,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
       <div class="kl">FY25 新增綁定</div>
       <div class="kv" id="k3">32,486</div>
       <div class="ks">vs FY24 財年 20,757　▲ +55.6%</div>
-      <div class="sw"><canvas id="sparkline" height="0" width="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;"></canvas></div>
+      <div class="sw"><canvas id="sparkline" height="34" width="442" style="display: block; box-sizing: border-box; height: 34px; width: 442px;"></canvas></div>
     </div>
 
     <!-- 系統保有 -->
@@ -301,7 +301,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
       </div>
       <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,.06)">
         <div style="font-size:10px;color:var(--dim);font-family:var(--fm);letter-spacing:.1em;margin-bottom:8px">近30日合計趨勢</div>
-        <div style="height:48px"><canvas id="spark2" height="0" width="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;"></canvas></div>
+        <div style="height:48px"><canvas id="spark2" height="48" width="692" style="display: block; box-sizing: border-box; height: 48px; width: 692px;"></canvas></div>
       </div>
     </div>
 
@@ -365,7 +365,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
   <div class="card" style="margin-bottom:14px">
     <div class="ct">FY25 各月綁定量（三大管道堆疊）</div>
     <div class="cs">2025/04–2026/03 ｜ 全部為確認實際數據</div>
-    <canvas id="mchart" height="0" width="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;"></canvas>
+    <canvas id="mchart" height="110"></canvas>
   </div>
 
   <!-- YoY + 月齡分布 -->
@@ -387,7 +387,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
           <div style="font-size:11px;color:var(--dim);font-family:var(--fm);margin-top:3px">2404～2503</div>
         </div>
       </div>
-      <canvas id="yoychart" height="0" width="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;"></canvas>
+      <canvas id="yoychart" height="120"></canvas>
     </div>
 
     <!-- 本月月齡 + FY25月齡 -->
@@ -417,15 +417,15 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
 
   <!-- 歷年趨勢 + 出生年保有率 -->
   <div class="g2" style="margin-bottom:14px">
-    <div class="card"><div class="ct">歷年 BCL 綁定量</div><div class="cs">2020–2026（2026 為 YTD）</div><canvas id="ychart" height="0" width="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;"></canvas></div>
-    <div class="card"><div class="ct">出生年保有率</div><div class="cs">各出生年已綁定 / 新生兒人口</div><canvas id="cchart" height="0" width="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;"></canvas></div>
+    <div class="card"><div class="ct">歷年 BCL 綁定量</div><div class="cs">2020–2026（2026 為 YTD）</div><canvas id="ychart" height="150"></canvas></div>
+    <div class="card"><div class="ct">出生年保有率</div><div class="cs">各出生年已綁定 / 新生兒人口</div><canvas id="cchart" height="150"></canvas></div>
   </div>
 
   <!-- FY25 各月月齡分布 -->
   <div class="card">
     <div class="ct">FY25 各月月齡分布（堆疊）</div>
     <div class="cs">每月收集結構 ｜ 孕期 · 0~36月 · 36月以上 · 無生日</div>
-    <canvas id="agedist" height="0" width="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;"></canvas>
+    <canvas id="agedist" height="100"></canvas>
   </div>
 
 </div><!-- /p1 -->
@@ -434,7 +434,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
 <!-- ════════════════════════════
      TAB 2 ── AI 建議
 ════════════════════════════ -->
-<div class="panel on" id="p2">
+<div class="panel" id="p2">
 
   <!-- AI Insight -->
   <div class="ai-w" style="margin-bottom:14px">
@@ -448,7 +448,9 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     <div class="ai-body">
       <div class="ai-lp">
         <div class="ai-pl">策略洞察報告</div>
-        <div id="aibox"><div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：Failed to fetch</div></div>
+        <div id="aibox">
+          <div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在分析 BCL 數據庫...</span></div>
+        </div>
       </div>
       <div class="ai-rp">
         <div class="qbar">
@@ -475,23 +477,23 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
       <div>
         <div class="cs" style="margin-bottom:10px">管道品質得分</div>
-        <div class="qr"><div class="qt"><span class="qn">自辦活動</span><span class="qv gg">7.24</span></div><div class="qtrack"><div class="qfill" style="width: 72.4%; background: rgb(15, 157, 88);" data-w="72.4"></div></div></div>
-        <div class="qr"><div class="qt"><span class="qn">主動（LINE OA）</span><span class="qv tg">5.50</span></div><div class="qtrack"><div class="qfill" style="width: 55%; background: rgb(66, 133, 244);" data-w="55.0"></div></div></div>
-        <div class="qr"><div class="qt"><span class="qn">異業合作</span><span class="qv ag">4.55</span></div><div class="qtrack"><div class="qfill" style="width: 45.5%; background: rgb(227, 116, 0);" data-w="45.5"></div></div></div>
+        <div class="qr"><div class="qt"><span class="qn">自辦活動</span><span class="qv gg">7.24</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#0F9D58" data-w="72.4"></div></div></div>
+        <div class="qr"><div class="qt"><span class="qn">主動（LINE OA）</span><span class="qv tg">5.50</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#4285F4" data-w="55.0"></div></div></div>
+        <div class="qr"><div class="qt"><span class="qn">異業合作</span><span class="qv ag">4.55</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#E37400" data-w="45.5"></div></div></div>
         <div style="border-top:1px solid var(--border);margin:12px 0"></div>
-        <div class="qr"><div class="qt"><span class="qn" style="color:var(--muted)">整體均分</span><span class="qv" style="color:#DB4437">6.20</span></div><div class="qtrack"><div class="qfill" style="width: 62%; background: rgb(219, 68, 55);" data-w="62.0"></div></div></div>
+        <div class="qr"><div class="qt"><span class="qn" style="color:var(--muted)">整體均分</span><span class="qv" style="color:#DB4437">6.20</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#DB4437" data-w="62.0"></div></div></div>
       </div>
       <div>
         <div class="cs" style="margin-bottom:10px">各管道有效率</div>
-        <div class="vrow"><span class="vl">主動</span><div class="vt"><div class="vf" style="width: 86.2%; background: var(--teal);" data-w="86.2"></div></div><span class="vp tg">86.2%</span></div>
-        <div class="vrow"><span class="vl">異業</span><div class="vt"><div class="vf" style="width: 76.4%; background: var(--amber);" data-w="76.4"></div></div><span class="vp ag">76.4%</span></div>
-        <div class="vrow"><span class="vl">自辦</span><div class="vt"><div class="vf" style="width: 65.6%; background: var(--green);" data-w="65.6"></div></div><span class="vp gg">65.6%</span></div>
+        <div class="vrow"><span class="vl">主動</span><div class="vt"><div class="vf" style="width:0%;background:var(--teal)" data-w="86.2"></div></div><span class="vp tg">86.2%</span></div>
+        <div class="vrow"><span class="vl">異業</span><div class="vt"><div class="vf" style="width:0%;background:var(--amber)" data-w="76.4"></div></div><span class="vp ag">76.4%</span></div>
+        <div class="vrow"><span class="vl">自辦</span><div class="vt"><div class="vf" style="width:0%;background:var(--green)" data-w="65.6"></div></div><span class="vp gg">65.6%</span></div>
         <div style="margin-top:14px;padding:9px 12px;background:rgba(219,68,55,.04);border:1px solid rgba(219,68,55,.12);border-radius:8px;font-size:11px;color:var(--muted)">⚠️ 自辦封鎖率 <span style="color:var(--red);font-family:var(--fm);font-weight:700">34.4%</span> 為三管道最高，需優先改善</div>
       </div>
     </div>
     <table class="dtab">
       <thead><tr><th>來源管道</th><th>分類</th><th>綁定數</th><th>佔比</th><th>品質均分</th></tr></thead>
-      <tbody id="tbody"><tr><td style="font-weight:600">客服</td><td><span class="chtag" style="background:#0F9D5818;color:#0F9D58;border:1px solid #0F9D5833">自辦</span></td><td style="font-family:var(--fm)">114</td><td style="font-family:var(--fm);color:var(--muted)">0.4%</td><td style="font-family:var(--fm);font-weight:600;color:#0F9D58">8.68</td></tr><tr><td style="font-weight:600">LineOA</td><td><span class="chtag" style="background:#4285F418;color:#4285F4;border:1px solid #4285F433">主動</span></td><td style="font-family:var(--fm)">779</td><td style="font-family:var(--fm);color:var(--muted)">2.4%</td><td style="font-family:var(--fm);font-weight:600;color:#0F9D58">7.30</td></tr><tr><td style="font-weight:600">官網-Welcome</td><td><span class="chtag" style="background:#0F9D5818;color:#0F9D58;border:1px solid #0F9D5833">自辦</span></td><td style="font-family:var(--fm)">2,540</td><td style="font-family:var(--fm);color:var(--muted)">7.8%</td><td style="font-family:var(--fm);font-weight:600;color:#4285F4">6.60</td></tr><tr><td style="font-weight:600">全管道</td><td><span class="chtag" style="background:#0F9D5818;color:#0F9D58;border:1px solid #0F9D5833">自辦</span></td><td style="font-family:var(--fm)">1,367</td><td style="font-family:var(--fm);color:var(--muted)">4.2%</td><td style="font-family:var(--fm);font-weight:600;color:#4285F4">5.86</td></tr><tr><td style="font-weight:600">六甲村</td><td><span class="chtag" style="background:#E3740018;color:#E37400;border:1px solid #E3740033">異業</span></td><td style="font-family:var(--fm)">1,240</td><td style="font-family:var(--fm);color:var(--muted)">3.8%</td><td style="font-family:var(--fm);font-weight:600;color:#E37400">4.50</td></tr><tr><td style="font-weight:600">Happy Go</td><td><span class="chtag" style="background:#E3740018;color:#E37400;border:1px solid #E3740033">異業</span></td><td style="font-family:var(--fm)">72</td><td style="font-family:var(--fm);color:var(--muted)">0.2%</td><td style="font-family:var(--fm);font-weight:600;color:#E37400">4.50</td></tr><tr><td style="font-weight:600">揚眾婦幼展</td><td><span class="chtag" style="background:#E3740018;color:#E37400;border:1px solid #E3740033">異業</span></td><td style="font-family:var(--fm)">529</td><td style="font-family:var(--fm);color:var(--muted)">1.6%</td><td style="font-family:var(--fm);font-weight:600;color:#E37400">3.50</td></tr><tr><td style="font-weight:600">永生</td><td><span class="chtag" style="background:#E3740018;color:#E37400;border:1px solid #E3740033">異業</span></td><td style="font-family:var(--fm)">792</td><td style="font-family:var(--fm);color:var(--muted)">2.4%</td><td style="font-family:var(--fm);font-weight:600;color:#E37400">3.50</td></tr><tr><td style="font-weight:600">芳茲</td><td><span class="chtag" style="background:#E3740018;color:#E37400;border:1px solid #E3740033">異業</span></td><td style="font-family:var(--fm)">314</td><td style="font-family:var(--fm);color:var(--muted)">1.0%</td><td style="font-family:var(--fm);font-weight:600;color:#E37400">3.50</td></tr><tr><td style="font-weight:600">SHOPLINE</td><td><span class="chtag" style="background:#0F9D5818;color:#0F9D58;border:1px solid #0F9D5833">自辦</span></td><td style="font-family:var(--fm)">2,075</td><td style="font-family:var(--fm);color:var(--muted)">6.4%</td><td style="font-family:var(--fm);font-weight:600;color:#E37400">3.47</td></tr><tr><td style="font-weight:600">聯盟網</td><td><span class="chtag" style="background:#E3740018;color:#E37400;border:1px solid #E3740033">異業</span></td><td style="font-family:var(--fm)">783</td><td style="font-family:var(--fm);color:var(--muted)">2.4%</td><td style="font-family:var(--fm);font-weight:600;color:#DB4437">2.50</td></tr><tr><td style="font-weight:600">樂飛發票</td><td><span class="chtag" style="background:#E3740018;color:#E37400;border:1px solid #E3740033">異業</span></td><td style="font-family:var(--fm)">1,451</td><td style="font-family:var(--fm);color:var(--muted)">4.5%</td><td style="font-family:var(--fm);font-weight:600;color:#DB4437">1.90</td></tr></tbody>
+      <tbody id="tbody"></tbody>
     </table>
   </div>
 
@@ -727,7 +729,7 @@ async function genBrief(){
   box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在生成今日觀察摘要...</span></div>`;
   const p=BCL.prev, m=BCL.month, d=BCL.date;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYS,messages:[{role:'user',content:`請以「每日晨報」風格，用4個面向簡短分析，每點1-2句話，繁體中文，直接切入數字：
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':atob('c2stYW50LWFwaTAzLTRBenBtSGtUTHVGVW4wRnBodmJON3ZOUERmZFJ0Zlp0VkdBTXhTWXp0bk5rb2lJOEV3NkhSOENLTGlneWcwWFJxQTQxMGVhQ1JnWkltSFdmT1g1V0ZnLVdZckNUQUFB'),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYS,messages:[{role:'user',content:`請以「每日晨報」風格，用4個面向簡短分析，每點1-2句話，繁體中文，直接切入數字：
 
 📅 昨日表現（${d.m}/${d.d}）：昨日${p.total}筆好不好？主動${p.actRate}、自辦${p.slfRate}、異業${p.prtRate}各代表什麼
 📆 本月進展：${d.m}月累計${m.total.toLocaleString()}筆（${m.days}天），達成率${(m.total/2500*100).toFixed(1)}%，好在哪裡或要注意什麼
@@ -744,7 +746,7 @@ async function genAI(){
   const box=document.getElementById('aibox');
   box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在分析 BCL 數據庫...</span></div>`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:'請生成給 GM 的 BCL 策略洞察報告，結構：\n🔍 三大關鍵發現（含數字佐證）\n⚠️ 兩大主要風險（直接點名問題）\n🚀 三個立即行動建議（具體可執行）\n語氣直接、高管級別，280字以內，繁體中文。'}]})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':atob('c2stYW50LWFwaTAzLTRBenBtSGtUTHVGVW4wRnBodmJON3ZOUERmZFJ0Zlp0VkdBTXhTWXp0bk5rb2lJOEV3NkhSOENLTGlneWcwWFJxQTQxMGVhQ1JnWkltSFdmT1g1V0ZnLVdZckNUQUFB'),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:'請生成給 GM 的 BCL 策略洞察報告，結構：\n🔍 三大關鍵發現（含數字佐證）\n⚠️ 兩大主要風險（直接點名問題）\n🚀 三個立即行動建議（具體可執行）\n語氣直接、高管級別，280字以內，繁體中文。'}]})});
     const d=await r.json();if(d.error)throw new Error(d.error.message);
     box.innerHTML=`<div class="ait">${fmt(d.content[0].text)}</div>`;
   }catch(e){box.innerHTML=`<div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：${e.message}</div>`;}
@@ -756,7 +758,7 @@ async function sc(){
   addB('user',msg);hist.push({role:'user',content:msg});
   const lid='l'+Date.now();addB('ai',`<div class="ldots"><span></span><span></span><span></span></div>`,lid);
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:SYS,messages:hist})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':atob('c2stYW50LWFwaTAzLTRBenBtSGtUTHVGVW4wRnBodmJON3ZOUERmZFJ0Zlp0VkdBTXhTWXp0bk5rb2lJOEV3NkhSOENLTGlneWcwWFJxQTQxMGVhQ1JnWkltSFdmT1g1V0ZnLVdZckNUQUFB'),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:SYS,messages:hist})});
     const d=await r.json();const rep=d.content[0].text;
     document.getElementById(lid).innerHTML=fmt(rep);hist.push({role:'assistant',content:rep});
   }catch(e){document.getElementById(lid).innerHTML=`<span style="color:var(--red)">回覆失敗，請重試。</span>`;}
