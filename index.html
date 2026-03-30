@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0051)file:///C:/Users/138531/Downloads/bcl_github_4.html -->
+<!-- saved from url=(0051)file:///C:/Users/138531/Downloads/bcl_github_5.html -->
 <html lang="zh-TW"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BCL Intelligence Dashboard | Benesse Taiwan</title>
-<link href="./11BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
-<script src="./11BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
+<link href="./12BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
+<script src="./12BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
 <style>
 :root{
   /* Google Material palette */
@@ -178,6 +178,14 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
 .tg{color:#1A73E8}.gg{color:#0F9D58}.ag{color:#E37400}.rg{color:#DB4437}.mono{font-family:var(--fm)}
 @media(max-width:1100px){.g4,.g3{grid-template-columns:1fr 1fr}.g2,.g21{grid-template-columns:1fr}.ai-body{grid-template-columns:1fr}.ai-lp{border-right:none;border-bottom:1px solid var(--border)}}
 @media(max-width:680px){.g4,.g3,.g2{grid-template-columns:1fr}}
+
+/* ─ API KEY UI ─ */
+#apiKeyBar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #DADCE0;padding:10px 24px;display:flex;align-items:center;gap:10px;z-index:999;box-shadow:0 -1px 4px rgba(0,0,0,.1)}
+#apiKeyBar.hidden{display:none}
+#apiKeyInput{flex:1;max-width:520px;font-family:'DM Mono',monospace;font-size:12px;padding:7px 12px;border:1px solid #DADCE0;border-radius:6px;outline:none}
+#apiKeyInput:focus{border-color:#4285F4}
+#apiKeySave{background:#4285F4;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
+#apiKeyStatus{font-size:11px;color:#5F6368}
 </style>
 </head>
 <body>
@@ -217,7 +225,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
       </div>
       <button class="regen" onclick="genBrief()" style="font-size:11px">🔄 重新生成</button>
     </div>
-    <div id="briefbox"><div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：invalid x-api-key</div></div>
+    <div id="briefbox"><div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：x-api-key header is required</div></div>
   </div>
 
   <!-- Row 1: Core KPIs (3欄，移除品質均分) -->
@@ -534,18 +542,18 @@ const D={
   fy25Total:32486,fy25A:5442,fy25S:18059,fy25C:8985,
   yearly:[{y:'2020',n:36569},{y:'2021',n:43743},{y:'2022',n:43066},{y:'2023',n:44888},{y:'2024',n:18248},{y:'2025',n:27170},{y:'2026*',n:32486}],
   monthly:[
-    {m:'25/04',主動:340,自辦:3690,異業:1197,n:5227},
-    {m:'25/05',主動:172,自辦:679,異業:361,n:1212},
-    {m:'25/06',主動:196,自辦:546,異業:933,n:1675},
-    {m:'25/07',主動:231,自辦:842,異業:1135,n:2208},
-    {m:'25/08',主動:214,自辦:742,異業:742,n:1698},
-    {m:'25/09',主動:219,自辦:1183,異業:517,n:1919},
-    {m:'25/10',主動:309,自辦:1927,異業:527,n:2763},
-    {m:'25/11',主動:385,自辦:1173,異業:493,n:2051},
-    {m:'25/12',主動:492,自辦:1017,異業:1105,n:2614},
-    {m:'26/01',主動:530,自辦:1392,異業:632,n:2554},
-    {m:'26/02',主動:1178,自辦:1226,異業:874,n:3278},
-    {m:'26/03',主動:1176,自辦:3642,異業:469,n:5287}
+    {m:'25/04',act:340,slf:3690,prt:1197,n:5227},
+    {m:'25/05',act:172,slf:679,prt:361,n:1212},
+    {m:'25/06',act:196,slf:546,prt:933,n:1675},
+    {m:'25/07',act:231,slf:842,prt:1135,n:2208},
+    {m:'25/08',act:214,slf:742,prt:742,n:1698},
+    {m:'25/09',act:219,slf:1183,prt:517,n:1919},
+    {m:'25/10',act:309,slf:1927,prt:527,n:2763},
+    {m:'25/11',act:385,slf:1173,prt:493,n:2051},
+    {m:'25/12',act:492,slf:1017,prt:1105,n:2614},
+    {m:'26/01',act:530,slf:1392,prt:632,n:2554},
+    {m:'26/02',act:1178,slf:1226,prt:874,n:3278},
+    {m:'26/03',act:1176,slf:3642,prt:469,n:5287}
   ],
   capture:[{y:'2023年生',b:135571,c:14754,r:10.9},{y:'2024年生',b:134856,c:13568,r:10.1},{y:'2025年生',b:107812,c:7712,r:7.2},{y:'2026年生',b:15246,c:3900,r:25.6}],
   sources:[{n:'客服',ch:'自辦',cnt:114,q:8.68},{n:'LineOA',ch:'主動',cnt:779,q:7.30},{n:'官網-Welcome',ch:'自辦',cnt:2540,q:6.60},{n:'全管道',ch:'自辦',cnt:1367,q:5.86},{n:'六甲村',ch:'異業',cnt:1240,q:4.50},{n:'Happy Go',ch:'異業',cnt:72,q:4.50},{n:'SHOPLINE',ch:'自辦',cnt:2075,q:3.47},{n:'揚眾婦幼展',ch:'異業',cnt:529,q:3.50},{n:'永生',ch:'異業',cnt:792,q:3.50},{n:'芳茲',ch:'異業',cnt:314,q:3.50},{n:'聯盟網',ch:'異業',cnt:783,q:2.50},{n:'樂飛發票',ch:'異業',cnt:1451,q:1.90}].sort((a,b)=>b.q-a.q)
@@ -578,9 +586,9 @@ function iSp2(){CI.sp2=new Chart(document.getElementById('spark2'),{type:'line',
 
 function iM(){
   CI.mc=new Chart(document.getElementById('mchart'),{type:'bar',data:{labels:D.monthly.map(d=>d.m),datasets:[
-    {label:'主動',data:D.monthly.map(d=>d.主動),backgroundColor:'rgba(66,133,244,.8)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:3,bottomRight:3},stack:'s'},
-    {label:'自辦',data:D.monthly.map(d=>d.自辦),backgroundColor:'rgba(15,157,88,.8)',borderWidth:0,borderRadius:0,stack:'s'},
-    {label:'異業',data:D.monthly.map(d=>d.異業),backgroundColor:'rgba(244,180,0,.85)',borderWidth:0,borderRadius:{topLeft:3,topRight:3,bottomLeft:0,bottomRight:0},stack:'s'}
+    {label:'主動',data:D.monthly.map(d=>d.act),backgroundColor:'rgba(66,133,244,.8)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:3,bottomRight:3},stack:'s'},
+    {label:'自辦',data:D.monthly.map(d=>d.slf),backgroundColor:'rgba(15,157,88,.8)',borderWidth:0,borderRadius:0,stack:'s'},
+    {label:'異業',data:D.monthly.map(d=>d.prt),backgroundColor:'rgba(244,180,0,.85)',borderWidth:0,borderRadius:{topLeft:3,topRight:3,bottomLeft:0,bottomRight:0},stack:'s'}
   ]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'top',align:'end',labels:{font:{size:11},padding:14,usePointStyle:true,pointStyle:'rect'}},tooltip:{mode:'index',intersect:false,callbacks:{title:c=>`${c[0].label}　合計 ${D.monthly[c[0].dataIndex].n.toLocaleString()} 筆`,label:c=>` ${c.dataset.label}：${c.raw.toLocaleString()} 筆（${(c.raw/D.monthly[c[0].dataIndex].n*100).toFixed(1)}%）`}}},scales:{x:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:11}},stacked:true},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{callback:v=>v.toLocaleString(),font:{size:11}},stacked:true}}}});
 }
 function iYoY(){
@@ -729,7 +737,7 @@ async function genBrief(){
   box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在生成今日觀察摘要...</span></div>`;
   const p=BCL.prev, m=BCL.month, d=BCL.date;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':String.fromCharCode(115,107,45,97,110,116,45,97,112,105,48,51,45,104,95,109,111,67,120,88,89,77,77,107,111,100,105,56,88,113,72,77,69,70,51,115,52,107,110,52,110,79,97,85,67,111,102,50,102,99,109,122,85,87,80,51,53,75,48,112,51,50,110,113,83,115,111,81,113,53,45,122,104,112,82,87,108,86,119,56,71,80,119,49,100,97,68,57,81,103,55,120,66,74,110,95,50,82,103,45,56,114,114,119,66,119,65,65),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYS,messages:[{role:'user',content:`請以「每日晨報」風格，用4個面向簡短分析，每點1-2句話，繁體中文，直接切入數字：
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYS,messages:[{role:'user',content:`請以「每日晨報」風格，用4個面向簡短分析，每點1-2句話，繁體中文，直接切入數字：
 
 📅 昨日表現（${d.m}/${d.d}）：昨日${p.total}筆好不好？主動${p.actRate}、自辦${p.slfRate}、異業${p.prtRate}各代表什麼
 📆 本月進展：${d.m}月累計${m.total.toLocaleString()}筆（${m.days}天），達成率${(m.total/2500*100).toFixed(1)}%，好在哪裡或要注意什麼
@@ -746,7 +754,7 @@ async function genAI(){
   const box=document.getElementById('aibox');
   box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在分析 BCL 數據庫...</span></div>`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':String.fromCharCode(115,107,45,97,110,116,45,97,112,105,48,51,45,104,95,109,111,67,120,88,89,77,77,107,111,100,105,56,88,113,72,77,69,70,51,115,52,107,110,52,110,79,97,85,67,111,102,50,102,99,109,122,85,87,80,51,53,75,48,112,51,50,110,113,83,115,111,81,113,53,45,122,104,112,82,87,108,86,119,56,71,80,119,49,100,97,68,57,81,103,55,120,66,74,110,95,50,82,103,45,56,114,114,119,66,119,65,65),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:'請生成給 GM 的 BCL 策略洞察報告，結構：\n🔍 三大關鍵發現（含數字佐證）\n⚠️ 兩大主要風險（直接點名問題）\n🚀 三個立即行動建議（具體可執行）\n語氣直接、高管級別，280字以內，繁體中文。'}]})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:'請生成給 GM 的 BCL 策略洞察報告，結構：\n🔍 三大關鍵發現（含數字佐證）\n⚠️ 兩大主要風險（直接點名問題）\n🚀 三個立即行動建議（具體可執行）\n語氣直接、高管級別，280字以內，繁體中文。'}]})});
     const d=await r.json();if(d.error)throw new Error(d.error.message);
     box.innerHTML=`<div class="ait">${fmt(d.content[0].text)}</div>`;
   }catch(e){box.innerHTML=`<div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：${e.message}</div>`;}
@@ -758,7 +766,7 @@ async function sc(){
   addB('user',msg);hist.push({role:'user',content:msg});
   const lid='l'+Date.now();addB('ai',`<div class="ldots"><span></span><span></span><span></span></div>`,lid);
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':String.fromCharCode(115,107,45,97,110,116,45,97,112,105,48,51,45,104,95,109,111,67,120,88,89,77,77,107,111,100,105,56,88,113,72,77,69,70,51,115,52,107,110,52,110,79,97,85,67,111,102,50,102,99,109,122,85,87,80,51,53,75,48,112,51,50,110,113,83,115,111,81,113,53,45,122,104,112,82,87,108,86,119,56,71,80,119,49,100,97,68,57,81,103,55,120,66,74,110,95,50,82,103,45,56,114,114,119,66,119,65,65),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:SYS,messages:hist})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:SYS,messages:hist})});
     const d=await r.json();const rep=d.content[0].text;
     document.getElementById(lid).innerHTML=fmt(rep);hist.push({role:'assistant',content:rep});
   }catch(e){document.getElementById(lid).innerHTML=`<span style="color:var(--red)">回覆失敗，請重試。</span>`;}
@@ -808,8 +816,30 @@ function iAgeDist(){
   });
 }
 
+
+// ── API KEY MANAGEMENT ──
+function getApiKey(){return sessionStorage.getItem('bcl_api_key')||'';}
+function saveApiKey(){
+  var k=document.getElementById('apiKeyInput').value.trim();
+  if(!k.startsWith('sk-ant-')){
+    document.getElementById('apiKeyStatus').textContent='❌ 格式不對，請確認 Key 以 sk-ant- 開頭';
+    return;
+  }
+  sessionStorage.setItem('bcl_api_key',k);
+  document.getElementById('apiKeyStatus').textContent='✅ 已儲存，頁面關閉後需重新輸入';
+  document.getElementById('apiKeyInput').value='';
+  document.getElementById('apiKeyBar').classList.add('hidden');
+  genBrief();
+}
+function checkApiKey(){
+  var k=getApiKey();
+  if(k){document.getElementById('apiKeyBar').classList.add('hidden');}
+  else{document.getElementById('apiKeyBar').classList.remove('hidden');}
+}
+
 // ── INIT ──
 document.addEventListener('DOMContentLoaded',()=>{
+  checkApiKey();
   applyBCLData();
   aN('k1',271038);aN('k3',32486);
   recalc();
@@ -817,6 +847,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   genBrief();
 });
 </script>
+
+<div id="apiKeyBar">
+  <span style="font-size:12px;color:#5F6368;font-weight:500;white-space:nowrap">🔑 Anthropic API Key</span>
+  <input id="apiKeyInput" type="password" placeholder="貼上你的 API Key（sk-ant-api03-...）">
+  <button id="apiKeySave" onclick="saveApiKey()">儲存</button>
+  <span id="apiKeyStatus"></span>
+</div>
 
 
 </body></html>
