@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0051)file:///C:/Users/138531/Downloads/bcl_github_6.html -->
+<!-- saved from url=(0051)file:///C:/Users/138531/Downloads/bcl_github_7.html -->
 <html lang="zh-TW"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BCL Intelligence Dashboard | Benesse Taiwan</title>
-<link href="./13BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
-<script src="./13BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
+<link href="./14BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
+<script src="./14BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
 <style>
 :root{
   /* Google Material palette */
@@ -202,8 +202,8 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     </div>
   </div>
   <nav class="tabs">
-    <button class="tab t0 on" onclick="sw(0)">📊 現況</button>
-    <button class="tab t1" onclick="sw(1)">📈 趨勢</button>
+    <button class="tab t0" onclick="sw(0)">📊 現況</button>
+    <button class="tab t1 on" onclick="sw(1)">📈 趨勢</button>
     <button class="tab t2" onclick="sw(2)">✦ AI 建議</button>
   </nav>
 </header>
@@ -213,7 +213,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
 <!-- ════════════════════════════
      TAB 0 ── 現況
 ════════════════════════════ -->
-<div class="panel on" id="p0">
+<div class="panel" id="p0">
 
   <!-- AI 每日觀察摘要 -->
   <div id="aibrief" style="background:#fff;border:1px solid #DADCE0;border-radius:8px;padding:18px 22px;margin-bottom:12px;box-shadow:0 1px 2px rgba(60,64,67,.1);position:relative;overflow:hidden">
@@ -248,7 +248,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
       <div class="kl">FY25 新增綁定</div>
       <div class="kv" id="k3">32,486</div>
       <div class="ks">vs FY24 財年 20,757　▲ +55.6%</div>
-      <div class="sw"><canvas id="sparkline" height="34" width="442" style="display: block; box-sizing: border-box; height: 34px; width: 442px;"></canvas></div>
+      <div class="sw"><canvas id="sparkline" height="0" width="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;"></canvas></div>
     </div>
 
     <!-- 系統保有 -->
@@ -309,7 +309,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
       </div>
       <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,.06)">
         <div style="font-size:10px;color:var(--dim);font-family:var(--fm);letter-spacing:.1em;margin-bottom:8px">近30日合計趨勢</div>
-        <div style="height:48px"><canvas id="spark2" height="48" width="692" style="display: block; box-sizing: border-box; height: 48px; width: 692px;"></canvas></div>
+        <div style="height:48px"><canvas id="spark2" height="0" width="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;"></canvas></div>
       </div>
     </div>
 
@@ -367,13 +367,13 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
 <!-- ════════════════════════════
      TAB 1 ── 趨勢
 ════════════════════════════ -->
-<div class="panel" id="p1">
+<div class="panel on" id="p1">
 
   <!-- 月度堆疊 -->
   <div class="card" style="margin-bottom:14px">
     <div class="ct">FY25 各月綁定量（三大管道堆疊）</div>
     <div class="cs">2025/04–2026/03 ｜ 全部為確認實際數據</div>
-    <canvas id="mchart" height="110"></canvas>
+    <canvas id="mchart" height="527" width="1438" style="display: block; box-sizing: border-box; height: 527px; width: 1438px;"></canvas>
   </div>
 
   <!-- YoY + 月齡分布 -->
@@ -395,7 +395,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
           <div style="font-size:11px;color:var(--dim);font-family:var(--fm);margin-top:3px">2404～2503</div>
         </div>
       </div>
-      <canvas id="yoychart" height="120"></canvas>
+      <canvas id="yoychart" height="373" width="934" style="display: block; box-sizing: border-box; height: 373px; width: 934px;"></canvas>
     </div>
 
     <!-- 本月月齡 + FY25月齡 -->
@@ -425,15 +425,15 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
 
   <!-- 歷年趨勢 + 出生年保有率 -->
   <div class="g2" style="margin-bottom:14px">
-    <div class="card"><div class="ct">歷年 BCL 綁定量</div><div class="cs">2020–2026（2026 為 YTD）</div><canvas id="ychart" height="150"></canvas></div>
-    <div class="card"><div class="ct">出生年保有率</div><div class="cs">各出生年已綁定 / 新生兒人口</div><canvas id="cchart" height="150"></canvas></div>
+    <div class="card"><div class="ct">歷年 BCL 綁定量</div><div class="cs">2020–2026（2026 為 YTD）</div><canvas id="ychart" height="344" width="688" style="display: block; box-sizing: border-box; height: 344px; width: 688px;"></canvas></div>
+    <div class="card"><div class="ct">出生年保有率</div><div class="cs">各出生年已綁定 / 新生兒人口</div><canvas id="cchart" height="344" width="688" style="display: block; box-sizing: border-box; height: 344px; width: 688px;"></canvas></div>
   </div>
 
   <!-- FY25 各月月齡分布 -->
   <div class="card">
     <div class="ct">FY25 各月月齡分布（堆疊）</div>
     <div class="cs">每月收集結構 ｜ 孕期 · 0~36月 · 36月以上 · 無生日</div>
-    <canvas id="agedist" height="100"></canvas>
+    <canvas id="agedist" height="479" width="1438" style="display: block; box-sizing: border-box; height: 479px; width: 1438px;"></canvas>
   </div>
 
 </div><!-- /p1 -->
