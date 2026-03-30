@@ -186,7 +186,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
   <div class="hd-top">
     <div class="brand">
       <div class="logo">📡</div>
-      <div><h1>BCL Intelligence Dashboard</h1><p>Benesse Taiwan &nbsp;·&nbsp; 業務戰略組</p></div>
+      <div><h1>BCL Intelligence Dashboard</h1><p>Benesse Taiwan &nbsp;·&nbsp; 經營計畫組</p></div>
     </div>
     <div class="badges">
       <span class="badge bp">FY25　2025/04 – 2026/03</span>
@@ -509,43 +509,49 @@ const BCL={
   date:{y:2026,m:3,d:27,label:'2026年3月27日'},
   prev:{
     total:69,
-    act:14, slf:39, prt:16,
-    actCls:'dn', slfCls:'dn', prtCls:'up',
-    actRate:'▼ -41.7%', slfRate:'▼ -54.1%', prtRate:'▲ +166.7%',
-    actPct:20.3, slfPct:56.5, prtPct:23.2,
-    avg7act:23.9, avg7slf:71.7, avg7prt:6.0
+    act:14,slf:39,prt:16,
+    actCls:'dn',slfCls:'dn',prtCls:'up',
+    actRate:'% -53.3%',slfRate:'% -59.9%',prtRate:'% +211.1%',
+    actPct:20.3,slfPct:56.5,prtPct:23.2,
+    avg7act:30.0,avg7slf:97.1,avg7prt:5.1
   },
   month:{
-    total:5287, act:1142, slf:3673, prt:472,
-    days:27, daysInMonth:31,
-    age:{pre:574,a36:3163,a37:1223,nb:327,tot:5287,
-         prePct:'10.9%',a36Pct:'59.8%',a37Pct:'23.1%',nbPct:'6.2%',
-         preW:10.9,a36W:59.8,a37W:23.1,nbW:6.2}
+    total:5287,act:1176,slf:3642,prt:469,
+    days:27,daysInMonth:31,
+    age:{pre:602,a36:3119,a37:1230,nb:336,tot:5287,
+         prePct:'11.4%',a36Pct:'59.0%',a37Pct:'23.3%',nbPct:'6.4%',
+         preW:11.4,a36W:59.0,a37W:23.3,nbW:6.4}
   },
-  spark30:[88,318,282,329,242,67,75,129,65,177,181,110,114,1318,351,196,252,238,102,147,117,82,99,175,196,107,110,119,94,69],
+  spark30:[88,318,282,329,242,67,75,129,65,177,181,110,114,1318,351,196,252,238,102,147,117,82,99,175,196,107,110,134,105,69],
   agedist:{
-    prenatal:[295,198,243,471,363,284,383,385,649,679,728,574],
-    age036:  [3738,739,800,1237,842,1120,1418,1099,1368,993,1353,3163],
-    age37:   [582,137,424,361,372,452,808,411,476,770,648,1223],
-    nobday:  [612,138,208,139,121,63,154,156,121,112,549,327]
+    prenatal:[295,198,243,471,363,284,383,385,649,679,728,602],
+    age036:  [3738,739,800,1237,842,1120,1418,1099,1368,993,1353,3119],
+    age37:   [582,137,424,361,372,452,809,411,476,770,648,1230],
+    nobday:  [612,138,208,139,121,63,153,156,121,112,549,336]
   }
 };
 /*BCL_END*/
 
 const D={
-  totalBCL:270850,valid:180602,invalid:90248,
-  fy25Total:32297,fy25A:5394,fy25S:17935,fy25C:8968,
-  yearly:[{y:'2020',n:36569},{y:'2021',n:43743},{y:'2022',n:43066},{y:'2023',n:44888},{y:'2024',n:18248},{y:'2025',n:27170},{y:'2026*',n:10930}],
+  totalBCL:271038,valid:180523,invalid:90515,
+  fy25Total:32486,fy25A:5442,fy25S:18059,fy25C:8985,
+  yearly:[{y:'2020',n:36569},{y:'2021',n:43743},{y:'2022',n:43066},{y:'2023',n:44888},{y:'2024',n:18248},{y:'2025',n:27170},{y:'2026*',n:32486}],
   monthly:[
-    {m:'25/04',主動:340,自辦:3690,異業:1197,n:5227},{m:'25/05',主動:172,自辦:679,異業:361,n:1212},
-    {m:'25/06',主動:196,自辦:546,異業:933,n:1675},{m:'25/07',主動:231,自辦:842,異業:1135,n:2208},
-    {m:'25/08',主動:214,自辦:742,異業:742,n:1698},{m:'25/09',主動:219,自辦:1183,異業:517,n:1919},
-    {m:'25/10',主動:309,自辦:1927,異業:527,n:2763},{m:'25/11',主動:385,自辦:1173,異業:493,n:2051},
-    {m:'25/12',主動:492,自辦:1017,異業:1105,n:2614},{m:'26/01',主動:530,自辦:1392,異業:632,n:2554},
-    {m:'26/02',主動:1178,自辦:1226,異業:874,n:3278},{m:'26/03',主動:1128,自辦:3518,異業:452,n:5098}
+    {m:'25/04',主動:340,自辖:3690,異業:1197,n:5227},
+    {m:'25/05',主動:172,自辖:679,異業:361,n:1212},
+    {m:'25/06',主動:196,自辖:546,異業:933,n:1675},
+    {m:'25/07',主動:231,自辖:842,異業:1135,n:2208},
+    {m:'25/08',主動:214,自辖:742,異業:742,n:1698},
+    {m:'25/09',主動:219,自辖:1183,異業:517,n:1919},
+    {m:'25/10',主動:309,自辖:1927,異業:527,n:2763},
+    {m:'25/11',主動:385,自辖:1173,異業:493,n:2051},
+    {m:'25/12',主動:492,自辖:1017,異業:1105,n:2614},
+    {m:'26/01',主動:530,自辖:1392,異業:632,n:2554},
+    {m:'26/02',主動:1178,自辖:1226,異業:874,n:3278},
+    {m:'26/03',主動:1176,自辖:3642,異業:469,n:5287}
   ],
   capture:[{y:'2023年生',b:135571,c:14754,r:10.9},{y:'2024年生',b:134856,c:13568,r:10.1},{y:'2025年生',b:107812,c:7712,r:7.2},{y:'2026年生',b:15246,c:3900,r:25.6}],
-  sources:[{n:'客服',ch:'自辦',cnt:114,q:8.68,note:'品質最高，量少'},{n:'LineOA',ch:'主動',cnt:779,q:7.30,note:'穩定高品質'},{n:'官網-Welcome',ch:'自辦',cnt:2540,q:6.60,note:'訂購轉化佳'},{n:'全管道',ch:'自辦',cnt:1367,q:5.86,note:'線下活動綜合'},{n:'六甲村',ch:'異業',cnt:1240,q:4.50,note:'通路合作穩定'},{n:'Happy Go',ch:'異業',cnt:72,q:4.50,note:'量少但穩定'},{n:'SHOPLINE',ch:'自辦',cnt:2075,q:3.47,note:'月齡分散需優化'},{n:'揆眾婦幼展',ch:'異業',cnt:529,q:3.50,note:'季節性展覽'},{n:'永生',ch:'異業',cnt:792,q:3.50,note:'藥妝通路'},{n:'芳茲',ch:'異業',cnt:314,q:3.50,note:'婦嬰通路'},{n:'聯盟網',ch:'異業',cnt:783,q:2.50,note:'數位廣告'},{n:'樂飛發票',ch:'異業',cnt:1451,q:1.90,note:'⚠️ 品質最低'}].sort((a,b)=>b.q-a.q)
+  sources:[{n:'客服',ch:'自辖',cnt:114,q:8.68},{n:'LineOA',ch:'主動',cnt:779,q:7.30},{n:'官網-Welcome',ch:'自辖',cnt:2540,q:6.60},{n:'全管道',ch:'自辖',cnt:1367,q:5.86},{n:'六申村',ch:'異業',cnt:1240,q:4.50},{n:'Happy Go',ch:'異業',cnt:72,q:4.50},{n:'SHOPLINE',ch:'自辖',cnt:2075,q:3.47},{n:'捨奧富媛展',ch:'異業',cnt:529,q:3.50},{n:'永生',ch:'異業',cnt:792,q:3.50},{n:'芳纂',ch:'異業',cnt:314,q:3.50},{n:'联盟網',ch:'異業',cnt:783,q:2.50},{n:'樂飛発票',ch:'異業',cnt:1451,q:1.90}].sort((a,b)=>b.q-a.q)
 };
 
 // ── TABS ──
@@ -726,7 +732,7 @@ async function genBrief(){
   box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在生成今日觀察摘要...</span></div>`;
   const p=BCL.prev, m=BCL.month, d=BCL.date;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':('sk-ant-api03-4AzpmHkTLuFUn0Fph'+('vbN7vNPDfdRtfZtVGAMxSYztnNkoiI8Ew6HR8CKLigyg0XRqA410eaCRgZImHWfOX5WFg-WYrCTAAA')),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYS,messages:[{role:'user',content:`請以「每日晨報」風格，用4個面向簡短分析，每點1-2句話，繁體中文，直接切入數字：
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYS,messages:[{role:'user',content:`請以「每日晨報」風格，用4個面向簡短分析，每點1-2句話，繁體中文，直接切入數字：
 
 📅 昨日表現（${d.m}/${d.d}）：昨日${p.total}筆好不好？主動${p.actRate}、自辦${p.slfRate}、異業${p.prtRate}各代表什麼
 📆 本月進展：${d.m}月累計${m.total.toLocaleString()}筆（${m.days}天），達成率${(m.total/2500*100).toFixed(1)}%，好在哪裡或要注意什麼
@@ -743,7 +749,7 @@ async function genAI(){
   const box=document.getElementById('aibox');
   box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在分析 BCL 數據庫...</span></div>`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':('sk-ant-api03-4AzpmHkTLuFUn0Fph'+('vbN7vNPDfdRtfZtVGAMxSYztnNkoiI8Ew6HR8CKLigyg0XRqA410eaCRgZImHWfOX5WFg-WYrCTAAA')),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:'請生成給 GM 的 BCL 策略洞察報告，結構：\n🔍 三大關鍵發現（含數字佐證）\n⚠️ 兩大主要風險（直接點名問題）\n🚀 三個立即行動建議（具體可執行）\n語氣直接、高管級別，280字以內，繁體中文。'}]})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:'請生成給 GM 的 BCL 策略洞察報告，結構：\n🔍 三大關鍵發現（含數字佐證）\n⚠️ 兩大主要風險（直接點名問題）\n🚀 三個立即行動建議（具體可執行）\n語氣直接、高管級別，280字以內，繁體中文。'}]})});
     const d=await r.json();if(d.error)throw new Error(d.error.message);
     box.innerHTML=`<div class="ait">${fmt(d.content[0].text)}</div>`;
   }catch(e){box.innerHTML=`<div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：${e.message}</div>`;}
@@ -755,7 +761,7 @@ async function sc(){
   addB('user',msg);hist.push({role:'user',content:msg});
   const lid='l'+Date.now();addB('ai',`<div class="ldots"><span></span><span></span><span></span></div>`,lid);
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':('sk-ant-api03-4AzpmHkTLuFUn0Fph'+('vbN7vNPDfdRtfZtVGAMxSYztnNkoiI8Ew6HR8CKLigyg0XRqA410eaCRgZImHWfOX5WFg-WYrCTAAA')),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:SYS,messages:hist})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:SYS,messages:hist})});
     const d=await r.json();const rep=d.content[0].text;
     document.getElementById(lid).innerHTML=fmt(rep);hist.push({role:'assistant',content:rep});
   }catch(e){document.getElementById(lid).innerHTML=`<span style="color:var(--red)">回覆失敗，請重試。</span>`;}
