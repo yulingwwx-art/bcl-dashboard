@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0051)file:///C:/Users/138531/Downloads/bcl_github_1.html -->
+<!-- saved from url=(0051)file:///C:/Users/138531/Downloads/bcl_github_2.html -->
 <html lang="zh-TW"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BCL Intelligence Dashboard | Benesse Taiwan</title>
-<link href="./8BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
-<script src="./8BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
+<link href="./9BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
+<script src="./9BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
 <style>
 :root{
   /* Google Material palette */
@@ -729,7 +729,7 @@ async function genBrief(){
   box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在生成今日觀察摘要...</span></div>`;
   const p=BCL.prev, m=BCL.month, d=BCL.date;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':atob('c2stYW50LWFwaTAzLTRBenBtSGtUTHVGVW4wRnBodmJON3ZOUERmZFJ0Zlp0VkdBTXhTWXp0bk5rb2lJOEV3NkhSOENLTGlneWcwWFJxQTQxMGVhQ1JnWkltSFdmT1g1V0ZnLVdZckNUQUFB'),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYS,messages:[{role:'user',content:`請以「每日晨報」風格，用4個面向簡短分析，每點1-2句話，繁體中文，直接切入數字：
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYS,messages:[{role:'user',content:`請以「每日晨報」風格，用4個面向簡短分析，每點1-2句話，繁體中文，直接切入數字：
 
 📅 昨日表現（${d.m}/${d.d}）：昨日${p.total}筆好不好？主動${p.actRate}、自辦${p.slfRate}、異業${p.prtRate}各代表什麼
 📆 本月進展：${d.m}月累計${m.total.toLocaleString()}筆（${m.days}天），達成率${(m.total/2500*100).toFixed(1)}%，好在哪裡或要注意什麼
@@ -746,7 +746,7 @@ async function genAI(){
   const box=document.getElementById('aibox');
   box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在分析 BCL 數據庫...</span></div>`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':atob('c2stYW50LWFwaTAzLTRBenBtSGtUTHVGVW4wRnBodmJON3ZOUERmZFJ0Zlp0VkdBTXhTWXp0bk5rb2lJOEV3NkhSOENLTGlneWcwWFJxQTQxMGVhQ1JnWkltSFdmT1g1V0ZnLVdZckNUQUFB'),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:'請生成給 GM 的 BCL 策略洞察報告，結構：\n🔍 三大關鍵發現（含數字佐證）\n⚠️ 兩大主要風險（直接點名問題）\n🚀 三個立即行動建議（具體可執行）\n語氣直接、高管級別，280字以內，繁體中文。'}]})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:'請生成給 GM 的 BCL 策略洞察報告，結構：\n🔍 三大關鍵發現（含數字佐證）\n⚠️ 兩大主要風險（直接點名問題）\n🚀 三個立即行動建議（具體可執行）\n語氣直接、高管級別，280字以內，繁體中文。'}]})});
     const d=await r.json();if(d.error)throw new Error(d.error.message);
     box.innerHTML=`<div class="ait">${fmt(d.content[0].text)}</div>`;
   }catch(e){box.innerHTML=`<div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：${e.message}</div>`;}
@@ -758,7 +758,7 @@ async function sc(){
   addB('user',msg);hist.push({role:'user',content:msg});
   const lid='l'+Date.now();addB('ai',`<div class="ldots"><span></span><span></span><span></span></div>`,lid);
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':atob('c2stYW50LWFwaTAzLTRBenBtSGtUTHVGVW4wRnBodmJON3ZOUERmZFJ0Zlp0VkdBTXhTWXp0bk5rb2lJOEV3NkhSOENLTGlneWcwWFJxQTQxMGVhQ1JnWkltSFdmT1g1V0ZnLVdZckNUQUFB'),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:SYS,messages:hist})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:SYS,messages:hist})});
     const d=await r.json();const rep=d.content[0].text;
     document.getElementById(lid).innerHTML=fmt(rep);hist.push({role:'assistant',content:rep});
   }catch(e){document.getElementById(lid).innerHTML=`<span style="color:var(--red)">回覆失敗，請重試。</span>`;}
