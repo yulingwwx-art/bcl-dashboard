@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0058)file:///C:/Users/138531/Downloads/bcl_dashboard_final.html -->
+<!-- saved from url=(0060)file:///C:/Users/138531/Downloads/bcl_dashboard_final_2.html -->
 <html lang="zh-TW"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BCL Intelligence Dashboard | Benesse Taiwan</title>
-<link href="./BCL Intelligence Dashboard _ Benesse Taiwan2_files/css2" rel="stylesheet">
-<script src="./BCL Intelligence Dashboard _ Benesse Taiwan2_files/chart.umd.min.js.下載"></script>
+<link href="./5BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
+<script src="./5BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
 <style>
 :root{
   /* Google Material palette */
@@ -217,7 +217,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
       </div>
       <button class="regen" onclick="genBrief()" style="font-size:11px">🔄 重新生成</button>
     </div>
-    <div id="briefbox"><div style="font-size:13px;line-height:1.85;color:var(--text)"><strong style="color:var(--text)">📅 昨日表現（3/27）</strong><br>69筆表現中等偏弱，主動管道-41.7%、自辦-54.1%雙雙大跌值得警惕。異業+166.7%強勁反彈是唯一亮點。<br><br><strong style="color:var(--text)">📆 本月進展</strong><br>3月累計5,287筆，達成率211.5%超標一倍以上表現優異。但日均196筆vs目標83筆，需維持後續動能不失速。<br><br><strong style="color:var(--text)">⚠️ 需要關注</strong><br>自辦管道封鎖率34.4%過高，雖然品質分數最佳（7.24）但有效率僅65.6%，投入產出比亮紅燈。<br><br><strong style="color:var(--text)">✅ 建議行動</strong><br>立即檢討自辦管道名單來源與推播策略，優化封鎖率問題，同時複製異業管道昨日成功經驗。</div></div>
+    <div id="briefbox"><div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：Failed to fetch</div></div>
   </div>
 
   <!-- Row 1: Core KPIs (3欄，移除品質均分) -->
@@ -227,10 +227,10 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     <div class="kc" style="--kc:#4285F4">
       <div class="ki">🗂️</div>
       <div class="kl">總 BCL 保有</div>
-      <div class="kv" id="k1">270,850</div>
+      <div class="kv" id="k1">271,038</div>
       <div class="km">
-        <div class="kr"><span class="krl">✅ 有效會員</span><span class="krv" style="color:#0F9D58">180,602</span><span class="tag up">66.7%</span></div>
-        <div class="kr"><span class="krl">⛔ 封鎖無效</span><span class="krv" style="color:#DB4437">90,248</span><span class="tag dn">33.3%</span></div>
+        <div class="kr"><span class="krl">✅ 有效會員</span><span class="krv" style="color:#0F9D58">180,523</span><span class="tag up">66.7%</span></div>
+        <div class="kr"><span class="krl">⛔ 封鎖無效</span><span class="krv" style="color:#DB4437">90,515</span><span class="tag dn">33.3%</span></div>
       </div>
     </div>
 
@@ -238,8 +238,8 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     <div class="kc" style="--kc:#F4B400">
       <div class="ki">📈</div>
       <div class="kl">FY25 新增綁定</div>
-      <div class="kv" id="k3">32,297</div>
-      <div class="ks">vs FY24 財年 20,757　▲ +55.6%</div>
+      <div class="kv" id="k3">32,486</div>
+      <div class="ks">vs FY24 財年 20,757　▲ +56.5%</div>
       <div class="sw"><canvas id="sparkline" height="34" style="display: block; box-sizing: border-box; height: 34px; width: 442px;" width="442"></canvas></div>
     </div>
 
@@ -806,7 +806,7 @@ function iAgeDist(){
 // ── INIT ──
 document.addEventListener('DOMContentLoaded',()=>{
   applyBCLData();
-  aN('k1',270850);aN('k3',32297);
+  aN('k1',271038);aN('k3',32486);
   recalc();
   iSp();iSp2();
   genBrief();
