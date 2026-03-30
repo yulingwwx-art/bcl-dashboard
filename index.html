@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0051)file:///C:/Users/138531/Downloads/bcl_github_5.html -->
+<!-- saved from url=(0051)file:///C:/Users/138531/Downloads/bcl_github_6.html -->
 <html lang="zh-TW"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BCL Intelligence Dashboard | Benesse Taiwan</title>
-<link href="./12BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
-<script src="./12BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
+<link href="./13BCL Intelligence Dashboard _ Benesse Taiwan_files/css2" rel="stylesheet">
+<script src="./13BCL Intelligence Dashboard _ Benesse Taiwan_files/chart.umd.min.js.下載"></script>
 <style>
 :root{
   /* Google Material palette */
@@ -181,7 +181,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
 
 /* ─ API KEY UI ─ */
 #apiKeyBar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #DADCE0;padding:10px 24px;display:flex;align-items:center;gap:10px;z-index:999;box-shadow:0 -1px 4px rgba(0,0,0,.1)}
-#apiKeyBar.hidden{display:none}
+#apiKeyBar.hidden{display:none!important}
 #apiKeyInput{flex:1;max-width:520px;font-family:'DM Mono',monospace;font-size:12px;padding:7px 12px;border:1px solid #DADCE0;border-radius:6px;outline:none}
 #apiKeyInput:focus{border-color:#4285F4}
 #apiKeySave{background:#4285F4;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
@@ -821,7 +821,7 @@ function iAgeDist(){
 function getApiKey(){return sessionStorage.getItem('bcl_api_key')||'';}
 function saveApiKey(){
   var k=document.getElementById('apiKeyInput').value.trim();
-  if(!k.startsWith('sk-ant-')){
+  if(k.length < 20){
     document.getElementById('apiKeyStatus').textContent='❌ 格式不對，請確認 Key 以 sk-ant- 開頭';
     return;
   }
@@ -850,7 +850,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 <div id="apiKeyBar">
   <span style="font-size:12px;color:#5F6368;font-weight:500;white-space:nowrap">🔑 Anthropic API Key</span>
-  <input id="apiKeyInput" type="password" placeholder="貼上你的 API Key（sk-ant-api03-...）">
+  <input id="apiKeyInput" type="password" placeholder="貼上你的 Anthropic API Key...i03-...）">
   <button id="apiKeySave" onclick="saveApiKey()">儲存</button>
   <span id="apiKeyStatus"></span>
 </div>
