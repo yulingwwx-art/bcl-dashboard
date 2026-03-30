@@ -257,14 +257,14 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
     <div class="kc" style="--kc:#4285F4">
       <div class="ki">🔋</div>
       <div class="kl">系統保有 0～36 月齡</div>
-      <div class="kv" style="color:#4285F4">34,958</div>
+      <div class="kv" style="color:#4285F4" id="sysTotal">35,032</div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
-        <div style="flex:1;height:5px;background:#E8EAED;border-radius:3px;overflow:hidden"><div style="width:82.8%;height:100%;background:#4285F4;border-radius:3px"></div></div>
-        <span style="font-size:11px;font-family:var(--fm);color:#4285F4;white-space:nowrap">82.8%</span>
+        <div style="flex:1;height:5px;background:#E8EAED;border-radius:3px;overflow:hidden"><div id="sysBar" style="width:82.5%;height:100%;background:#4285F4;border-radius:3px"></div></div>
+        <span style="font-size:11px;font-family:var(--fm);color:#4285F4;white-space:nowrap" id="sysPct">82.5%</span>
       </div>
       <div class="km" style="margin-top:8px">
-        <div class="kr"><span class="krl">✅ 有效可推播</span><span class="krv" style="color:#4285F4">28,960</span><span class="tag neu">立即可用</span></div>
-        <div class="kr"><span class="krl">⚠️ 無效封鎖</span><span class="krv">5,998</span><span class="tag dn">流失</span></div>
+        <div class="kr"><span class="krl">✅ 有效可推播</span><span class="krv" style="color:#4285F4" id="sysValid">28,962</span><span class="tag neu">立即可用</span></div>
+        <div class="kr"><span class="krl">⚠️ 無效封鎖</span><span class="krv" id="sysInvalid">6,070</span><span class="tag dn">流失</span></div>
       </div>
     </div>
 
@@ -388,7 +388,7 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
         <div style="text-align:center;padding:12px 10px;background:rgba(66,133,244,.05);border:1px solid rgba(66,133,244,.12);border-radius:10px">
           <div style="font-size:9px;color:var(--dim);font-family:var(--fm);letter-spacing:.1em;margin-bottom:5px">FY25 總量</div>
-          <div style="font-family:var(--fm);font-size:22px;font-weight:500;color:var(--text)">32,297</div>
+          <div style="font-family:var(--fm);font-size:22px;font-weight:500;color:var(--text)" id="yoyFY25">32,486</div>
           <div style="font-size:11px;color:#0F9D58;font-family:var(--fm);margin-top:3px">▲ +55.6%</div>
         </div>
         <div style="text-align:center;padding:12px 10px;background:rgba(0,0,0,.02);border:1px solid var(--border);border-radius:10px">
@@ -414,12 +414,12 @@ main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
       </div>
       <div class="card">
         <div class="ct">FY25 月齡分布</div>
-        <div class="cs">全年 32,297 筆 · 日度資料加總</div>
+        <div class="cs" id="fy25ageTot">全年 32,486 筆 · 日度資料加總</div>
         <div class="ab">
-          <div class="ar"><div class="ar-top"><span class="ar-l">🤰 孕期</span><span class="ar-v" style="color:#e17055">5,230 <span style="color:var(--dim);font-weight:400;font-size:10px">16.2%</span></span></div><div class="at"><div class="af" style="width:16.2%;background:#e17055"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">🍼 0～36月</span><span class="ar-v" style="color:#0F9D58">17,753 <span style="color:var(--dim);font-weight:400;font-size:10px">55.0%</span></span></div><div class="at"><div class="af" style="width:55.0%;background:#0F9D58"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">🧒 36月+</span><span class="ar-v" style="color:#6c5ce7">6,619 <span style="color:var(--dim);font-weight:400;font-size:10px">20.5%</span></span></div><div class="at"><div class="af" style="width:20.5%;background:#6c5ce7"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">❓ 無生日</span><span class="ar-v" style="color:var(--muted)">2,695 <span style="color:var(--dim);font-weight:400;font-size:10px">8.3%</span></span></div><div class="at"><div class="af" style="width:8.3%;background:#b2bec3"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">🤰 孕期</span><span class="ar-v" style="color:#e17055"><span id="fy25pre">5,230</span> <span style="color:var(--dim);font-weight:400;font-size:10px" id="fy25prePct">16.2%</span></span></div><div class="at"><div class="af" id="fy25preBar" style="width:16.2%;background:#e17055"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">🍼 0～36月</span><span class="ar-v" style="color:#0F9D58"><span id="fy25a36">17,753</span> <span style="color:var(--dim);font-weight:400;font-size:10px" id="fy25a36Pct">55.0%</span></span></div><div class="at"><div class="af" id="fy25a36Bar" style="width:55.0%;background:#0F9D58"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">🧒 36月+</span><span class="ar-v" style="color:#6c5ce7"><span id="fy25a37">6,619</span> <span style="color:var(--dim);font-weight:400;font-size:10px" id="fy25a37Pct">20.5%</span></span></div><div class="at"><div class="af" id="fy25a37Bar" style="width:20.5%;background:#6c5ce7"></div></div></div>
+          <div class="ar"><div class="ar-top"><span class="ar-l">❓ 無生日</span><span class="ar-v" style="color:var(--muted)"><span id="fy25nb">2,695</span> <span style="color:var(--dim);font-weight:400;font-size:10px" id="fy25nbPct">8.3%</span></span></div><div class="at"><div class="af" id="fy25nbBar" style="width:8.3%;background:#b2bec3"></div></div></div>
         </div>
       </div>
     </div>
@@ -542,6 +542,8 @@ const BCL={
 const D={
   totalBCL:271038,valid:180523,invalid:90515,
   fy25Total:32486,fy25A:5442,fy25S:18059,fy25C:8985,
+  validRate:{act:88.1,slf:87.0,prt:75.4},
+  sys:{total:35032,valid:28962,invalid:6070},
   yearly:[{y:'2020',n:36569},{y:'2021',n:43743},{y:'2022',n:43066},{y:'2023',n:44888},{y:'2024',n:18248},{y:'2025',n:27170},{y:'2026*',n:32486}],
   monthly:[
     {m:'25/04',act:340,slf:3690,prt:1197,n:5227},
@@ -638,7 +640,21 @@ function iT(){
     return `<tr><td style="font-weight:600">${s.n}</td><td><span class="chtag" style="background:${c}18;color:${c};border:1px solid ${c}33">${s.ch}</span></td><td style="font-family:var(--fm)">${s.cnt.toLocaleString()}</td><td style="font-family:var(--fm);color:var(--muted)">${p}%</td><td style="font-family:var(--fm);font-weight:600;color:${q}">${s.q.toFixed(2)}</td></tr>`;
   }).join('');
 }
-function iT2(){setTimeout(()=>{document.querySelectorAll('.qfill,.vf').forEach(el=>el.style.width=el.dataset.w+'%')},80);}
+function iT2(){
+  setTimeout(()=>{
+    // 管道品質進度條（寫死）
+    document.querySelectorAll('.qfill').forEach(el=>el.style.width=el.dataset.w+'%');
+    // 有效率進度條（動態）
+    const vr=D.validRate||{act:88.1,slf:87.0,prt:75.4};
+    const vf=document.querySelectorAll('.vf');
+    const vp=document.querySelectorAll('.vp');
+    if(vf.length>=3){
+      vf[0].style.width=vr.act+'%'; if(vp[0]) vp[0].textContent=vr.act.toFixed(1)+'%';
+      vf[1].style.width=vr.prt+'%'; if(vp[1]) vp[1].textContent=vr.prt.toFixed(1)+'%';
+      vf[2].style.width=vr.slf+'%'; if(vp[2]) vp[2].textContent=vr.slf.toFixed(1)+'%';
+    }
+  },80);
+}
 
 // ── TARGET ──
 function recalc(){
@@ -702,6 +718,46 @@ function applyBCLData(){
   setBarW('age-036-bar', ma.a36W);
   setBarW('age-37-bar', ma.a37W);
   setBarW('age-nb-bar', ma.nbW);
+
+  // FY25 月齡分布（從 BCL.agedist 加總全年）
+  const ad=b.agedist;
+  if(ad){
+    const fyPre=ad.prenatal.reduce((a,v)=>a+v,0);
+    const fy36=ad.age036.reduce((a,v)=>a+v,0);
+    const fy37=ad.age37.reduce((a,v)=>a+v,0);
+    const fyNb=ad.nobday.reduce((a,v)=>a+v,0);
+    const fyTot=fyPre+fy36+fy37+fyNb;
+    const pct=(v,t)=>(v/t*100).toFixed(1)+'%';
+    const fmt2=v=>v.toLocaleString('en-US');
+    const se=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    const sw=(id,v)=>{const el=document.getElementById(id);if(el)el.style.width=v;};
+    se('fy25pre',fmt2(fyPre)); se('fy25prePct',pct(fyPre,fyTot)); sw('fy25preBar',pct(fyPre,fyTot));
+    se('fy25a36',fmt2(fy36));  se('fy25a36Pct',pct(fy36,fyTot));  sw('fy25a36Bar',pct(fy36,fyTot));
+    se('fy25a37',fmt2(fy37));  se('fy25a37Pct',pct(fy37,fyTot));  sw('fy25a37Bar',pct(fy37,fyTot));
+    se('fy25nb',fmt2(fyNb));   se('fy25nbPct',pct(fyNb,fyTot));   sw('fy25nbBar',pct(fyNb,fyTot));
+    const tot=document.getElementById('fy25ageTot');
+    if(tot) tot.textContent='全年 '+fmt2(fyTot)+' 筆 · 日度資料加總';
+  }
+
+  // FY25 YoY 卡
+  const yoyEl=document.getElementById('yoyFY25');
+  if(yoyEl) yoyEl.textContent=D.fy25Total.toLocaleString('en-US');
+
+  // 系統保有 KPI 卡
+  if(D.sys){
+    const s=D.sys;
+    const pct=(s.valid/s.total*100).toFixed(1);
+    const el=document.getElementById('sysTotal');
+    if(el) el.textContent=s.total.toLocaleString('en-US');
+    const ve=document.getElementById('sysValid');
+    if(ve) ve.textContent=s.valid.toLocaleString('en-US');
+    const ie=document.getElementById('sysInvalid');
+    if(ie) ie.textContent=s.invalid.toLocaleString('en-US');
+    const be=document.getElementById('sysBar');
+    if(be) be.style.width=pct+'%';
+    const pe=document.getElementById('sysPct');
+    if(pe) pe.textContent=pct+'%';
+  }
 }
 
 function setSlot(slot, val){
@@ -810,6 +866,7 @@ function iAgeDist(){
           }
         }
       },
+      hover:{mode:'index', intersect:false},
       scales:{
         x:{grid:{color:'#F1F3F4'}, ticks:{font:{size:11}}, stacked:true},
         y:{grid:{color:'#F1F3F4'}, ticks:{callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v, font:{size:11}}, stacked:true}
