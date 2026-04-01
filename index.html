@@ -3,926 +3,1521 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BCL Intelligence Dashboard | Benesse Taiwan</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<title>BCL 名單收集儀表板</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-:root{
-  /* Google Material palette */
-  --gb:#4285F4;   /* Google Blue */
-  --gr:#DB4437;   /* Google Red */
-  --gy:#F4B400;   /* Google Yellow */
-  --gg2:#0F9D58;  /* Google Green */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap');
 
-  --bg:#F8F9FA;   /* Google surface grey */
-  --card:#FFFFFF;
-  --border:#DADCE0; /* Google standard border */
-  --text:#202124;   /* Google near-black */
-  --muted:#5F6368;  /* Google secondary text */
-  --dim:#9AA0A6;    /* Google tertiary text */
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
+:root {
+  --bg:        #f4f6f9;
+  --card:      #ffffff;
+  --border:    #e8edf2;
+  --text-h:    #0f172a;   /* headlines */
+  --text-b:    #334155;   /* body */
+  --text-m:    #64748b;   /* muted */
+  --text-d:    #94a3b8;   /* dim */
 
-  /* Semantic aliases */
-  --teal:#4285F4;     /* use Google Blue */
-  --green:#0F9D58;
-  --amber:#F4B400;
-  --red:#DB4437;
-  --violet:#4285F4;   /* unify to Google Blue */
+  --blue:      #2563eb;
+  --blue-s:    #eff6ff;
+  --purple:    #7c3aed;
+  --purple-s:  #f5f3ff;
+  --teal:      #0891b2;
+  --teal-s:    #ecfeff;
+  --green:     #059669;
+  --green-s:   #ecfdf5;
+  --amber:     #d97706;
+  --amber-s:   #fffbeb;
+  --red:       #dc2626;
+  --red-s:     #fef2f2;
+  --slate:     #475569;
+  --slate-s:   #f1f5f9;
 
-  --fd:'Plus Jakarta Sans',sans-serif;
-  --fm:'DM Mono',monospace;
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --shadow: 0 1px 4px rgba(15,23,42,.07), 0 0 1px rgba(15,23,42,.06);
+  --shadow-md: 0 4px 16px rgba(15,23,42,.08), 0 0 1px rgba(15,23,42,.05);
 }
 
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--fd);background:var(--bg);color:var(--text);min-height:100vh}
+/* ══════════════════════════════════════
+   RESET + BASE
+══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ─ HEADER ─ */
-.hd{background:#fff;border-bottom:1px solid var(--border);padding:0 36px;position:sticky;top:0;z-index:200;box-shadow:0 1px 3px rgba(60,64,67,.15)}
-.hd-top{display:flex;align-items:center;justify-content:space-between;height:56px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:34px;height:34px;background:#4285F4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.brand h1{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.1px}
-.brand p{font-size:11px;color:var(--muted);font-family:var(--fm);margin-top:1px}
-.badges{display:flex;gap:8px}
-.badge{font-family:var(--fm);font-size:11px;padding:4px 11px;border-radius:4px;border:1px solid var(--border);background:#fff}
-.bp{color:#1A73E8;border-color:#D2E3FC;background:#E8F0FE}
-.bd{color:var(--muted);border-color:var(--border)}
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--bg);
+  color: var(--text-b);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
 
-/* ─ TAB NAV ─ */
-.tabs{display:flex;border-top:1px solid var(--border)}
-.tab{font-family:var(--fd);font-size:13px;font-weight:500;color:var(--muted);padding:11px 28px;border:none;background:none;cursor:pointer;position:relative;transition:color .15s;letter-spacing:0}
-.tab::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:#4285F4;border-radius:3px 3px 0 0;transform:scaleX(0);transition:transform .2s cubic-bezier(.4,0,.2,1)}
-.tab:hover{background:rgba(66,133,244,.06);color:#1A73E8}
-.tab.on{color:#1A73E8;font-weight:600}
-.tab.on::after{transform:scaleX(1)}
+/* ══════════════════════════════════════
+   TOPBAR
+══════════════════════════════════════ */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: stretch;
+  height: 56px;
+  padding: 0 32px;
+  box-shadow: var(--shadow);
+}
 
-/* ─ PANELS ─ */
-main{max-width:1560px;margin:0 auto;padding:20px 36px 64px}
-.panel{display:none}
-.panel.on{display:block;animation:fi .18s ease}
-@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  margin-right: 36px; padding-right: 36px;
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.brand-pill {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: #fff;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 6px;
+  letter-spacing: .5px;
+}
+.brand-text { font-size: 14px; font-weight: 700; color: var(--text-h); line-height: 1.1; }
+.brand-sub  { font-size: 10px; color: var(--text-d); margin-top: 1px; }
 
-/* ─ GRID ─ */
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.g21{display:grid;grid-template-columns:2fr 1fr;gap:12px}
-.gap{height:12px}
+.nav-tabs { display: flex; align-items: stretch; gap: 2px; flex: 1; }
+.nav-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 0 20px;
+  font-size: 13px; font-weight: 500; color: var(--text-m);
+  border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .18s;
+  font-family: 'Noto Sans TC', sans-serif;
+  white-space: nowrap;
+}
+.nav-tab:hover { color: var(--text-b); }
+.nav-tab.on {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+  font-weight: 600;
+}
+.nav-tab .tab-icon { font-size: 15px; }
 
-/* ─ CARD ─ */
-.card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:20px 24px;box-shadow:0 1px 2px rgba(60,64,67,.1)}
-.ct{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
-.cs{font-size:11px;color:var(--dim);font-family:var(--fm);margin-bottom:16px}
+.topbar-meta {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--text-d);
+  font-family: 'DM Mono', monospace;
+  flex-shrink: 0;
+}
+.pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 2px rgba(5,150,105,.2);
+  animation: pulse 2.5s ease infinite;
+}
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 2px rgba(5,150,105,.2)} 50%{box-shadow:0 0 0 5px rgba(5,150,105,.08)} }
 
-/* ─ KPI CARD ─ */
-.kc{background:#fff;border:1px solid var(--border);border-radius:8px;padding:20px 22px;position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(60,64,67,.1);transition:box-shadow .15s,border-color .15s}
-.kc:hover{box-shadow:0 2px 8px rgba(60,64,67,.2);border-color:#BDBDBD}
-.kc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,transparent)}
-/* no radial gradient glow - cleaner Google look */
-.ki{font-size:20px;margin-bottom:10px}
-.kl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-family:var(--fm);margin-bottom:8px}
-.kv{font-family:var(--fm);font-size:32px;font-weight:400;letter-spacing:-1px;line-height:1;color:var(--text)}
-.ks{font-size:11px;color:var(--dim);margin-top:6px;line-height:1.5}
-.km{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
-.kr{display:flex;align-items:center;gap:6px}
-.krl{font-size:10px;color:var(--dim);font-family:var(--fm);flex:1}
-.krv{font-family:var(--fm);font-size:12px;font-weight:500}
-.tag{font-size:10px;font-family:var(--fm);padding:2px 7px;border-radius:12px;white-space:nowrap;flex-shrink:0;font-weight:500}
-.up{color:#137333;background:#E6F4EA}
-.dn{color:#DB4437;background:#FCE8E6}
-.neu{color:var(--muted);background:#F1F3F4}
-.sw{height:34px;margin-top:10px}
+/* ══════════════════════════════════════
+   MAIN CONTAINER
+══════════════════════════════════════ */
+.main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 32px 60px;
+}
 
-/* ─ CHANNEL DAY CARD ─ */
-.ch-row{display:flex;flex-direction:column;gap:16px;margin-top:4px}
-.ch-item{}
-.ch-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.ch-name{font-size:12px;color:var(--muted);font-family:var(--fm)}
-.ch-right{display:flex;align-items:center;gap:10px}
-.ch-n{font-family:var(--fm);font-size:22px;font-weight:400;letter-spacing:-.5px}
-.ch-bar{height:6px;background:#F1F3F4;border-radius:3px;overflow:hidden}
-.ch-fill{height:100%;border-radius:3px;transition:width .8s ease}
-.ch-hint{font-size:10px;color:var(--dim);font-family:var(--fm);margin-top:4px}
+/* ══════════════════════════════════════
+   PAGE SYSTEM
+══════════════════════════════════════ */
+.page { display: none; }
+.page.on { display: block; }
 
-/* ─ TARGET ─ */
-.tgt-inp{width:88px;font-family:var(--fm);font-size:16px;font-weight:500;color:var(--text);background:#E8F0FE;border:1px solid #D2E3FC;border-radius:4px;padding:5px 8px;outline:none;text-align:right;transition:border-color .15s}
-.tgt-inp:focus{border-color:#4285F4;background:#fff}
-.tgt-main{background:#F8F9FA;border:1px solid var(--border);border-radius:8px;padding:16px 18px;margin:14px 0}
-.tgt-rows{display:flex;flex-direction:column;gap:10px}
-.tgt-row{display:flex;justify-content:space-between;align-items:center}
-.tgt-lbl{font-size:12px;color:var(--muted)}
-.tgt-val{font-family:var(--fm);font-size:14px;font-weight:700}
-.progbar{height:6px;background:#E8EAED;border-radius:3px;overflow:hidden;margin:4px 0}
-.progfill{height:100%;border-radius:3px;background:#4285F4;transition:width .7s ease}
+/* ══════════════════════════════════════
+   SECTION HEADER
+══════════════════════════════════════ */
+.section-head {
+  margin-bottom: 20px;
+}
+.section-head h2 {
+  font-size: 22px; font-weight: 700;
+  color: var(--text-h); letter-spacing: -.3px;
+}
+.section-head p {
+  font-size: 13px; color: var(--text-m);
+  margin-top: 3px;
+}
 
-/* ─ QUALITY BAR ─ */
-.qr{margin-bottom:14px}
-.qt{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
-.qn{font-size:12px;color:var(--muted);font-weight:500}
-.qv{font-family:var(--fm);font-size:15px;font-weight:500}
-.qtrack{height:5px;background:#E8EAED;border-radius:3px;overflow:hidden}
-.qfill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.23,1,.32,1)}
-.vrow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.vl{font-size:11px;color:var(--muted);width:36px;flex-shrink:0;font-family:var(--fm)}
-.vt{flex:1;height:5px;background:#E8EAED;border-radius:3px;overflow:hidden}
-.vf{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.23,1,.32,1)}
-.vp{font-family:var(--fm);font-size:11px;width:40px;text-align:right}
+/* ══════════════════════════════════════
+   CARDS
+══════════════════════════════════════ */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.card-title {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-h);
+  display: flex; align-items: center; gap: 7px;
+}
+.card-body { padding: 24px; }
 
-/* ─ AGE BAR ─ */
-.ab{display:flex;flex-direction:column;gap:10px}
-.ar{}.ar-top{display:flex;justify-content:space-between;margin-bottom:4px}
-.ar-l{font-size:11px;color:var(--muted)}
-.ar-v{font-family:var(--fm);font-size:12px;font-weight:500}
-.at{height:5px;background:#E8EAED;border-radius:3px;overflow:hidden}
-.af{height:100%;border-radius:3px;transition:width 1.2s ease}
+/* ══════════════════════════════════════
+   LAYOUT HELPERS
+══════════════════════════════════════ */
+.grid-2   { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3   { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4   { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+.grid-6-4 { display: grid; grid-template-columns: 6fr 4fr; gap: 16px; }
+.grid-7-3 { display: grid; grid-template-columns: 7fr 3fr; gap: 16px; }
+.gap-16   { margin-bottom: 16px; }
+.gap-24   { margin-bottom: 24px; }
 
-/* ─ TABLE ─ */
-.dtab{width:100%;border-collapse:collapse}
-.dtab th{text-align:left;padding:8px 14px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);font-family:var(--fm);background:#F8F9FA}
-.dtab td{padding:10px 14px;font-size:12px;color:var(--text);border-bottom:1px solid var(--border)}
-.dtab tr:hover td{background:#F8F9FA}
-.dtab tr:last-child td{border-bottom:none}
-.chtag{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:600;font-family:var(--fm)}
+/* ══════════════════════════════════════
+   HERO METRIC (big number)
+══════════════════════════════════════ */
+.hero-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-md);
+  position: relative; overflow: hidden;
+}
+.hero-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.hero-blue::before   { background: linear-gradient(90deg, var(--blue), #60a5fa); }
+.hero-purple::before { background: linear-gradient(90deg, var(--purple), #a78bfa); }
+.hero-teal::before   { background: linear-gradient(90deg, var(--teal), #22d3ee); }
+.hero-green::before  { background: linear-gradient(90deg, var(--green), #34d399); }
+.hero-amber::before  { background: linear-gradient(90deg, var(--amber), #fbbf24); }
+.hero-slate::before  { background: linear-gradient(90deg, var(--slate), #94a3b8); }
 
-/* ─ AI ─ */
-.ai-w{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;box-shadow:0 1px 2px rgba(60,64,67,.1)}
-.ai-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:#F8F9FA;border-bottom:1px solid var(--border)}
-.aibg{background:#4285F4;color:#fff;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.5px;font-family:var(--fm)}
-.ai-body{display:grid;grid-template-columns:55% 45%;min-height:460px}
-.ai-lp{padding:22px;border-right:1px solid var(--border)}
-.ai-pl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1A73E8;font-family:var(--fm);margin-bottom:14px;display:flex;align-items:center;gap:7px}
-.ai-pl::before{content:'';width:6px;height:6px;background:#4285F4;border-radius:50%;animation:pd 2s ease-in-out infinite;flex-shrink:0}
-@keyframes pd{0%,100%{opacity:1}50%{opacity:.3}}
-.ait{font-size:13px;line-height:1.9;color:var(--text);white-space:pre-wrap}
-.ldots{display:flex;align-items:center;gap:5px}
-.ldots span{display:inline-block;width:5px;height:5px;background:#4285F4;border-radius:50%;animation:db 1.4s ease-in-out infinite}
-.ldots span:nth-child(2){animation-delay:.2s}.ldots span:nth-child(3){animation-delay:.4s}
-@keyframes db{0%,80%,100%{transform:scale(.5);opacity:.3}40%{transform:scale(1);opacity:1}}
-.ai-rp{display:flex;flex-direction:column}
-.chatmsg{flex:1;padding:18px;overflow-y:auto;max-height:380px;display:flex;flex-direction:column;gap:10px}
-.chatmsg::-webkit-scrollbar{width:3px}.chatmsg::-webkit-scrollbar-thumb{background:#DADCE0;border-radius:2px}
-.chemp{color:var(--dim);font-size:12px;text-align:center;padding:30px 0;font-family:var(--fm)}
-.bub{padding:10px 14px;border-radius:8px;font-size:12.5px;line-height:1.7;max-width:88%}
-.bub.user{background:#E8F0FE;border:1px solid #D2E3FC;color:#1A73E8;align-self:flex-end;border-radius:8px 8px 2px 8px}
-.bub.ai{background:#F8F9FA;border:1px solid var(--border);color:var(--text);align-self:flex-start;border-radius:8px 8px 8px 2px}
-.qbar{padding:12px 18px 4px;display:flex;flex-wrap:wrap;gap:6px}
-.qchip{background:#F8F9FA;border:1px solid var(--border);color:var(--muted);padding:5px 12px;border-radius:16px;font-size:11px;cursor:pointer;transition:all .15s;font-family:var(--fd)}
-.qchip:hover{background:#E8F0FE;border-color:#D2E3FC;color:#1A73E8}
-.ci-row{padding:12px 18px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
-.cin{flex:1;background:#F8F9FA;border:1px solid var(--border);color:var(--text);padding:9px 13px;border-radius:8px;font-size:12.5px;outline:none;font-family:var(--fd);transition:border-color .15s,background .15s}
-.cin:focus{border-color:#4285F4;background:#fff}.cin::placeholder{color:var(--dim)}
-.csend{background:#4285F4;color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s,box-shadow .15s}
-.csend:hover{background:#1A73E8;box-shadow:0 1px 3px rgba(66,133,244,.4)}.csend:disabled{opacity:.4;cursor:not-allowed}
-.regen{background:#fff;border:1px solid var(--border);color:var(--muted);padding:5px 13px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--fd);transition:all .15s}
-.regen:hover{background:#F8F9FA;border-color:#BDBDBD;color:var(--text)}
+.hero-label { font-size: 12px; font-weight: 600; color: var(--text-m); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 10px; }
+.hero-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 56px; font-weight: 500;
+  letter-spacing: -2px; line-height: 1;
+  margin-bottom: 6px;
+}
+.hero-blue   .hero-num { color: var(--blue); }
+.hero-purple .hero-num { color: var(--purple); }
+.hero-teal   .hero-num { color: var(--teal); }
+.hero-green  .hero-num { color: var(--green); }
+.hero-amber  .hero-num { color: var(--amber); }
+.hero-slate  .hero-num { color: var(--slate); }
 
-.tg{color:#1A73E8}.gg{color:#0F9D58}.ag{color:#E37400}.rg{color:#DB4437}.mono{font-family:var(--fm)}
-@media(max-width:1100px){.g4,.g3{grid-template-columns:1fr 1fr}.g2,.g21{grid-template-columns:1fr}.ai-body{grid-template-columns:1fr}.ai-lp{border-right:none;border-bottom:1px solid var(--border)}}
-@media(max-width:680px){.g4,.g3,.g2{grid-template-columns:1fr}}
+.hero-unit   { font-size: 14px; color: var(--text-m); }
+.hero-sub {
+  margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 13px; color: var(--text-m);
+  display: flex; align-items: center; gap: 8px;
+}
 
-/* ─ API KEY UI ─ */
-#apiKeyBar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #DADCE0;padding:10px 24px;display:flex;align-items:center;gap:10px;z-index:999;box-shadow:0 -1px 4px rgba(0,0,0,.1)}
-#apiKeyBar.hidden{display:none!important}
-#apiKeyInput{flex:1;max-width:520px;font-family:'DM Mono',monospace;font-size:12px;padding:7px 12px;border:1px solid #DADCE0;border-radius:6px;outline:none}
-#apiKeyInput:focus{border-color:#4285F4}
-#apiKeySave{background:#4285F4;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
-#apiKeyStatus{font-size:11px;color:#5F6368}
+/* ══════════════════════════════════════
+   STAT ROW (medium metrics)
+══════════════════════════════════════ */
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.stat-card::before { content:''; position:absolute; top:0;left:0;right:0;height:2px; border-radius:var(--r-md) var(--r-md) 0 0; }
+.stat-blue::before   { background:var(--blue); }
+.stat-purple::before { background:var(--purple); }
+.stat-teal::before   { background:var(--teal); }
+.stat-green::before  { background:var(--green); }
+.stat-amber::before  { background:var(--amber); }
+.stat-slate::before  { background:var(--slate); }
+
+.stat-label { font-size: 11px; font-weight: 600; color: var(--text-m); letter-spacing: .4px; text-transform: uppercase; margin-bottom: 6px; }
+.stat-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 32px; font-weight: 500; line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-blue   .stat-num { color: var(--blue); }
+.stat-purple .stat-num { color: var(--purple); }
+.stat-teal   .stat-num { color: var(--teal); }
+.stat-green  .stat-num { color: var(--green); }
+.stat-amber  .stat-num { color: var(--amber); }
+.stat-slate  .stat-num { color: var(--slate); }
+.stat-sub { font-size: 12px; color: var(--text-m); }
+
+/* ══════════════════════════════════════
+   DELTA BADGE
+══════════════════════════════════════ */
+.delta {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  padding: 3px 8px; border-radius: 20px;
+}
+.d-up   { background: #dcfce7; color: #166534; }
+.d-dn   { background: #fee2e2; color: #991b1b; }
+.d-neu  { background: var(--slate-s); color: var(--slate); }
+
+/* ══════════════════════════════════════
+   CHANNEL ROW (daily comparison)
+══════════════════════════════════════ */
+.ch-rows { display: flex; flex-direction: column; gap: 0; }
+.ch-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 80px 90px 110px;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.ch-row:last-child { border-bottom: none; }
+.ch-name { font-size: 15px; font-weight: 600; }
+.ch-bar  { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.ch-bar-fill { height: 100%; border-radius: 4px; transition: width .7s ease; }
+.ch-val  { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; color: var(--text-h); text-align: right; }
+.ch-avg  { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text-d); text-align: right; }
+.ch-delta { text-align: right; }
+
+/* ══════════════════════════════════════
+   SPARKLINE
+══════════════════════════════════════ */
+.sparkline-wrap { display: flex; align-items: flex-end; gap: 4px; }
+.spark-col { flex: 1; border-radius: 3px 3px 0 0; transition: opacity .2s; cursor: default; min-height: 4px; }
+
+/* ══════════════════════════════════════
+   AGE COMPOSITION
+══════════════════════════════════════ */
+.age-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.age-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+}
+.age-block::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+}
+.age-prenatal::after { background: #c084fc; }
+.age-sweet::after    { background: var(--green); }
+.age-old::after      { background: var(--amber); }
+.age-nobday::after   { background: #94a3b8; }
+
+.age-icon  { font-size: 28px; margin-bottom: 10px; }
+.age-pct   {
+  font-family: 'DM Mono', monospace;
+  font-size: 38px; font-weight: 500;
+  line-height: 1; margin-bottom: 4px;
+}
+.age-prenatal .age-pct { color: #c084fc; }
+.age-sweet    .age-pct { color: var(--green); }
+.age-old      .age-pct { color: var(--amber); }
+.age-nobday   .age-pct { color: #94a3b8; }
+
+.age-abs   { font-family: 'DM Mono', monospace; font-size: 16px; color: var(--text-h); margin-bottom: 2px; }
+.age-lbl   { font-size: 12px; color: var(--text-m); font-weight: 500; }
+.age-valid { font-size: 11px; color: var(--text-d); margin-top: 6px; }
+
+/* ══════════════════════════════════════
+   SEGMENT STACK BAR
+══════════════════════════════════════ */
+.seg-stack { height: 32px; border-radius: 6px; overflow:hidden; display:flex; }
+.seg-piece {
+  height: 100%; display:flex; align-items:center; justify-content:center;
+  font-size: 10px; font-weight: 700; color: rgba(255,255,255,.9);
+  transition: width .7s ease; min-width: 0; overflow:hidden; white-space:nowrap;
+}
+
+/* ══════════════════════════════════════
+   TABLE
+══════════════════════════════════════ */
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th { padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text-d); background: var(--bg); border-bottom: 2px solid var(--border); letter-spacing: .4px; }
+.tbl td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.tbl tr:last-child td { border: none; }
+.tbl tr:hover td { background: #fafbfc; }
+.mono { font-family: 'DM Mono', monospace; }
+
+/* ══════════════════════════════════════
+   LEGEND
+══════════════════════════════════════ */
+.legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+.legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text-m); }
+.legend-dot  { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+
+/* ══════════════════════════════════════
+   DONUT
+══════════════════════════════════════ */
+.donut-wrap { position:relative; display:flex; align-items:center; justify-content:center; }
+.donut-center { position:absolute; text-align:center; pointer-events:none; }
+.donut-main { font-family:'DM Mono',monospace; font-size:22px; font-weight:500; }
+.donut-sub  { font-size:11px; color:var(--text-d); }
+
+/* ══════════════════════════════════════
+   SCORE BADGE (quality page)
+══════════════════════════════════════ */
+.score-badge {
+  display: inline-flex; align-items: baseline; gap: 4px;
+}
+.score-num { font-family: 'DM Mono', monospace; font-size: 48px; font-weight: 500; line-height: 1; }
+.score-of  { font-size: 16px; color: var(--text-d); }
+
+/* ══════════════════════════════════════
+   TOGGLE BTNS
+══════════════════════════════════════ */
+.toggle-group { display:flex; gap:2px; background:var(--bg); border-radius:6px; padding:2px; }
+.tgl {
+  padding: 5px 12px; font-size: 11px; font-weight: 500;
+  border:none; background:transparent; cursor:pointer;
+  color:var(--text-m); border-radius:5px;
+  font-family:'Noto Sans TC',sans-serif; transition:all .15s;
+}
+.tgl.on { background:var(--card); color:var(--blue); box-shadow:var(--shadow); }
+
+/* ══════════════════════════════════════
+   AI CHAT
+══════════════════════════════════════ */
+.chat-outer { display:grid; grid-template-columns:1fr 300px; gap:16px; align-items:start; }
+.chat-messages { height:420px; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:14px; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+.chat-bubble-row { display:flex; gap:10px; }
+.chat-bubble-row.me { flex-direction:row-reverse; }
+.av { width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+.av-ai { background:linear-gradient(135deg,var(--blue),var(--purple)); color:#fff; }
+.av-me { background:var(--amber-s); color:var(--amber); border:1px solid rgba(217,119,6,.2); }
+.bubble { max-width:82%; padding:11px 15px; border-radius:12px; font-size:13px; line-height:1.6; }
+.bubble-ai { background:var(--bg); border:1px solid var(--border); border-radius:3px 12px 12px 12px; }
+.bubble-me { background:var(--blue-s); border:1px solid #bfdbfe; border-radius:12px 3px 12px 12px; }
+.typing { display:flex; align-items:center; gap:4px; padding:4px 0; }
+.typing span { width:6px;height:6px;border-radius:50%;background:var(--blue);opacity:.5;animation:ty 1.2s infinite; }
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes ty{0%,60%,100%{transform:none}30%{transform:translateY(-6px)}}
+.chat-footer { border-top:1px solid var(--border); padding:12px 16px; display:flex; gap:8px; align-items:flex-end; }
+.chat-textarea { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:9px 13px; font-family:'Noto Sans TC',sans-serif; font-size:13px; color:var(--text-b); resize:none; outline:none; transition:border-color .15s; min-height:40px; max-height:100px; }
+.chat-textarea:focus { border-color:var(--blue); }
+.chat-send { width:38px;height:38px;background:var(--blue);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s; }
+.chat-send:hover{opacity:.85}.chat-send:disabled{opacity:.35;cursor:not-allowed}
+.chat-send svg{width:15px;height:15px;fill:#fff}
+.qp-row { display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 10px; }
+.qp { font-size:11px;padding:5px 11px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text-m);cursor:pointer;transition:all .15s;font-family:'Noto Sans TC',sans-serif; }
+.qp:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-s)}
+.insight-panel-list { display:flex;flex-direction:column;gap:8px;padding:16px; }
+.insight { padding:10px 12px;border-radius:8px;border-left:3px solid;font-size:12px;line-height:1.6; }
+.ins-ok   { background:var(--green-s);border-color:var(--green);color:#065f46; }
+.ins-warn { background:var(--amber-s);border-color:var(--amber);color:#92400e; }
+.ins-info { background:var(--blue-s);border-color:var(--blue);color:#1e40af; }
+
+/* ══════════════════════════════════════
+   MISC
+══════════════════════════════════════ */
+.divider { height:1px; background:var(--border); margin:16px 0; }
+.chip { display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600; }
+.chip-blue   { background:var(--blue-s);color:var(--blue); }
+.chip-purple { background:var(--purple-s);color:var(--purple); }
+.chip-amber  { background:var(--amber-s);color:var(--amber); }
+.chip-green  { background:var(--green-s);color:var(--green); }
+.chip-slate  { background:var(--slate-s);color:var(--slate); }
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 </style>
 </head>
 <body>
 
-<header class="hd">
-  <div class="hd-top">
-    <div class="brand">
-      <div class="logo">📡</div>
-      <div><h1>BCL Intelligence Dashboard</h1><p>Benesse Taiwan &nbsp;·&nbsp; 業務戰略組</p></div>
-    </div>
-    <div class="badges">
-      <span class="badge bp">FY25　2025/04 – 2026/03</span>
-      <span class="badge bd">資料截至 2026年3月25日</span>
-    </div>
-  </div>
-  <nav class="tabs">
-    <button class="tab t0 on" onclick="sw(0)">📊 現況</button>
-    <button class="tab t1"    onclick="sw(1)">📈 趨勢</button>
-    <button class="tab t2"    onclick="sw(2)">✦ AI 建議</button>
-  </nav>
-</header>
-
-<main>
-
-<!-- ════════════════════════════
-     TAB 0 ── 現況
-════════════════════════════ -->
-<div class="panel on" id="p0">
-
-  <!-- AI 每日觀察摘要 -->
-  <div id="aibrief" style="background:#fff;border:1px solid #DADCE0;border-radius:8px;padding:18px 22px;margin-bottom:12px;box-shadow:0 1px 2px rgba(60,64,67,.1);position:relative;overflow:hidden">
-    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#4285F4"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="background:#4285F4;color:#fff;padding:2px 9px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.5px;font-family:var(--fm)">✦ AI 每日觀察</span>
-        <span style="font-size:12px;font-weight:600;color:var(--text)">昨日與本月表現摘要</span>
-      </div>
-      <button class="regen" onclick="genBrief()" style="font-size:11px">🔄 重新生成</button>
-    </div>
-    <div id="briefbox">
-      <div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在生成今日觀察摘要...</span></div>
+<!-- ═══════════════════ TOP NAV ═══════════════════ -->
+<nav class="topbar">
+  <div class="brand">
+    <div class="brand-pill">BCL</div>
+    <div>
+      <div class="brand-text">名單收集儀表板</div>
+      <div class="brand-sub">Benesse Taiwan · FY26</div>
     </div>
   </div>
 
-  <!-- Row 1: Core KPIs (3欄，移除品質均分) -->
-  <div class="g3">
-
-    <!-- BCL 保有 -->
-    <div class="kc" style="--kc:#4285F4">
-      <div class="ki">🗂️</div>
-      <div class="kl">總 BCL 保有</div>
-      <div class="kv" id="k1">—</div>
-      <div class="km">
-        <div class="kr"><span class="krl">✅ 有效會員</span><span class="krv" style="color:#0F9D58">180,523</span><span class="tag up">66.7%</span></div>
-        <div class="kr"><span class="krl">⛔ 封鎖無效</span><span class="krv" style="color:#DB4437">90,515</span><span class="tag dn">33.3%</span></div>
-      </div>
-    </div>
-
-    <!-- FY25 新增 -->
-    <div class="kc" style="--kc:#F4B400">
-      <div class="ki">📈</div>
-      <div class="kl">FY25 新增綁定</div>
-      <div class="kv" id="k3">—</div>
-      <div class="ks">vs FY24 財年 20,757　▲ +55.6%</div>
-      <div class="sw"><canvas id="sparkline" height="34"></canvas></div>
-    </div>
-
-    <!-- 系統保有 -->
-    <div class="kc" style="--kc:#4285F4">
-      <div class="ki">🔋</div>
-      <div class="kl">系統保有 0～36 月齡</div>
-      <div class="kv" style="color:#4285F4" id="sysTotal">35,032</div>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
-        <div style="flex:1;height:5px;background:#E8EAED;border-radius:3px;overflow:hidden"><div id="sysBar" style="width:82.5%;height:100%;background:#4285F4;border-radius:3px"></div></div>
-        <span style="font-size:11px;font-family:var(--fm);color:#4285F4;white-space:nowrap" id="sysPct">82.5%</span>
-      </div>
-      <div class="km" style="margin-top:8px">
-        <div class="kr"><span class="krl">✅ 有效可推播</span><span class="krv" style="color:#4285F4" id="sysValid">28,962</span><span class="tag neu">立即可用</span></div>
-        <div class="kr"><span class="krl">⚠️ 無效封鎖</span><span class="krv" id="sysInvalid">6,070</span><span class="tag dn">流失</span></div>
-      </div>
-    </div>
-
-  </div><!-- /g3 -->
-
-  <div class="gap"></div>
-
-  <!-- Row 2: 前一日 + 月目標 -->
-  <div class="g2">
-
-    <!-- 前一日各管道 -->
-    <div class="kc" style="--kc:#0F9D58">
-      <div class="ki">📡</div>
-      <div class="kl" data-slot="prev-date">前一日收集（3月25日）</div>
-      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:22px">
-        <span style="font-family:var(--fm);font-size:48px;font-weight:300;letter-spacing:-3px;color:var(--text)" data-slot="prev-total">119</span>
-        <span style="font-size:13px;color:var(--muted);font-family:var(--fm)">筆</span>
-      </div>
-      <div class="ch-row">
-        <div class="ch-item">
-          <div class="ch-top">
-            <span class="ch-name">主動（LINE OA）</span>
-            <div class="ch-right"><span class="ch-n" style="color:#4285F4" data-slot="act-n">34</span><span class="tag up" data-slot="act-tag">▲ +24.6%</span></div>
-          </div>
-          <div class="ch-bar"><div class="ch-fill" style="width:28.6%;background:#4285F4" data-slot="act-bar"></div></div>
-          <div class="ch-hint">前7日均 <span data-slot="act-avg7">27.3</span> 筆</div>
-        </div>
-        <div class="ch-item">
-          <div class="ch-top">
-            <span class="ch-name">自辦活動</span>
-            <div class="ch-right"><span class="ch-n" style="color:#0F9D58" data-slot="slf-n">85</span><span class="tag dn" data-slot="slf-tag">▼ −8.7%</span></div>
-          </div>
-          <div class="ch-bar"><div class="ch-fill" style="width:71.4%;background:#0F9D58" data-slot="slf-bar"></div></div>
-          <div class="ch-hint">前7日均 <span data-slot="slf-avg7">93.1</span> 筆</div>
-        </div>
-        <div class="ch-item">
-          <div class="ch-top">
-            <span class="ch-name">異業合作</span>
-            <div class="ch-right"><span class="ch-n" style="color:#F4B400" data-slot="prt-n">0</span><span class="tag dn" data-slot="prt-tag">▼ −100%</span></div>
-          </div>
-          <div class="ch-bar"><div class="ch-fill" style="width:0%;background:#F4B400" data-slot="prt-bar"></div></div>
-          <div class="ch-hint">前7日均 <span data-slot="prt-avg7">6.1</span> 筆</div>
-        </div>
-      </div>
-      <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,.06)">
-        <div style="font-size:10px;color:var(--dim);font-family:var(--fm);letter-spacing:.1em;margin-bottom:8px">近30日合計趨勢</div>
-        <div style="height:48px"><canvas id="spark2" height="48"></canvas></div>
-      </div>
-    </div>
-
-    <!-- 本月目標追蹤 -->
-    <div class="kc" style="--kc:#4285F4">
-      <div class="ki">🎯</div>
-      <div class="kl">本月收集目標追蹤（3月）</div>
-
-      <div style="display:flex;align-items:center;gap:10px;margin:12px 0 0">
-        <span style="font-size:12px;color:var(--muted)">月目標</span>
-        <input id="monthTarget" type="number" value="2500" min="1" class="tgt-inp" oninput="recalc()"/>
-        <span style="font-size:12px;color:var(--muted)">筆</span>
-      </div>
-
-      <div class="tgt-main">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">本月累計（<span data-slot="month-days">3月 1–25 日</span>）</div>
-        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px">
-          <span style="font-family:var(--fm);font-size:42px;font-weight:300;color:#4285F4;letter-spacing:-2px" data-slot="month-total">5,098</span>
-          <span style="font-size:13px;color:var(--muted)">筆</span>
-        </div>
-        <div style="display:flex;gap:14px;font-size:11px;color:var(--muted);font-family:var(--fm)">
-          <span>主動 <b style="color:#4285F4" data-slot="month-act">1,128</b></span>
-          <span>自辦 <b style="color:#0F9D58" data-slot="month-slf">3,518</b></span>
-          <span>異業 <b style="color:#E37400" data-slot="month-prt">452</b></span>
-        </div>
-      </div>
-
-      <div class="tgt-rows">
-        <div class="tgt-row">
-          <span class="tgt-lbl">時間進度目標</span>
-          <span id="tgtTime" style="font-family:var(--fm);font-size:13px;font-weight:500;color:var(--text)">—</span>
-        </div>
-        <div>
-          <div class="tgt-row" style="margin-bottom:7px">
-            <span class="tgt-lbl">對時間進度達成率</span>
-            <span id="tgtTR" class="tgt-val">—</span>
-          </div>
-          <div class="progbar"><div id="tgtBar" class="progfill" style="width:0%"></div></div>
-        </div>
-        <div class="tgt-row">
-          <span class="tgt-lbl">對月目標達成率</span>
-          <span id="tgtMR" class="tgt-val">—</span>
-        </div>
-        <div class="tgt-row" style="padding-top:10px;border-top:1px solid rgba(0,0,0,.06)">
-          <span class="tgt-lbl">差異數（累計 vs 進度目標）</span>
-          <span id="tgtGap" class="tgt-val">—</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div><!-- /p0 -->
-
-
-<!-- ════════════════════════════
-     TAB 1 ── 趨勢
-════════════════════════════ -->
-<div class="panel" id="p1">
-
-  <!-- 月度堆疊 -->
-  <div class="card" style="margin-bottom:14px">
-    <div class="ct">FY25 各月綁定量（三大管道堆疊）</div>
-    <div class="cs">2025/04–2026/03 ｜ 全部為確認實際數據</div>
-    <canvas id="mchart" height="110"></canvas>
+  <div class="nav-tabs">
+    <button class="nav-tab on" onclick="goTab('daily',this)">
+      <span class="tab-icon">📡</span>前一日快報
+    </button>
+    <button class="nav-tab" onclick="goTab('trend',this)">
+      <span class="tab-icon">📈</span>收集趨勢
+    </button>
+    <button class="nav-tab" onclick="goTab('stock',this)">
+      <span class="tab-icon">🗂</span>名單健康度
+    </button>
+    <button class="nav-tab" onclick="goTab('quality',this)">
+      <span class="tab-icon">🎯</span>月齡品質
+    </button>
+    <button class="nav-tab" onclick="goTab('ai',this)">
+      <span class="tab-icon">🤖</span>AI 分析師
+    </button>
   </div>
 
-  <!-- YoY + 月齡分布 -->
-  <div class="g21" style="margin-bottom:14px">
+  <div class="topbar-meta">
+    <div class="pulse"></div>
+    <span id="data-updated">載入中...</span>
+  </div>
+</nav>
 
-    <!-- YoY -->
+<div id="loading-bar" style="display:none;position:fixed;top:56px;left:0;right:0;height:3px;background:linear-gradient(90deg,#2563eb,#7c3aed);z-index:200;animation:ldbar 1.5s ease infinite alternate">
+</div>
+<style>@keyframes ldbar{from{opacity:.4}to{opacity:1}}</style>
+<div class="main">
+
+<!-- ═══════════════════════════════════════════════════
+  TAB 1  前一日快報
+═══════════════════════════════════════════════════ -->
+<div class="page on" id="page-daily">
+  <div class="section-head">
+    <h2>前一日收集快報</h2>
+    <p><span id="yd-date">—</span> · 與前7日日均比較</p>
+  </div>
+
+  <!-- Row 1: Hero + Channels -->
+  <div class="grid-2 gap-24">
+
+    <!-- Hero total -->
+    <div class="hero-card hero-blue">
+      <div class="hero-label">昨日新增 BCL</div>
+      <div class="hero-num" id="yd-total">—</div>
+      <div class="hero-unit">筆綁定</div>
+      <div class="hero-sub">
+        前7日均
+        <span id="yd-p7avg" style="font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--text-h)">—</span>
+        <span id="yd-delta-chip" class="delta d-dn" id="yd-delta">—</span>
+        <span style="font-size:12px;color:var(--text-d);margin-left:4px">（週末效應）</span>
+      </div>
+
+      <!-- 8-day sparkline -->
+      <div style="margin-top:20px">
+        <div style="font-size:11px;color:var(--text-d);margin-bottom:8px">近8日每日合計</div>
+        <div class="sparkline-wrap" style="height:44px" id="spark-total"></div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-d);margin-top:4px;font-family:'DM Mono',monospace">
+          <span>3/22</span><span>3/29</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Channel breakdown -->
     <div class="card">
-      <div class="ct">各月收集量比較（FY25 vs FY24）</div>
-      <div class="cs">柱狀 = 各月實際數量；折線 = YoY 增減率</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
-        <div style="text-align:center;padding:12px 10px;background:rgba(66,133,244,.05);border:1px solid rgba(66,133,244,.12);border-radius:10px">
-          <div style="font-size:9px;color:var(--dim);font-family:var(--fm);letter-spacing:.1em;margin-bottom:5px">FY25 總量</div>
-          <div style="font-family:var(--fm);font-size:22px;font-weight:500;color:var(--text)" id="yoyFY25">32,486</div>
-          <div style="font-size:11px;color:#0F9D58;font-family:var(--fm);margin-top:3px">▲ +55.6%</div>
-        </div>
-        <div style="text-align:center;padding:12px 10px;background:rgba(0,0,0,.02);border:1px solid var(--border);border-radius:10px">
-          <div style="font-size:9px;color:var(--dim);font-family:var(--fm);letter-spacing:.1em;margin-bottom:5px">FY24 基準</div>
-          <div style="font-family:var(--fm);font-size:22px;font-weight:500;color:var(--muted)">20,757</div>
-          <div style="font-size:11px;color:var(--dim);font-family:var(--fm);margin-top:3px">2404～2503</div>
-        </div>
+      <div class="card-head">
+        <div class="card-title">管道明細</div>
+        <span style="font-size:11px;color:var(--text-d)">昨日 / 7日均 / 差異</span>
       </div>
-      <canvas id="yoychart" height="120"></canvas>
-    </div>
-
-    <!-- 本月月齡 + FY25月齡 -->
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="card">
-        <div class="ct">本月月齡分布（3月）</div>
-        <div class="cs" data-slot="age-tot">2026/03 ｜ 5,098 筆 · 實際日度資料</div>
-        <div class="ab">
-          <div class="ar"><div class="ar-top"><span class="ar-l">🤰 孕期</span><span class="ar-v" style="color:#e17055"><span data-slot="age-pre-n">552</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-pre-pct">10.8%</span></span></div><div class="at"><div class="af" style="width:10.8%;background:#e17055" data-slot="age-pre-bar"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">🍼 0～36月</span><span class="ar-v" style="color:#4285F4"><span data-slot="age-036-n">3,046</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-036-pct">59.7%</span></span></div><div class="at"><div class="af" style="width:59.7%;background:#4285F4" data-slot="age-036-bar"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">🧒 36月+</span><span class="ar-v" style="color:#6c5ce7"><span data-slot="age-37-n">1,178</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-37-pct">23.1%</span></span></div><div class="at"><div class="af" style="width:23.1%;background:#6c5ce7" data-slot="age-37-bar"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">❓ 無生日</span><span class="ar-v" style="color:var(--muted)"><span data-slot="age-nb-n">322</span> <span style="color:var(--dim);font-weight:400;font-size:10px" data-slot="age-nb-pct">6.3%</span></span></div><div class="at"><div class="af" style="width:6.3%;background:#b2bec3" data-slot="age-nb-bar"></div></div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct">FY25 月齡分布</div>
-        <div class="cs" id="fy25ageTot">全年 32,486 筆 · 日度資料加總</div>
-        <div class="ab">
-          <div class="ar"><div class="ar-top"><span class="ar-l">🤰 孕期</span><span class="ar-v" style="color:#e17055"><span id="fy25pre">5,230</span> <span style="color:var(--dim);font-weight:400;font-size:10px" id="fy25prePct">16.2%</span></span></div><div class="at"><div class="af" id="fy25preBar" style="width:16.2%;background:#e17055"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">🍼 0～36月</span><span class="ar-v" style="color:#0F9D58"><span id="fy25a36">17,753</span> <span style="color:var(--dim);font-weight:400;font-size:10px" id="fy25a36Pct">55.0%</span></span></div><div class="at"><div class="af" id="fy25a36Bar" style="width:55.0%;background:#0F9D58"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">🧒 36月+</span><span class="ar-v" style="color:#6c5ce7"><span id="fy25a37">6,619</span> <span style="color:var(--dim);font-weight:400;font-size:10px" id="fy25a37Pct">20.5%</span></span></div><div class="at"><div class="af" id="fy25a37Bar" style="width:20.5%;background:#6c5ce7"></div></div></div>
-          <div class="ar"><div class="ar-top"><span class="ar-l">❓ 無生日</span><span class="ar-v" style="color:var(--muted)"><span id="fy25nb">2,695</span> <span style="color:var(--dim);font-weight:400;font-size:10px" id="fy25nbPct">8.3%</span></span></div><div class="at"><div class="af" id="fy25nbBar" style="width:8.3%;background:#b2bec3"></div></div></div>
+      <div class="card-body">
+        <div class="ch-rows">
+          <div class="ch-row">
+            <div class="ch-name" style="color:var(--blue)">🎯 主動</div>
+            <div><div class="ch-bar"><div class="ch-bar-fill" id="ch-active-bar" style="width:0%;background:var(--blue)"></div></div></div>
+            <div class="ch-val" id="ch-active-val" style="color:var(--blue)">—</div>
+            <div class="ch-avg" id="ch-active-avg">—</div>
+            <div class="ch-delta"><span id="ch-active-delta" class="delta d-dn">—</span></div>
+          </div>
+          <div class="ch-row">
+            <div class="ch-name" style="color:var(--purple)">🏢 自辦</div>
+            <div><div class="ch-bar"><div class="ch-bar-fill" id="ch-self-bar" style="width:0%;background:var(--purple)"></div></div></div>
+            <div class="ch-val" id="ch-self-val" style="color:var(--text-d)">—</div>
+            <div class="ch-avg" id="ch-self-avg">—</div>
+            <div class="ch-delta"><span id="ch-self-delta" class="delta d-dn">—</span></div>
+          </div>
+          <div class="ch-row">
+            <div class="ch-name" style="color:var(--amber)">🤝 異業</div>
+            <div><div class="ch-bar"><div class="ch-bar-fill" id="ch-cross-bar" style="width:0%;background:var(--amber)"></div></div></div>
+            <div class="ch-val" id="ch-cross-val" style="color:var(--text-d)">—</div>
+            <div class="ch-avg" id="ch-cross-avg">—</div>
+            <div class="ch-delta"><span id="ch-cross-delta" class="delta d-dn">—</span></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 歷年趨勢 + 出生年保有率 -->
-  <div class="g2" style="margin-bottom:14px">
-    <div class="card"><div class="ct">歷年 BCL 綁定量</div><div class="cs">2020–2026（2026 為 YTD）</div><canvas id="ychart" height="150"></canvas></div>
-    <div class="card"><div class="ct">出生年保有率</div><div class="cs">各出生年已綁定 / 新生兒人口</div><canvas id="cchart" height="150"></canvas></div>
+  <!-- Row 2: Age breakdown yesterday -->
+  <div class="section-head" style="margin-top:8px">
+    <h2 style="font-size:16px">前一日月齡組成</h2>
+    <p>昨日綁定 8 筆的月齡分布 · 括弧為前7日均值</p>
+  </div>
+  <div class="age-grid">
+    <div class="age-block age-prenatal">
+      <div class="age-icon">🤰</div>
+      <div class="age-pct">0</div>
+      <div class="age-abs">筆（7日均 14.0）</div>
+      <div class="age-lbl">孕期</div>
+    </div>
+    <div class="age-block age-sweet">
+      <div class="age-icon">🍼</div>
+      <div class="age-pct">4</div>
+      <div class="age-abs">筆（7日均 43.0）</div>
+      <div class="age-lbl">0–36M 甜蜜區</div>
+    </div>
+    <div class="age-block age-old">
+      <div class="age-icon">🧒</div>
+      <div class="age-pct">0</div>
+      <div class="age-abs">筆（7日均 39.3）</div>
+      <div class="age-lbl">3歲以上</div>
+    </div>
+    <div class="age-block age-nobday">
+      <div class="age-icon">❓</div>
+      <div class="age-pct">4</div>
+      <div class="age-abs">筆（7日均 8.1）</div>
+      <div class="age-lbl">無生日（9999）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+  TAB 2  收集趨勢
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-trend">
+  <div class="section-head">
+    <h2>FY24 vs FY25 收集趨勢</h2>
+    <p>以財年月次（4月起）對齊比較 · 觀察各管道長期軌跡</p>
   </div>
 
-  <!-- FY25 各月月齡分布 -->
+  <!-- FY summary stats -->
+  <div class="grid-4 gap-24">
+    <div class="stat-card stat-blue">
+      <div class="stat-label">FY25 全年總收集</div>
+      <div class="stat-num" id="fy25-total">32,504</div>
+      <div class="stat-sub" style="display:flex;align-items:center;gap:6px;margin-top:6px">
+        FY24: 20,757 <span class="delta d-up">↑ 56.6%</span>
+      </div>
+    </div>
+    <div class="stat-card stat-purple">
+      <div class="stat-label">主動管道</div>
+      <div class="stat-num">5,460</div>
+      <div class="stat-sub" style="display:flex;align-items:center;gap:6px;margin-top:6px">
+        FY24: 3,040 <span class="delta d-up">↑ 79.6%</span>
+      </div>
+    </div>
+    <div class="stat-card stat-slate">
+      <div class="stat-label">自辦管道</div>
+      <div class="stat-num">18,059</div>
+      <div class="stat-sub" style="display:flex;align-items:center;gap:6px;margin-top:6px">
+        FY24: 17,238 <span class="delta d-up">↑ 4.8%</span>
+      </div>
+    </div>
+    <div class="stat-card stat-amber">
+      <div class="stat-label">異業管道</div>
+      <div class="stat-num">8,985</div>
+      <div class="stat-sub" style="display:flex;align-items:center;gap:6px;margin-top:6px">
+        FY24: 2,479 <span class="delta d-up">↑ 263%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main chart -->
+  <div class="card gap-24">
+    <div class="card-head">
+      <div class="card-title">月份收集量比較（FY24 vs FY25）</div>
+      <div class="toggle-group">
+        <button class="tgl on" onclick="switchView('stacked',this)">堆疊</button>
+        <button class="tgl" onclick="switchView('line',this)">折線</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="position:relative;height:300px">
+        <canvas id="trendChart"></canvas>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div>FY25 主動</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>FY25 自辦</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>FY25 異業</div>
+        <div class="legend-item" style="opacity:.6"><div class="legend-dot" style="background:#94a3b8"></div>FY24 主動</div>
+        <div class="legend-item" style="opacity:.6"><div class="legend-dot" style="background:#c4b5fd"></div>FY24 自辦</div>
+        <div class="legend-item" style="opacity:.6"><div class="legend-dot" style="background:#fbbf24"></div>FY24 異業</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FY comparison table -->
   <div class="card">
-    <div class="ct">FY25 各月月齡分布（堆疊）</div>
-    <div class="cs">每月收集結構 ｜ 孕期 · 0~36月 · 36月以上 · 無生日</div>
-    <canvas id="agedist" height="100"></canvas>
-  </div>
-
-</div><!-- /p1 -->
-
-
-<!-- ════════════════════════════
-     TAB 2 ── AI 建議
-════════════════════════════ -->
-<div class="panel" id="p2">
-
-  <!-- AI Insight -->
-  <div class="ai-w" style="margin-bottom:14px">
-    <div class="ai-hdr">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="aibg">✦ AI POWERED</span>
-        <span style="font-size:13px;font-weight:600;color:var(--text)">BCL 數據策略分析 · 自動生成供 GM 決策參考</span>
-      </div>
-      <button class="regen" onclick="genAI()">🔄 重新生成</button>
-    </div>
-    <div class="ai-body">
-      <div class="ai-lp">
-        <div class="ai-pl">策略洞察報告</div>
-        <div id="aibox">
-          <div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在分析 BCL 數據庫...</span></div>
-        </div>
-      </div>
-      <div class="ai-rp">
-        <div class="qbar">
-          <span class="qchip" onclick="qs('FY25最值得加碼投入的管道是哪個？請給具體建議')">最值得投入的管道？</span>
-          <span class="qchip" onclick="qs('異業合作品質偏低（4.55分）的主要原因與改善方向？')">異業品質改善？</span>
-          <span class="qchip" onclick="qs('自辦活動封鎖率34.4%偏高，可能原因與對策？')">自辦封鎖率偏高？</span>
-          <span class="qchip" onclick="qs('目前最緊急需要優先處理的三件事？')">最優先三件事？</span>
-          <span class="qchip" onclick="qs('3月無生日名單322筆佔6.3%，如何改善？')">無生日名單處理？</span>
-          <span class="qchip" onclick="qs('本月3月目標已超額達成203.9%，下月策略建議？')">下月策略建議？</span>
-        </div>
-        <div class="chatmsg" id="msgs"><div class="chemp">↑ 點選快速提問，或直接輸入問題</div></div>
-        <div class="ci-row">
-          <input class="cin" id="ci" placeholder="問 AI 關於 BCL 的任何策略問題..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sc()}"/>
-          <button class="csend" id="sb" onclick="sc()">送出</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 管道明細表（輔助 AI 建議參考）-->
-  <div class="card">
-    <div class="ct">FY25 各來源管道比較</div>
-    <div class="cs">依品質均分排序 ｜ 可作為 AI 建議的佐證數據</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
-      <div>
-        <div class="cs" style="margin-bottom:10px">管道品質得分</div>
-        <div class="qr"><div class="qt"><span class="qn">自辦活動</span><span class="qv gg">7.24</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#0F9D58" data-w="72.4"></div></div></div>
-        <div class="qr"><div class="qt"><span class="qn">主動（LINE OA）</span><span class="qv tg">5.50</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#4285F4" data-w="55.0"></div></div></div>
-        <div class="qr"><div class="qt"><span class="qn">異業合作</span><span class="qv ag">4.55</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#E37400" data-w="45.5"></div></div></div>
-        <div style="border-top:1px solid var(--border);margin:12px 0"></div>
-        <div class="qr"><div class="qt"><span class="qn" style="color:var(--muted)">整體均分</span><span class="qv" style="color:#DB4437">6.20</span></div><div class="qtrack"><div class="qfill" style="width:0%;background:#DB4437" data-w="62.0"></div></div></div>
-      </div>
-      <div>
-        <div class="cs" style="margin-bottom:10px">各管道有效率</div>
-        <div class="vrow"><span class="vl">主動</span><div class="vt"><div class="vf" style="width:0%;background:var(--teal)" data-w="88.1"></div></div><span class="vp tg">88.1%</span></div>
-        <div class="vrow"><span class="vl">異業</span><div class="vt"><div class="vf" style="width:0%;background:var(--amber)" data-w="75.4"></div></div><span class="vp ag">75.4%</span></div>
-        <div class="vrow"><span class="vl">自辦</span><div class="vt"><div class="vf" style="width:0%;background:var(--green)" data-w="87.0"></div></div><span class="vp gg">87.0%</span></div>
-        <div style="margin-top:14px;padding:9px 12px;background:rgba(219,68,55,.04);border:1px solid rgba(219,68,55,.12);border-radius:8px;font-size:11px;color:var(--muted)">⚠️ 自辦封鎖率 <span style="color:var(--red);font-family:var(--fm);font-weight:700">13%</span>，異業封鎖率 <span style="color:var(--amber);font-family:var(--fm);font-weight:700">25%</span> 需留意</div>
-      </div>
-    </div>
-    <table class="dtab">
-      <thead><tr><th>來源管道</th><th>分類</th><th>綁定數</th><th>佔比</th><th>品質均分</th></tr></thead>
-      <tbody id="tbody"></tbody>
+    <div class="card-head"><div class="card-title">管道年度彙總</div></div>
+    <table class="tbl">
+      <thead><tr><th>管道</th><th>FY24</th><th>FY25</th><th>成長量</th><th>YoY</th><th>FY25 佔比</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="chip chip-blue">主動</span></td>
+          <td class="mono">3,040</td>
+          <td class="mono" style="font-weight:600;color:var(--blue)">5,460</td>
+          <td class="mono">+2,420</td>
+          <td><span class="delta d-up">↑ 79.6%</span></td>
+          <td class="mono">16.8%</td>
+        </tr>
+        <tr>
+          <td><span class="chip chip-purple">自辦</span></td>
+          <td class="mono">17,238</td>
+          <td class="mono" style="font-weight:600;color:var(--purple)">18,059</td>
+          <td class="mono">+821</td>
+          <td><span class="delta d-up">↑ 4.8%</span></td>
+          <td class="mono">55.6%</td>
+        </tr>
+        <tr>
+          <td><span class="chip chip-amber">異業</span></td>
+          <td class="mono">2,479</td>
+          <td class="mono" style="font-weight:600;color:var(--amber)">8,985</td>
+          <td class="mono">+6,506</td>
+          <td><span class="delta d-up">↑ 263%</span></td>
+          <td class="mono">27.6%</td>
+        </tr>
+        <tr style="background:var(--bg)">
+          <td><strong>合計</strong></td>
+          <td class="mono">20,757</td>
+          <td class="mono" style="font-weight:700;color:var(--blue)">32,504</td>
+          <td class="mono">+11,747</td>
+          <td><span class="delta d-up">↑ 56.6%</span></td>
+          <td class="mono">100%</td>
+        </tr>
+      </tbody>
     </table>
   </div>
+</div>
 
-</div><!-- /p2 -->
+<!-- ═══════════════════════════════════════════════════
+  TAB 3  名單健康度
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-stock">
+  <div class="section-head">
+    <h2>保有名單健康度</h2>
+    <p>系統保有 271,056 筆 BCL 的當前月齡分布與有效性</p>
+  </div>
 
-</main>
+  <!-- 4 big age blocks -->
+  <div class="age-grid gap-24">
+    <div class="age-block age-prenatal">
+      <div class="age-icon">🤰</div>
+      <div class="age-pct" id="st-prenatal-pct">—</div>
+      <div class="age-abs" id="st-prenatal">— 筆</div>
+      <div class="age-lbl">孕期</div>
+      <div class="age-valid" id="st-prenatal-valid">—</div>
+    </div>
+    <div class="age-block age-sweet">
+      <div class="age-icon">🍼</div>
+      <div class="age-pct" id="st-m036-pct">—</div>
+      <div class="age-abs" id="st-m036">— 筆</div>
+      <div class="age-lbl">0–36M 甜蜜區</div>
+      <div class="age-valid" id="st-m036-valid">—</div>
+    </div>
+    <div class="age-block age-old">
+      <div class="age-icon">🧒</div>
+      <div class="age-pct" id="st-m36p-pct">—</div>
+      <div class="age-abs" id="st-m36p">— 筆</div>
+      <div class="age-lbl">3歲以上</div>
+      <div class="age-valid" id="st-m36p-valid">—</div>
+    </div>
+    <div class="age-block age-nobday">
+      <div class="age-icon">❓</div>
+      <div class="age-pct" id="st-nobday-pct">—</div>
+      <div class="age-abs" id="st-nobday">— 筆</div>
+      <div class="age-lbl">無生日（9999）</div>
+      <div class="age-valid" id="st-nobday-valid">—</div>
+    </div>
+  </div>
+
+  <!-- Chart + context -->
+  <div class="grid-6-4">
+    <!-- Donut + bar -->
+    <div class="card">
+      <div class="card-head"><div class="card-title">有效 vs 封鎖 — 各月齡組</div></div>
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:32px">
+          <div class="donut-wrap" style="height:220px;width:220px;flex-shrink:0">
+            <canvas id="stockDonut"></canvas>
+            <div class="donut-center">
+              <div class="donut-main" style="color:var(--blue)">271K</div>
+              <div class="donut-sub">保有總計</div>
+            </div>
+          </div>
+          <div style="flex:1">
+            <div style="position:relative;height:200px">
+              <canvas id="stockValid"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insight column -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:20px;box-shadow:var(--shadow)">
+        <div style="font-size:12px;font-weight:600;color:var(--text-d);margin-bottom:14px;letter-spacing:.4px">封鎖率對比</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-size:13px">🤰 孕期</span>
+              <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--green);font-weight:500">12.7%</span>
+            </div>
+            <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+              <div style="height:100%;width:12.7%;background:var(--green);border-radius:4px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-size:13px">🍼 0–36M</span>
+              <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--amber);font-weight:500">17.4%</span>
+            </div>
+            <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+              <div style="height:100%;width:17.4%;background:var(--amber);border-radius:4px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-size:13px">🧒 3歲以上</span>
+              <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--red);font-weight:500">36.7%</span>
+            </div>
+            <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+              <div style="height:100%;width:36.7%;background:var(--red);border-radius:4px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-size:13px">❓ 無生日</span>
+              <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--slate);font-weight:500">20.4%</span>
+            </div>
+            <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+              <div style="height:100%;width:20.4%;background:#94a3b8;border-radius:4px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--amber-s);border:1px solid #fde68a;border-radius:var(--r-md);padding:16px">
+        <div style="font-size:13px;font-weight:600;color:#92400e;margin-bottom:6px">⚠️ 注意</div>
+        <div style="font-size:12px;color:#92400e;line-height:1.6">3歲以上佔保有 <strong>83.1%</strong>，封鎖率高達 36.7%，是整體封鎖偏高的主因</div>
+      </div>
+      <div style="background:var(--blue-s);border:1px solid #bfdbfe;border-radius:var(--r-md);padding:16px">
+        <div style="font-size:12px;color:#1e40af;line-height:1.6">ℹ️ 無生日（9999）共 8,469 筆，建議透過 Super8 後台批次補齊出生日資料</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+  TAB 4  月齡品質
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-quality">
+  <div class="section-head">
+    <h2>FY25 收集月齡品質</h2>
+    <p>綁定當下孩子月齡 · 月齡均分越高 = 名單越甜（甜蜜區 0–36M）</p>
+  </div>
+
+  <!-- Score heroes -->
+  <div class="grid-4 gap-24">
+    <div class="hero-card hero-blue">
+      <div class="hero-label">整體均分</div>
+      <div class="score-badge">
+        <div class="score-num" id="q-overall" style="color:var(--blue)">—</div>
+        <div class="score-of">/ 12</div>
+      </div>
+      <div class="hero-unit">32,504 筆</div>
+    </div>
+    <div class="hero-card hero-purple">
+      <div class="hero-label">主動均分</div>
+      <div class="score-badge">
+        <div class="score-num" id="q-active" style="color:var(--purple)">—</div>
+        <div class="score-of">/ 12</div>
+      </div>
+      <div class="hero-unit">5,460 筆</div>
+    </div>
+    <div class="hero-card hero-green">
+      <div class="hero-label">自辦均分 ✦ 最高</div>
+      <div class="score-badge">
+        <div class="score-num" id="q-self" style="color:var(--green)">—</div>
+        <div class="score-of">/ 12</div>
+      </div>
+      <div class="hero-unit">18,059 筆</div>
+    </div>
+    <div class="hero-card hero-amber">
+      <div class="hero-label">異業均分 ▼ 最低</div>
+      <div class="score-badge">
+        <div class="score-num" id="q-cross" style="color:var(--amber)">—</div>
+        <div class="score-of">/ 12</div>
+      </div>
+      <div class="hero-unit">8,985 筆</div>
+    </div>
+  </div>
+
+  <!-- Monthly age chart -->
+  <div class="card gap-24">
+    <div class="card-head">
+      <div class="card-title">FY25 各月收集月齡組成</div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="legend-item"><div class="legend-dot" style="background:#c084fc"></div>孕期</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>0–36M</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fb923c"></div>3歲以上</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div>無生日</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="position:relative;height:260px">
+        <canvas id="fy25AgeChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Channel seg bars -->
+  <div class="card">
+    <div class="card-head"><div class="card-title">各管道月齡組成比例</div></div>
+    <div class="card-body">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <!-- LEGEND for bars -->
+        <div style="display:flex;gap:14px;margin-bottom:14px;font-size:12px;color:var(--text-m)">
+          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#c084fc;border-radius:50%;display:inline-block"></span>孕期</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#34d399;border-radius:50%;display:inline-block"></span>0–36M</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#fb923c;border-radius:50%;display:inline-block"></span>3歲以上</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#94a3b8;border-radius:50%;display:inline-block"></span>無生日</span>
+        </div>
+
+        <!-- 主動 -->
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div><span class="chip chip-purple" style="font-size:13px;padding:3px 12px">主動</span> <span style="font-size:13px;color:var(--text-m);margin-left:8px">5,460 筆 · 均分 5.48</span></div>
+            <div style="font-size:12px;color:var(--text-m)">孕期 <strong>7.6%</strong> · 0–36M <strong>69.3%</strong> · 3歲 <strong>0.8%</strong> · 無生日 <strong style="color:var(--amber)">22.3%</strong></div>
+          </div>
+          <div class="seg-stack">
+            <div class="seg-piece" id="seg-a-pre" style="width:7.6%;background:#c084fc">7.6%</div>
+            <div class="seg-piece" id="seg-a-m036" style="width:69.3%;background:#34d399">69.3%</div>
+            <div class="seg-piece" id="seg-a-m36p" style="width:0.8%;background:#fb923c"></div>
+            <div class="seg-piece" id="seg-a-nb" style="width:22.3%;background:#94a3b8">22.3%</div>
+          </div>
+        </div>
+
+        <!-- 自辦 -->
+        <div style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div><span class="chip" style="font-size:13px;padding:3px 12px;background:var(--green-s);color:var(--green)">自辦</span> <span style="font-size:13px;color:var(--text-m);margin-left:8px">18,059 筆 · 均分 7.22</span></div>
+            <div style="font-size:12px;color:var(--text-m)">孕期 <strong>9.7%</strong> · 0–36M <strong>87.4%</strong> · 3歲 <strong>0.6%</strong> · 無生日 <strong>2.3%</strong></div>
+          </div>
+          <div class="seg-stack">
+            <div class="seg-piece" id="seg-s-pre" style="width:9.7%;background:#c084fc">9.7%</div>
+            <div class="seg-piece" id="seg-s-m036" style="width:87.4%;background:#34d399">87.4%</div>
+            <div class="seg-piece" id="seg-s-m36p" style="width:0.6%;background:#fb923c"></div>
+            <div class="seg-piece" id="seg-s-nb" style="width:2.3%;background:#94a3b8">2.3%</div>
+          </div>
+        </div>
+
+        <!-- 異業 -->
+        <div style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div><span class="chip chip-amber" style="font-size:13px;padding:3px 12px">異業</span> <span style="font-size:13px;color:var(--text-m);margin-left:8px">8,985 筆 · 均分 4.55</span></div>
+            <div style="font-size:12px;color:var(--text-m)">孕期 <strong>34.6%</strong> · 0–36M <strong>51.5%</strong> · 3歲 <strong>1.9%</strong> · 無生日 <strong>12.0%</strong></div>
+          </div>
+          <div class="seg-stack">
+            <div class="seg-piece" id="seg-c-pre" style="width:34.6%;background:#c084fc">34.6%</div>
+            <div class="seg-piece" id="seg-c-m036" style="width:51.5%;background:#34d399">51.5%</div>
+            <div class="seg-piece" id="seg-c-m36p" style="width:1.9%;background:#fb923c"></div>
+            <div class="seg-piece" id="seg-c-nb" style="width:12.0%;background:#94a3b8">12.0%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- summary mini table -->
+      <div style="margin-bottom:20px;overflow:auto">
+        <table class="tbl" style="font-size:12px">
+          <thead><tr><th>管道</th><th>孕期</th><th>0–36M</th><th>3歲以上</th><th>無生日(9999)</th><th>合計</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="chip chip-purple">主動</span></td>
+              <td class="mono">414 <span style="color:var(--text-d)">(7.6%)</span></td>
+              <td class="mono" style="color:var(--green)">3,783 <span style="color:var(--text-d)">(69.3%)</span></td>
+              <td class="mono">44 <span style="color:var(--text-d)">(0.8%)</span></td>
+              <td class="mono" style="color:var(--amber);font-weight:600">1,219 <span style="color:var(--text-d)">(22.3%)</span></td>
+              <td class="mono" style="font-weight:600">5,460</td>
+            </tr>
+            <tr>
+              <td><span class="chip chip-green">自辦</span></td>
+              <td class="mono">1,744 <span style="color:var(--text-d)">(9.7%)</span></td>
+              <td class="mono" style="color:var(--green)">15,779 <span style="color:var(--text-d)">(87.4%)</span></td>
+              <td class="mono">117 <span style="color:var(--text-d)">(0.6%)</span></td>
+              <td class="mono">419 <span style="color:var(--text-d)">(2.3%)</span></td>
+              <td class="mono" style="font-weight:600">18,059</td>
+            </tr>
+            <tr>
+              <td><span class="chip chip-amber">異業</span></td>
+              <td class="mono" style="color:var(--amber)">3,111 <span style="color:var(--text-d)">(34.6%)</span></td>
+              <td class="mono" style="color:var(--green)">4,623 <span style="color:var(--text-d)">(51.5%)</span></td>
+              <td class="mono">170 <span style="color:var(--text-d)">(1.9%)</span></td>
+              <td class="mono">1,081 <span style="color:var(--text-d)">(12.0%)</span></td>
+              <td class="mono" style="font-weight:600">8,985</td>
+            </tr>
+            <tr style="background:var(--bg)">
+              <td><strong>合計</strong></td>
+              <td class="mono">5,269</td>
+              <td class="mono" style="color:var(--green);font-weight:700">24,185</td>
+              <td class="mono">331</td>
+              <td class="mono">2,719</td>
+              <td class="mono" style="color:var(--blue);font-weight:700">32,504</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 3 observations -->
+      <div class="grid-3">
+        <div style="padding:14px;background:var(--purple-s);border-radius:8px;border-left:3px solid var(--purple)">
+          <div style="font-size:12px;font-weight:700;color:var(--purple);margin-bottom:5px">⚠️ 主動（5.48）— 注意</div>
+          <div style="font-size:12px;color:var(--text-b);line-height:1.6">無生日高達 <strong>22.3%（1,219 筆）</strong>是均分偏低的主因，真實 3 歲以上僅 0.8%。建議優先補齊出生日資料</div>
+        </div>
+        <div style="padding:14px;background:var(--green-s);border-radius:8px;border-left:3px solid var(--green)">
+          <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:5px">✅ 自辦（7.22 最高）</div>
+          <div style="font-size:12px;color:var(--text-b);line-height:1.6">0–36M 佔 87.4%，月齡最精準。無生日僅 2.3%，品質最可信</div>
+        </div>
+        <div style="padding:14px;background:var(--amber-s);border-radius:8px;border-left:3px solid var(--amber)">
+          <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:5px">⚠️ 異業（4.55 最低）</div>
+          <div style="font-size:12px;color:var(--text-b);line-height:1.6">孕期 34.6%（3,111筆）+ 無生日 12.0%（1,081筆）合計佔 46.6%。優先選婦幼展等 0–12M 場景</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+  TAB 5  AI 分析師
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-ai">
+  <div class="section-head">
+    <h2>AI 智慧分析師</h2>
+    <p>基於 FY25 CUBE 完整數據 · Claude 驅動 · 結論先行</p>
+  </div>
+
+  <div class="chat-outer">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">對話 <span style="font-size:10px;padding:2px 8px;background:var(--blue-s);color:var(--blue);border-radius:20px;font-weight:500;margin-left:4px">Claude Sonnet</span></div>
+        <button onclick="clearChat()" style="font-size:11px;color:var(--text-d);background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:5px;hover:background:var(--bg)">清除</button>
+      </div>
+      <div class="chat-messages" id="chat-box">
+        <div class="chat-bubble-row">
+          <div class="av av-ai">AI</div>
+          <div class="bubble bubble-ai">
+            您好！我是 BCL 智慧分析師 👋<br><br>
+            已載入 FY25 CUBE 數據（2504–2603），涵蓋保有名單 <strong>271,056 筆</strong>、FY25 新收集 <strong>32,504 筆</strong>，以及三大管道月齡品質分析。<br><br>
+            請問有什麼想深入探討的？
+          </div>
+        </div>
+      </div>
+      <div class="qp-row" id="qp-area">
+        <button class="qp" onclick="ask('自辦均分最高（7.22）但主動只有 5.48，原因是？')">管道均分差異</button>
+        <button class="qp" onclick="ask('異業孕期34.6%對名單LTV有什麼影響？')">異業孕期策略</button>
+        <button class="qp" onclick="ask('FY24→FY25進步最大的管道是哪個？背後原因？')">FY趨勢解讀</button>
+        <button class="qp" onclick="ask('83.1%是3歲以上，有哪些再活化方法？')">3歲以上再活化</button>
+        <button class="qp" onclick="ask('FY26三個管道的名單目標應該怎麼分配？')">FY26 策略建議</button>
+      </div>
+      <div class="chat-footer">
+        <textarea class="chat-textarea" id="chat-in" placeholder="輸入問題，例如：主動管道封鎖率偏低代表什麼？" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+        <button class="chat-send" id="send-btn" onclick="sendMsg()">
+          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-title">🔍 關鍵洞察</div></div>
+      <div class="insight-panel-list">
+        <div class="insight ins-ok"><strong>FY25 +56.6% YoY</strong>：32,504 筆 vs FY24 的 20,757，異業成長最驚人 +263%</div>
+        <div class="insight ins-warn">異業孕期 <strong>34.6%</strong>，均分最低 4.55，需優先選 0–12M 場景夥伴</div>
+        <div class="insight ins-ok">自辦品質最佳（均分 <strong>7.22</strong>），0–36M 佔 87.4%</div>
+        <div class="insight ins-warn">保有 <strong>83.1%</strong> 為3歲以上，封鎖率 36.7%</div>
+        <div class="insight ins-info">建議：FY26 提升主動比例（目前僅 16.8%），設月齡上限 30M</div>
+        <div class="insight ins-info">無生日 8,469 筆（3.1%），有效率 79.6%，值得補齊</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.main -->
 
 <script>
-/*BCL_START*/
-const BCL={
-  date:{y:2026,m:3,d:27,label:'2026年3月27日'},
-  prev:{
-    total:69,act:14,slf:39,prt:16,
-    actCls:'dn',slfCls:'dn',prtCls:'up',
-    actRate:'▼ -41.7%',slfRate:'▼ -54.1%',prtRate:'▲ +166.7%',
-    actPct:20.3,slfPct:56.5,prtPct:23.2,
-    avg7act:23.9,avg7slf:71.7,avg7prt:6.0
-  },
-  month:{
-    total:5287,act:1176,slf:3642,prt:469,
-    days:27,daysInMonth:31,
-    age:{pre:574,a36:3163,a37:1223,nb:327,tot:5287,
-         prePct:'10.9%',a36Pct:'59.8%',a37Pct:'23.1%',nbPct:'6.2%',
-         preW:10.9,a36W:59.8,a37W:23.1,nbW:6.2}
-  },
-  spark30:[88,318,282,329,242,67,75,129,65,177,181,110,114,1318,351,196,252,238,102,147,117,82,99,175,196,107,110,119,94,69],
-  agedist:{
-    prenatal:[295,198,243,471,363,284,383,385,649,679,728,574],
-    age036:  [3738,739,800,1237,842,1120,1418,1099,1368,993,1353,3163],
-    age37:   [582,137,424,361,372,452,808,411,476,770,648,1223],
-    nobday:  [612,138,208,139,121,63,154,156,121,112,549,327]
+/* ─── 動態資料載入 ─────────────────────────── */
+const DATA_URL = 'data/bcl_data.json';
+
+/* 全域資料變數（fetch 後填入） */
+let FY_LBL = ['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'];
+let FY24 = { 主動:[], 自辦:[], 異業:[] };
+let FY25 = { 主動:[], 自辦:[], 異業:[] };
+let FY25_AGE = { 孕期:[], m036:[], m36p:[], none:[] };
+let SPARK8 = [];
+let YESTERDAY = {};
+let PREV7 = {};
+let YESTERDAY_AGE = {};
+let PREV7_AGE = {};
+let STOCK = {};
+let CH_AGE = {};
+let Q_SCORES = {};
+
+/* ─── CHART DEFAULTS ───────────────────────── */
+Chart.defaults.font.family = "'Noto Sans TC', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#64748b';
+const TT = {
+  backgroundColor:'#fff', borderColor:'#e8edf2', borderWidth:1,
+  titleColor:'#0f172a', bodyColor:'#334155',
+  padding:12, boxPadding:5, cornerRadius:8
+};
+
+/* ─── INSTANCES ─────────────────────────────── */
+let tChart, donutC, validC, ageC, fy25C;
+let tMode = 'stacked';
+
+/* ─── INIT：先 fetch JSON，再建圖表 ─────────── */
+document.addEventListener('DOMContentLoaded', async () => {
+  showLoading(true);
+  try {
+    const res = await fetch(DATA_URL + '?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const D = await res.json();
+    loadData(D);
+  } catch(e) {
+    console.warn('無法載入 JSON，使用預設資料:', e);
   }
-};
-/*BCL_END*/
+  showLoading(false);
+  buildSpark();
+  buildTrend();
+  buildDonut();
+  buildValid();
+  buildAgeDist();
+  buildFY25Age();
+  updateDailyUI();
+  updateStockUI();
+  updateQualityUI();
+});
 
-const D={
-  totalBCL:271038,valid:180523,invalid:90515,
-  fy25Total:32486,fy25A:5442,fy25S:18059,fy25C:8985,
-  validRate:{act:88.1,slf:87.0,prt:75.4},
-  sys:{total:35032,valid:28962,invalid:6070},
-  yearly:[{y:'2020',n:36569},{y:'2021',n:43743},{y:'2022',n:43066},{y:'2023',n:44888},{y:'2024',n:18248},{y:'2025',n:27170},{y:'2026*',n:32486}],
-  monthly:[
-    {m:'25/04',act:340,slf:3690,prt:1197,n:5227},
-    {m:'25/05',act:172,slf:679,prt:361,n:1212},
-    {m:'25/06',act:196,slf:546,prt:933,n:1675},
-    {m:'25/07',act:231,slf:842,prt:1135,n:2208},
-    {m:'25/08',act:214,slf:742,prt:742,n:1698},
-    {m:'25/09',act:219,slf:1183,prt:517,n:1919},
-    {m:'25/10',act:309,slf:1927,prt:527,n:2763},
-    {m:'25/11',act:385,slf:1173,prt:493,n:2051},
-    {m:'25/12',act:492,slf:1017,prt:1105,n:2614},
-    {m:'26/01',act:530,slf:1392,prt:632,n:2554},
-    {m:'26/02',act:1178,slf:1226,prt:874,n:3278},
-    {m:'26/03',act:1176,slf:3642,prt:469,n:5287}
-  ],
-  capture:[{y:'2023年生',b:135571,c:14754,r:10.9},{y:'2024年生',b:134856,c:13568,r:10.1},{y:'2025年生',b:107812,c:7712,r:7.2},{y:'2026年生',b:15246,c:3900,r:25.6}],
-  sources:[{n:'心測',ch:'自辦',cnt:5649,q:8.76,note:'高品質大量'},{n:'客服',ch:'自辦',cnt:119,q:8.54,note:'品質最高'},{n:'聯盟網',ch:'異業',cnt:314,q:8.5,note:'品質優'},{n:'揆眾婦幼展',ch:'異業',cnt:1918,q:7.58,note:'展覽高品質'},{n:'LineOA',ch:'主動',cnt:779,q:7.3,note:'主力線上管道'},{n:'全管道(on)',ch:'自辦',cnt:9325,q:7.17,note:'最大量管道'},{n:'Happy Go',ch:'自辦',cnt:72,q:6.94,note:'穩定'},{n:'官網-Welcome',ch:'主動',cnt:2562,q:6.59,note:'訂購轉化佳'},{n:'全管道(off)',ch:'自辦',cnt:1367,q:5.86,note:'線下活動'},{n:'大樹',ch:'異業',cnt:1451,q:4.24,note:'藥妝通路'},{n:'明治',ch:'異業',cnt:793,q:4.2,note:'藥妝通路'},{n:'六甲村',ch:'異業',cnt:785,q:4.03,note:'通路合作'},{n:'永生',ch:'異業',cnt:1241,q:3.76,note:'藥妝通路'},{n:'SHOPLINE',ch:'主動',cnt:2119,q:3.47,note:'月齡分散'},{n:'芳茲',ch:'異業',cnt:23,q:3.3,note:'婦嬰通路'},{n:'英語劇',ch:'自辦',cnt:529,q:3.09,note:'季節性活動'},{n:'春季舞台劇',ch:'自辦',cnt:975,q:2.84,note:'季節性活動'},{n:'夏季舞台劇',ch:'自辦',cnt:7,q:2.57,note:'少量'},{n:'樂飛發票',ch:'異業',cnt:2459,q:2.54,note:'⚠️ 品質最低'}].sort((a,b)=>b.q-a.q)
-};
-
-// ── TABS ──
-const CI={};let cur=0;
-function sw(i){
-  document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('on',j===i));
-  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('on',j===i));
-  cur=i;
-  setTimeout(()=>{
-    if(i===0&&!CI.sp){iSp();iSp2();}
-    if(i===1&&!CI.mc){iM();iY();iC();iYoY();iAgeDist();}
-    if(i===2){if(!CI.ai){genAI();CI.ai=1;}if(!CI.tb){iT();iT2();CI.tb=1;setTimeout(()=>{document.querySelectorAll('.qfill,.vf').forEach(el=>el.style.width=el.dataset.w+'%')},50);}}
-    Object.values(CI).forEach(c=>{try{if(c&&c.resize)c.resize()}catch(e){}});
-  },40);
+function showLoading(on) {
+  const el = document.getElementById('loading-bar');
+  if (el) el.style.display = on ? 'block' : 'none';
 }
 
-// ── COUNTER ──
-function aN(id,t){const el=document.getElementById(id);if(!el)return;let c=0;const s=t/60,ti=setInterval(()=>{c=Math.min(c+s,t);el.textContent=Math.floor(c).toLocaleString('en-US');if(c>=t)clearInterval(ti)},20);}
+function loadData(D) {
+  /* FY 月份 */
+  FY_LBL = (D.fy25_monthly?.月份 || FY_LBL).map(m => {
+    const [y, mo] = m.split('/');
+    return mo + '月';
+  });
+  FY24 = {
+    主動: D.fy24_monthly?.主動 || [],
+    自辦: D.fy24_monthly?.自辦 || [],
+    異業: D.fy24_monthly?.異業 || [],
+  };
+  FY25 = {
+    主動: D.fy25_monthly?.主動 || [],
+    自辦: D.fy25_monthly?.自辦 || [],
+    異業: D.fy25_monthly?.異業 || [],
+  };
+  FY25_AGE = {
+    孕期: D.fy25_monthly_age?.孕期 || [],
+    m036: D.fy25_monthly_age?.m036 || [],
+    m36p: D.fy25_monthly_age?.m36p || [],
+    none: D.fy25_monthly_age?.nobday || [],
+  };
+  SPARK8 = D.last8?.總計 || [];
+  YESTERDAY = D.yesterday || {};
+  PREV7 = D.prev7_avg || {};
+  YESTERDAY_AGE = D.yesterday_age || {};
+  PREV7_AGE = D.prev7_age_avg || {};
+  STOCK = D.stock_age || {};
+  CH_AGE = D.channel_age || {};
+  Q_SCORES = D.quality_scores || {};
 
-// ── CHARTS ──
-Chart.defaults.color='#6B7A99';Chart.defaults.font.family="'DM Mono',monospace";
+  /* 更新資料時間顯示 */
+  const ts = D.meta?.updated_at || '';
+  const el = document.getElementById('data-updated');
+  if (el && ts) el.textContent = '資料截至 ' + ts;
+}
 
-const spData=BCL.spark30.map(v=>Math.min(v,900));
+function pct(val, tot) {
+  if (!tot) return '0.0%';
+  return (val/tot*100).toFixed(1) + '%';
+}
+function delta(now, avg) {
+  if (!avg) return '';
+  const d = ((now - avg) / avg * 100).toFixed(1);
+  return d >= 0 ? '▲ +' + d + '%' : '▼ ' + d + '%';
+}
+function deltaClass(now, avg) {
+  if (!avg) return 'delta-zero';
+  return now >= avg ? 'd-up' : 'd-dn';
+}
 
-function iSp(){CI.sp=new Chart(document.getElementById('sparkline'),{type:'line',data:{labels:spData.map((_,i)=>i),datasets:[{data:spData,borderColor:'rgba(244,180,0,.8)',backgroundColor:'rgba(244,180,0,.1)',borderWidth:1.5,pointRadius:0,fill:true,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});}
-function iSp2(){CI.sp2=new Chart(document.getElementById('spark2'),{type:'line',data:{labels:spData.map((_,i)=>i),datasets:[{data:spData,borderColor:'rgba(15,157,88,.8)',backgroundColor:'rgba(15,157,88,.1)',borderWidth:2,pointRadius:0,fill:true,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});}
+/* ─── 更新前一日快報 UI ──────────────────────── */
+function updateDailyUI() {
+  const Y = YESTERDAY, P = PREV7, YA = YESTERDAY_AGE, PA = PREV7_AGE;
+  const date = Y.date || '—';
+  const tot  = Y.總計 ?? 0;
+  const p7t  = P.總計 ?? 0;
 
-function iM(){
-  CI.mc=new Chart(document.getElementById('mchart'),{type:'bar',data:{labels:D.monthly.map(d=>d.m),datasets:[
-    {label:'主動',data:D.monthly.map(d=>d.act),backgroundColor:'rgba(66,133,244,.8)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:3,bottomRight:3},stack:'s'},
-    {label:'自辦',data:D.monthly.map(d=>d.slf),backgroundColor:'rgba(15,157,88,.8)',borderWidth:0,borderRadius:0,stack:'s'},
-    {label:'異業',data:D.monthly.map(d=>d.prt),backgroundColor:'rgba(244,180,0,.85)',borderWidth:0,borderRadius:{topLeft:3,topRight:3,bottomLeft:0,bottomRight:0},stack:'s'}
-  ]},options:{
-    responsive:true,maintainAspectRatio:true,
-    interaction:{mode:'index',intersect:false},
-    plugins:{
-      legend:{position:'top',align:'end',labels:{font:{size:11},padding:14,usePointStyle:true,pointStyle:'rect'}},
-      tooltip:{callbacks:{
-        title:c=>`${c[0].label}　合計 ${(D.monthly[c[0].dataIndex].act+D.monthly[c[0].dataIndex].slf+D.monthly[c[0].dataIndex].prt).toLocaleString()} 筆`,
-        label:c=>{
-          const tot=D.monthly[c[0].dataIndex].act+D.monthly[c[0].dataIndex].slf+D.monthly[c[0].dataIndex].prt;
-          return ` ${c.dataset.label}：${c.raw.toLocaleString()} 筆（${(c.raw/tot*100).toFixed(1)}%）`;
-        }
-      }}
+  setText('yd-date',  date);
+  setText('yd-total', tot);
+  setText('yd-p7avg', p7t.toFixed(1));
+  setText('yd-delta', delta(tot, p7t));
+  setClass('yd-delta-chip', 'delta ' + deltaClass(tot, p7t));
+
+  const channels = [
+    {id:'ch-active', key:'主動'},
+    {id:'ch-self',   key:'自辦'},
+    {id:'ch-cross',  key:'異業'},
+  ];
+  channels.forEach(({id, key}) => {
+    const v = Y[key] ?? 0, av = P[key] ?? 0;
+    setText(id+'-val', v);
+    setText(id+'-avg', '均 ' + av.toFixed(1));
+    setText(id+'-delta', delta(v, av));
+    setClass(id+'-delta', 'delta ' + deltaClass(v, av));
+    const bar = document.getElementById(id+'-bar');
+    if (bar) bar.style.width = (p7t > 0 ? Math.min(100, v/p7t*100) : 0) + '%';
+  });
+
+  /* 月齡四格 */
+  const ageMap = [
+    {id:'yd-prenatal', key:'孕期'},
+    {id:'yd-m036',     key:'m036'},
+    {id:'yd-m36p',     key:'m36p'},
+    {id:'yd-nobday',   key:'nobday'},
+  ];
+  ageMap.forEach(({id, key}) => {
+    setText(id+'-val', YA[key] ?? 0);
+    setText(id+'-avg', '7日均 ' + (PA[key] ?? 0).toFixed(1));
+  });
+}
+
+/* ─── 更新保有名單 UI ─────────────────────────── */
+function updateStockUI() {
+  const S = STOCK;
+  const grand = S.grand_total || 0;
+  const valid  = S.valid_total  || 0;
+  const pr  = S['孕期']  || {};
+  const m0  = S['m036']  || {};
+  const m3  = S['m36p']  || {};
+  const nb  = S['nobday']|| {};
+
+  setText('st-total',      grand.toLocaleString());
+  setText('st-valid',      valid.toLocaleString());
+  setText('st-valid-pct',  pct(valid, grand));
+  setText('st-prenatal',   (pr.total||0).toLocaleString());
+  setText('st-prenatal-pct', pct(pr.total||0, grand));
+  setText('st-prenatal-valid', '有效 '+(pr.valid||0).toLocaleString()+'（'+pct(pr.valid||0,pr.total||1)+'）');
+  setText('st-m036',       (m0.total||0).toLocaleString());
+  setText('st-m036-pct',   pct(m0.total||0, grand));
+  setText('st-m036-valid', '有效 '+(m0.valid||0).toLocaleString()+'（'+pct(m0.valid||0,m0.total||1)+'）');
+  setText('st-m36p',       (m3.total||0).toLocaleString());
+  setText('st-m36p-pct',   pct(m3.total||0, grand));
+  setText('st-m36p-valid', '有效 '+(m3.valid||0).toLocaleString()+'（'+pct(m3.valid||0,m3.total||1)+'）');
+  setText('st-nobday',     (nb.total||0).toLocaleString());
+  setText('st-nobday-pct', pct(nb.total||0, grand));
+  setText('st-nobday-valid','有效 '+(nb.valid||0).toLocaleString()+'（'+pct(nb.valid||0,nb.total||1)+'）');
+}
+
+/* ─── 更新月齡品質 UI ─────────────────────────── */
+function updateQualityUI() {
+  const Q = Q_SCORES, C = CH_AGE;
+  setText('q-overall', (Q['整體']||0).toFixed(2));
+  setText('q-active',  (Q['主動'] ||0).toFixed(2));
+  setText('q-self',    (Q['自辦'] ||0).toFixed(2));
+  setText('q-cross',   (Q['異業'] ||0).toFixed(2));
+
+  const setBar = (ch_data, ids) => {
+    const tot = ch_data.total || 1;
+    const fields = [
+      {id:ids[0], key:'孕期'},
+      {id:ids[1], key:'m036'},
+      {id:ids[2], key:'m36p'},
+      {id:ids[3], key:'nobday'},
+    ];
+    fields.forEach(({id, key}) => {
+      const v = ch_data[key] || 0;
+      const p = (v/tot*100).toFixed(1);
+      const el = document.getElementById(id);
+      if (el) { el.style.width = p + '%'; el.textContent = p + '%'; }
+    });
+  };
+
+  if (C['主動']) setBar(C['主動'], ['seg-a-pre','seg-a-m036','seg-a-m36p','seg-a-nb']);
+  if (C['自辦']) setBar(C['自辦'], ['seg-s-pre','seg-s-m036','seg-s-m36p','seg-s-nb']);
+  if (C['異業']) setBar(C['異業'], ['seg-c-pre','seg-c-m036','seg-c-m36p','seg-c-nb']);
+}
+
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+function setClass(id, cls) {
+  const el = document.getElementById(id);
+  if (el) el.className = cls;
+}
+
+/* ─── TAB NAVIGATION ───────────────────────── */
+function goTab(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('page-' + id).classList.add('on');
+  el.classList.add('on');
+  setTimeout(() => {
+    tChart?.resize(); donutC?.resize(); validC?.resize();
+    ageC?.resize(); fy25C?.resize();
+  }, 60);
+}
+
+/* ─── SPARKLINE ─────────────────────────────── */
+function buildSpark() {
+  const el = document.getElementById('spark-total');
+  if (!el) return;
+  const max = Math.max(...SPARK8);
+  el.innerHTML = SPARK8.map((v,i) => {
+    const h = Math.max(4, Math.round(v/max * 40));
+    const isLast = i === SPARK8.length-1;
+    const bg = isLast ? 'var(--blue)' : 'var(--border)';
+    const lbl = ['3/22','3/23','3/24','3/25','3/26','3/27','3/28','3/29'][i];
+    return `<div class="spark-col" style="height:${h}px;background:${bg}"
+      title="${lbl}: ${v}筆"
+      onmouseenter="this.style.background='var(--blue)'"
+      onmouseleave="this.style.background='${bg}'"></div>`;
+  }).join('');
+}
+
+/* ─── TREND CHART ───────────────────────────── */
+function buildTrend() {
+  if (tChart) tChart.destroy();
+  const ctx = document.getElementById('trendChart')?.getContext('2d');
+  if (!ctx) return;
+  const s = tMode === 'stacked';
+  tChart = new Chart(ctx, {
+    type: s ? 'bar' : 'line',
+    data: {
+      labels: FY_LBL,
+      datasets: [
+        { label:'FY25 主動', data:FY25.主動, backgroundColor:s?'rgba(37,99,235,.8)':'transparent', borderColor:'#2563eb', borderWidth:s?0:2.5, pointRadius:s?0:3, tension:.3, stack:s?'f25':undefined },
+        { label:'FY25 自辦', data:FY25.自辦, backgroundColor:s?'rgba(124,58,237,.8)':'transparent', borderColor:'#7c3aed', borderWidth:s?0:2.5, pointRadius:s?0:3, tension:.3, stack:s?'f25':undefined },
+        { label:'FY25 異業', data:FY25.異業, backgroundColor:s?'rgba(217,119,6,.8)':'transparent', borderColor:'#d97706', borderWidth:s?0:2.5, pointRadius:s?0:3, tension:.3, stack:s?'f25':undefined },
+        { label:'FY24 主動', data:FY24.主動, backgroundColor:s?'rgba(148,163,184,.4)':'transparent', borderColor:'#94a3b8', borderWidth:s?0:1.5, borderDash:s?[]:[5,3], pointRadius:s?0:2, tension:.3, stack:s?'f24':undefined },
+        { label:'FY24 自辦', data:FY24.自辦, backgroundColor:s?'rgba(196,181,253,.4)':'transparent', borderColor:'#c4b5fd', borderWidth:s?0:1.5, borderDash:s?[]:[5,3], pointRadius:s?0:2, tension:.3, stack:s?'f24':undefined },
+        { label:'FY24 異業', data:FY24.異業, backgroundColor:s?'rgba(251,191,36,.4)':'transparent', borderColor:'#fbbf24', borderWidth:s?0:1.5, borderDash:s?[]:[5,3], pointRadius:s?0:2, tension:.3, stack:s?'f24':undefined },
+      ]
     },
-    scales:{
-      x:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:11}},stacked:true},
-      y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{callback:v=>v.toLocaleString(),font:{size:11}},stacked:true}
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'nearest', intersect:true },
+      plugins:{
+        legend:{ display:false },
+        tooltip:{
+          ...TT,
+          callbacks:{
+            label: c => c.parsed.y>0 ? ` ${c.dataset.label}: ${c.parsed.y.toLocaleString()} 筆` : null,
+            afterBody: items => {
+              const i = items[0].dataIndex;
+              const f25 = (FY25.主動[i]||0)+(FY25.自辦[i]||0)+(FY25.異業[i]||0);
+              const f24 = (FY24.主動[i]||0)+(FY24.自辦[i]||0)+(FY24.異業[i]||0);
+              return ['', `FY25 月合計: ${f25.toLocaleString()}`, `FY24 月合計: ${f24.toLocaleString()}`];
+            }
+          }
+        }
+      },
+      scales:{
+        x:{ stacked:s, grid:{display:false}, ticks:{color:'#94a3b8'} },
+        y:{ stacked:s, grid:{color:'#f1f5f9'}, ticks:{ color:'#94a3b8', callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v } }
+      }
     }
-  }});
+  });
 }
-function iYoY(){
-  const lb=['04','05','06','07','08','09','10','11','12','01','02','03'];
-  const f5=[5227,1212,1675,2208,1698,1919,2763,2051,2614,2554,3278,5098];
-  const f4=[163,192,203,308,2466,4217,2899,3354,1152,1077,1831,2895];
-  const yoy=f5.map((n,i)=>parseFloat(((n/f4[i]-1)*100).toFixed(1)));
-  CI.yoy=new Chart(document.getElementById('yoychart'),{
+
+function switchView(mode, el) {
+  tMode = mode;
+  document.querySelectorAll('.toggle-group .tgl').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  buildTrend();
+}
+
+/* ─── STOCK DONUT ───────────────────────────── */
+function buildDonut() {
+  const ctx = document.getElementById('stockDonut')?.getContext('2d');
+  if (!ctx) return;
+  donutC = new Chart(ctx, {
+    type:'doughnut',
+    data:{
+      labels:['孕期','0–36M','3歲以上','無生日'],
+      datasets:[{ data:[2335,35038,225214,8469], backgroundColor:['#c084fc','#34d399','#fb923c','#94a3b8'], borderWidth:2, borderColor:'#fff', hoverOffset:6 }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'68%',
+      plugins:{ legend:{display:false}, tooltip:{ ...TT, callbacks:{ label:c=>`${c.label}: ${c.parsed.toLocaleString()} (${(c.parsed/271056*100).toFixed(1)}%)` } } }
+    }
+  });
+}
+
+/* ─── STOCK VALID CHART ─────────────────────── */
+function buildValid() {
+  const ctx = document.getElementById('stockValid')?.getContext('2d');
+  if (!ctx) return;
+  validC = new Chart(ctx, {
     type:'bar',
     data:{
-      labels:lb,
+      labels:['孕期','0–36M','3歲以上','無生日'],
       datasets:[
-        {label:'FY25',data:f5,backgroundColor:'rgba(66,133,244,.7)',borderColor:'#4285F4',borderWidth:1,borderRadius:4,yAxisID:'y'},
-        {label:'FY24',data:f4,backgroundColor:'rgba(189,189,189,.5)',borderColor:'#BDBDBD',borderWidth:1,borderRadius:4,yAxisID:'y'},
-        {label:'YoY%',data:yoy,type:'line',borderColor:'#DB4437',backgroundColor:'transparent',borderWidth:2,pointBackgroundColor:yoy.map(v=>v>=0?'#0F9D58':'#DB4437'),pointRadius:4,pointHoverRadius:6,tension:.3,yAxisID:'y2'}
+        { label:'有效', data:[2038,28950,142740,6743], backgroundColor:['rgba(192,132,252,.8)','rgba(52,211,153,.8)','rgba(251,146,60,.8)','rgba(148,163,184,.8)'], borderRadius:4, stack:'a' },
+        { label:'封鎖', data:[297,6088,82474,1726], backgroundColor:['rgba(192,132,252,.25)','rgba(52,211,153,.25)','rgba(251,146,60,.25)','rgba(148,163,184,.25)'], borderRadius:4, stack:'a' },
       ]
     },
     options:{
-      responsive:true,maintainAspectRatio:true,
-      plugins:{
-        legend:{position:'top',align:'end',labels:{font:{size:10},padding:12,usePointStyle:true}},
-        tooltip:{mode:'index',intersect:false,callbacks:{
-          title:c=>`${lb[c[0].dataIndex]}月`,
-          label:c=>{
-            if(c.dataset.label==='YoY%') return ` YoY：${c.raw>=0?'+':''}${c.raw}%`;
-            return ` ${c.dataset.label}：${c.raw.toLocaleString()} 筆`;
-          }
-        }}
-      },
-      scales:{
-        x:{grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{size:10},color:'#A0AABF'}},
-        y:{grid:{color:'rgba(0,0,0,.04)'},ticks:{callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v,font:{size:10}},position:'left'},
-        y2:{ticks:{callback:v=>v+'%',font:{size:10},color:'#DB4437'},position:'right',grid:{display:false}}
-      }
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:9, padding:10, font:{size:11} } }, tooltip:{ ...TT, callbacks:{ label:c=>`${c.dataset.label}: ${c.parsed.y.toLocaleString()}` } } },
+      scales:{ x:{ stacked:true, grid:{display:false} }, y:{ stacked:true, grid:{color:'#f1f5f9'}, ticks:{ callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v } } }
     }
   });
 }
-function iY(){CI.yc=new Chart(document.getElementById('ychart'),{type:'bar',data:{labels:D.yearly.map(d=>d.y),datasets:[{data:D.yearly.map(d=>d.n),backgroundColor:D.yearly.map((_,i)=>i===6?'rgba(66,133,244,.25)':i>=4?'rgba(66,133,244,.75)':'rgba(66,133,244,.35)'),borderColor:D.yearly.map((_,i)=>i>=4?'#4285F4':'rgba(66,133,244,.5)'),borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw.toLocaleString()} 筆`}}},scales:{x:{grid:{color:'#F1F3F4'},ticks:{font:{size:11}}},y:{grid:{color:'#F1F3F4'},ticks:{callback:v=>v>=1000?(v/1000)+'k':v,font:{size:11}}}}}});}
-function iC(){CI.cc=new Chart(document.getElementById('cchart'),{type:'bar',data:{labels:D.capture.map(d=>d.y),datasets:[{label:'已綁定數',data:D.capture.map(d=>d.c),backgroundColor:'rgba(66,133,244,.55)',borderColor:'#4285F4',borderWidth:1,borderRadius:4,yAxisID:'y'},{label:'保有率',data:D.capture.map(d=>d.r),type:'line',borderColor:'#E37400',backgroundColor:'rgba(244,180,0,.08)',borderWidth:2,pointBackgroundColor:'#E37400',pointRadius:5,tension:.4,yAxisID:'y2'}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'top',labels:{font:{size:10},padding:10}},tooltip:{callbacks:{label:c=>c.datasetIndex===1?` 保有率：${c.raw}%`:` 綁定數：${c.raw.toLocaleString()}`}}},scales:{x:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:10}}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{callback:v=>v.toLocaleString(),font:{size:10}}},y2:{ticks:{callback:v=>v+'%',color:'#E37400',font:{size:10}},position:'right',grid:{display:false},min:0,max:35}}}});}
-function iT(){
-  const cc={'主動':'#4285F4','自辦':'#0F9D58','異業':'#E37400'};
-  const qc=q=>q>=7?'#0F9D58':q>=5?'#4285F4':q>=3?'#E37400':'#DB4437';
-  document.getElementById('tbody').innerHTML=D.sources.map(s=>{
-    const c=cc[s.ch],q=qc(s.q),p=(s.cnt/D.fy25Total*100).toFixed(1),bw=(s.q/10*100).toFixed(0);
-    return `<tr><td style="font-weight:600">${s.n}</td><td><span class="chtag" style="background:${c}18;color:${c};border:1px solid ${c}33">${s.ch}</span></td><td style="font-family:var(--fm)">${s.cnt.toLocaleString()}</td><td style="font-family:var(--fm);color:var(--muted)">${p}%</td><td style="font-family:var(--fm);font-weight:600;color:${q}">${s.q.toFixed(2)}</td></tr>`;
-  }).join('');
-}
-function iT2(){
-  setTimeout(()=>{
-    // 管道品質進度條（寫死）
-    document.querySelectorAll('.qfill').forEach(el=>el.style.width=el.dataset.w+'%');
-    // 有效率進度條（動態）
-    const vr=D.validRate||{act:88.1,slf:87.0,prt:75.4};
-    const vf=document.querySelectorAll('.vf');
-    const vp=document.querySelectorAll('.vp');
-    if(vf.length>=3){
-      vf[0].style.width=vr.act+'%'; if(vp[0]) vp[0].textContent=vr.act.toFixed(1)+'%';
-      vf[1].style.width=vr.prt+'%'; if(vp[1]) vp[1].textContent=vr.prt.toFixed(1)+'%';
-      vf[2].style.width=vr.slf+'%'; if(vp[2]) vp[2].textContent=vr.slf.toFixed(1)+'%';
-    }
-  },80);
-}
 
-// ── TARGET ──
-function recalc(){
-  const tgt=parseInt(document.getElementById('monthTarget').value)||2500;
-  const act=BCL.month.total,dim=BCL.month.daysInMonth,el=BCL.month.days,tt=Math.round(tgt/dim*el);
-  const tr=(act/tt*100).toFixed(1),mr=(act/tgt*100).toFixed(1),gp=act-tt;
-  document.getElementById('tgtTime').textContent=tt.toLocaleString()+' 筆';
-  const rEl=document.getElementById('tgtTR');rEl.textContent=tr+'%';rEl.style.color=parseFloat(tr)>=100?'var(--green)':'var(--red)';
-  const mEl=document.getElementById('tgtMR');mEl.textContent=mr+'%';mEl.style.color=parseFloat(mr)>=100?'var(--green)':'var(--amber)';
-  const gEl=document.getElementById('tgtGap');gEl.textContent=(gp>=0?'+':'')+gp.toLocaleString()+' 筆';gEl.style.color=gp>=0?'var(--green)':'var(--red)';
-  document.getElementById('tgtBar').style.width=Math.min(act/tt*100,100)+'%';
-}
-
-// ── AI ──
-// ── 套用 BCL 每日資料到 DOM ──
-function applyBCLData(){
-  const b=BCL, p=b.prev, m=b.month, ma=m.age;
-
-  // Header 日期
-  document.querySelectorAll('.hbadge,.bd').forEach(el=>{
-    if(el.textContent.includes('資料截至')) el.textContent='資料截至 '+b.date.label;
-  });
-
-  // 前一日標題
-  const dTitle=document.querySelector('[data-slot="prev-date"]');
-  if(dTitle) dTitle.textContent=`前一日收集（${b.date.m}月${b.date.d}日）`;
-
-  // 前一日合計
-  const totEl=document.querySelector('[data-slot="prev-total"]');
-  if(totEl) totEl.textContent=p.total.toLocaleString('en-US');
-
-  // 主動
-  setChannel('act', p.act, p.actCls, p.actRate, p.actPct, p.avg7act);
-  // 自辦
-  setChannel('slf', p.slf, p.slfCls, p.slfRate, p.slfPct, p.avg7slf);
-  // 異業
-  setChannel('prt', p.prt, p.prtCls, p.prtRate, p.prtPct, p.avg7prt);
-
-  // 本月累計
-  const mTotEl=document.querySelector('[data-slot="month-total"]');
-  if(mTotEl) mTotEl.textContent=m.total.toLocaleString('en-US');
-  const mDayEl=document.querySelector('[data-slot="month-days"]');
-  if(mDayEl) mDayEl.textContent=`${b.date.m}月 1–${m.days} 日`;
-  setSlot('month-act', m.act.toLocaleString('en-US'));
-  setSlot('month-slf', m.slf.toLocaleString('en-US'));
-  setSlot('month-prt', m.prt.toLocaleString('en-US'));
-
-  // 本月月齡分布卡
-  setSlot('age-pre-n', ma.pre.toLocaleString('en-US'));
-  setSlot('age-pre-pct', ma.prePct);
-  setSlot('age-036-n', ma.a36.toLocaleString('en-US'));
-  setSlot('age-036-pct', ma.a36Pct);
-  setSlot('age-37-n', ma.a37.toLocaleString('en-US'));
-  setSlot('age-37-pct', ma.a37Pct);
-  setSlot('age-nb-n', ma.nb.toLocaleString('en-US'));
-  setSlot('age-nb-pct', ma.nbPct);
-  setSlot('age-tot', `2026/${String(b.date.m).padStart(2,'0')} ｜ ${ma.tot.toLocaleString('en-US')} 筆 · 實際日度資料`);
-
-  // 進度條寬度
-  setBarW('age-pre-bar', ma.preW);
-  setBarW('age-036-bar', ma.a36W);
-  setBarW('age-37-bar', ma.a37W);
-  setBarW('age-nb-bar', ma.nbW);
-
-  // FY25 月齡分布（從 BCL.agedist 加總全年）
-  const ad=b.agedist;
-  if(ad){
-    const fyPre=ad.prenatal.reduce((a,v)=>a+v,0);
-    const fy36=ad.age036.reduce((a,v)=>a+v,0);
-    const fy37=ad.age37.reduce((a,v)=>a+v,0);
-    const fyNb=ad.nobday.reduce((a,v)=>a+v,0);
-    const fyTot=fyPre+fy36+fy37+fyNb;
-    const pct=(v,t)=>(v/t*100).toFixed(1)+'%';
-    const fmt2=v=>v.toLocaleString('en-US');
-    const se=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-    const sw=(id,v)=>{const el=document.getElementById(id);if(el)el.style.width=v;};
-    se('fy25pre',fmt2(fyPre)); se('fy25prePct',pct(fyPre,fyTot)); sw('fy25preBar',pct(fyPre,fyTot));
-    se('fy25a36',fmt2(fy36));  se('fy25a36Pct',pct(fy36,fyTot));  sw('fy25a36Bar',pct(fy36,fyTot));
-    se('fy25a37',fmt2(fy37));  se('fy25a37Pct',pct(fy37,fyTot));  sw('fy25a37Bar',pct(fy37,fyTot));
-    se('fy25nb',fmt2(fyNb));   se('fy25nbPct',pct(fyNb,fyTot));   sw('fy25nbBar',pct(fyNb,fyTot));
-    const tot=document.getElementById('fy25ageTot');
-    if(tot) tot.textContent='全年 '+fmt2(fyTot)+' 筆 · 日度資料加總';
-  }
-
-  // FY25 YoY 卡
-  const yoyEl=document.getElementById('yoyFY25');
-  if(yoyEl) yoyEl.textContent=D.fy25Total.toLocaleString('en-US');
-
-  // 系統保有 KPI 卡
-  if(D.sys){
-    const s=D.sys;
-    const pct=(s.valid/s.total*100).toFixed(1);
-    const el=document.getElementById('sysTotal');
-    if(el) el.textContent=s.total.toLocaleString('en-US');
-    const ve=document.getElementById('sysValid');
-    if(ve) ve.textContent=s.valid.toLocaleString('en-US');
-    const ie=document.getElementById('sysInvalid');
-    if(ie) ie.textContent=s.invalid.toLocaleString('en-US');
-    const be=document.getElementById('sysBar');
-    if(be) be.style.width=pct+'%';
-    const pe=document.getElementById('sysPct');
-    if(pe) pe.textContent=pct+'%';
-  }
-}
-
-function setSlot(slot, val){
-  document.querySelectorAll('[data-slot="'+slot+'"]').forEach(el=>el.textContent=val);
-}
-function setBarW(slot, pct){
-  document.querySelectorAll('[data-slot="'+slot+'"]').forEach(el=>el.style.width=pct+'%');
-}
-function setChannel(ch, n, cls, rate, barPct, avg7){
-  setSlot(ch+'-n', n);
-  document.querySelectorAll('[data-slot="'+ch+'-tag"]').forEach(el=>{
-    el.className='tag '+cls;
-    el.textContent=rate;
-  });
-  setBarW(ch+'-bar', barPct);
-  setSlot(ch+'-avg7', avg7.toFixed(1));
-}
-
-var SYS=`你是 Benesse Taiwan 業務戰略組的 BCL 數據顧問，協助 GM（小沼和幸總經理）進行數據洞察與策略決策。
-
-BCL 關鍵指標（FY25：2025/04–2026/03）：
-【總量】歷史累積 270,850 筆（有效 66.7%，封鎖 33.3%）；系統可推播 28,960 筆
-【FY25新增】32,297 筆（vs FY24財年：20,757筆，年增+55.6%）
-【管道】自辦 55.5%（17,935）、異業 27.8%（8,968）、主動 16.7%（5,394）
-【品質均分】整體 6.20；自辦 7.24（最高）、主動 5.50、異業 4.55（最低）
-【有效率】主動 86.2%（最優）、異業 76.4%、自辦 65.6%（封鎖率34.4%偏高）
-【${BCL.date.m}月當月】累計${BCL.month.total.toLocaleString()}筆；孕期${BCL.month.age.pre}（${BCL.month.age.prePct}）/ 0-36月${BCL.month.age.a36}（${BCL.month.age.a36Pct}）/ 36月+${BCL.month.age.a37}（${BCL.month.age.a37Pct}）/ 無生日${BCL.month.age.nb}（${BCL.month.age.nbPct}）
-【月度目標】目標2,500，時間進度目標${Math.round(2500/BCL.month.daysInMonth*BCL.month.days).toLocaleString()}，已達成${(BCL.month.total/2500*100).toFixed(1)}%
-【前一日（${BCL.date.m}/${BCL.date.d}）】${BCL.prev.total}筆：主動${BCL.prev.act}（${BCL.prev.actRate}）/ 自辦${BCL.prev.slf}（${BCL.prev.slfRate}）/ 異業${BCL.prev.prt}（${BCL.prev.prtRate}）
-
-請用繁體中文回答，直接、精準、高管風格，數字要引用，控制在200字以內。`;
-
-async function genBrief(){
-  const box=document.getElementById('briefbox');
-  box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在生成今日觀察摘要...</span></div>`;
-  const p=BCL.prev, m=BCL.month, d=BCL.date;
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:SYS,messages:[{role:'user',content:`請以「每日晨報」風格，用4個面向簡短分析，每點1-2句話，繁體中文，直接切入數字：
-
-📅 昨日表現（${d.m}/${d.d}）：昨日${p.total}筆好不好？主動${p.actRate}、自辦${p.slfRate}、異業${p.prtRate}各代表什麼
-📆 本月進展：${d.m}月累計${m.total.toLocaleString()}筆（${m.days}天），達成率${(m.total/2500*100).toFixed(1)}%，好在哪裡或要注意什麼
-⚠️ 需要關注：現在最值得注意的一個警訊
-✅ 建議行動：今天最應該做的一件事
-
-語氣直接，像給主管的30秒口頭簡報。`}]})});
-    const d2=await r.json();if(d2.error)throw new Error(d2.error.message);
-    box.innerHTML=`<div style="font-size:13px;line-height:1.85;color:var(--text)">${fmt(d2.content[0].text)}</div>`;
-  }catch(e){box.innerHTML=`<div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：${e.message}</div>`;}
-}
-
-async function genAI(){
-  const box=document.getElementById('aibox');
-  box.innerHTML=`<div style="display:flex;align-items:center;gap:10px"><div class="ldots"><span></span><span></span><span></span></div><span style="font-size:12px;color:var(--dim);font-family:var(--fm)">正在分析 BCL 數據庫...</span></div>`;
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:[{role:'user',content:'請生成給 GM 的 BCL 策略洞察報告，結構：\n🔍 三大關鍵發現（含數字佐證）\n⚠️ 兩大主要風險（直接點名問題）\n🚀 三個立即行動建議（具體可執行）\n語氣直接、高管級別，280字以內，繁體中文。'}]})});
-    const d=await r.json();if(d.error)throw new Error(d.error.message);
-    box.innerHTML=`<div class="ait">${fmt(d.content[0].text)}</div>`;
-  }catch(e){box.innerHTML=`<div style="color:var(--red);font-size:12px;font-family:var(--fm)">⚠ 連線失敗：${e.message}</div>`;}
-}
-let hist=[];
-async function sc(){
-  const inp=document.getElementById('ci'),btn=document.getElementById('sb');
-  const msg=inp.value.trim();if(!msg)return;inp.value='';btn.disabled=true;
-  addB('user',msg);hist.push({role:'user',content:msg});
-  const lid='l'+Date.now();addB('ai',`<div class="ldots"><span></span><span></span><span></span></div>`,lid);
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:SYS,messages:hist})});
-    const d=await r.json();const rep=d.content[0].text;
-    document.getElementById(lid).innerHTML=fmt(rep);hist.push({role:'assistant',content:rep});
-  }catch(e){document.getElementById(lid).innerHTML=`<span style="color:var(--red)">回覆失敗，請重試。</span>`;}
-  btn.disabled=false;document.getElementById('ci').focus();
-}
-function qs(t){document.getElementById('ci').value=t;sc();}
-function addB(role,content,id){const box=document.getElementById('msgs');box.querySelector('.chemp')?.remove();const el=document.createElement('div');el.className='bub '+role;if(id)el.id=id;el.innerHTML=content;box.appendChild(el);box.scrollTop=box.scrollHeight;}
-function fmt(t){return t.replace(/\*\*(.*?)\*\*/g,'<strong style="color:var(--text)">$1</strong>').replace(/\n/g,'<br>');}
-
-function iAgeDist(){
-  const lb=['25/04','25/05','25/06','25/07','25/08','25/09','25/10','25/11','25/12','26/01','26/02','26/03'];
-  const prenatal=BCL.agedist.prenatal;
-  const age036=BCL.agedist.age036;
-  const age37=BCL.agedist.age37;
-  const nobday=BCL.agedist.nobday;
-  CI.ad=new Chart(document.getElementById('agedist'),{
+/* ─── AGE DIST (channel bar) ────────────────── */
+function buildAgeDist() {
+  const ctx = document.getElementById('ageDistChart')?.getContext('2d');
+  if (!ctx) return;
+  ageC = new Chart(ctx, {
     type:'bar',
-    data:{labels:lb,datasets:[
-      {label:'孕期',      data:prenatal,backgroundColor:'rgba(225,112,85,.75)',borderWidth:0,borderRadius:{topLeft:0,topRight:0,bottomLeft:3,bottomRight:3},stack:'s'},
-      {label:'0～36月齡', data:age036,  backgroundColor:'rgba(66,133,244,.75)', borderWidth:0,borderRadius:0,stack:'s'},
-      {label:'36月以上',  data:age37,   backgroundColor:'rgba(108,92,231,.75)', borderWidth:0,borderRadius:0,stack:'s'},
-      {label:'無生日',    data:nobday,  backgroundColor:'rgba(178,190,195,.75)',borderWidth:0,borderRadius:{topLeft:3,topRight:3,bottomLeft:0,bottomRight:0},stack:'s'}
-    ]},
+    data:{
+      labels:['主動','自辦','異業'],
+      datasets:[
+        { label:'孕期', data:[414,1744,3111], backgroundColor:'rgba(192,132,252,.85)', borderRadius:4, stack:'a' },
+        { label:'0–36M', data:[3783,15779,4623], backgroundColor:'rgba(52,211,153,.85)', borderRadius:4, stack:'a' },
+        { label:'3歲以上', data:[1263,536,1251], backgroundColor:'rgba(251,146,60,.85)', borderRadius:4, stack:'a' },
+        { label:'無生日', data:[0,0,0], backgroundColor:'rgba(148,163,184,.85)', borderRadius:4, stack:'a' },
+      ]
+    },
     options:{
-      responsive:true,maintainAspectRatio:true,
-      interaction:{mode:'index',intersect:false},
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'nearest', intersect:true },
+      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:9, padding:10, font:{size:11} } }, tooltip:{ ...TT, callbacks:{ label:c=>c.parsed.y>0?` ${c.dataset.label}: ${c.parsed.y.toLocaleString()}筆`:null } } },
+      scales:{ x:{ stacked:true, grid:{display:false} }, y:{ stacked:true, grid:{color:'#f1f5f9'}, ticks:{ callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v } } }
+    }
+  });
+}
+
+/* ─── FY25 MONTHLY AGE ──────────────────────── */
+function buildFY25Age() {
+  const ctx = document.getElementById('fy25AgeChart')?.getContext('2d');
+  if (!ctx) return;
+  fy25C = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: FY_LBL,
+      datasets:[
+        { label:'孕期',   data:FY25_AGE.孕期, backgroundColor:'rgba(192,132,252,.85)', borderRadius:3, stack:'a' },
+        { label:'0–36M', data:FY25_AGE.m036, backgroundColor:'rgba(52,211,153,.85)',  borderRadius:3, stack:'a' },
+        { label:'3歲以上', data:FY25_AGE.m36p, backgroundColor:'rgba(251,146,60,.85)',  borderRadius:3, stack:'a' },
+        { label:'無生日',  data:FY25_AGE.none, backgroundColor:'rgba(148,163,184,.85)', borderRadius:3, stack:'a' },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'nearest', intersect:true },
       plugins:{
-        legend:{position:'top',align:'end',labels:{font:{size:11},padding:14,usePointStyle:true,pointStyle:'rect'}},
-        tooltip:{callbacks:{
-          title:c=>`${lb[c[0].dataIndex]}`,
-          label:c=>{
-            const total=prenatal[c[0].dataIndex]+age036[c[0].dataIndex]+age37[c[0].dataIndex]+nobday[c[0].dataIndex];
-            return ` ${c.dataset.label}：${c.raw.toLocaleString()} 筆（${(c.raw/total*100).toFixed(1)}%）`;
+        legend:{ display:false },
+        tooltip:{
+          ...TT,
+          callbacks:{
+            label:c=>c.parsed.y>0?` ${c.dataset.label}: ${c.parsed.y.toLocaleString()}筆`:null,
+            afterBody:items=>{
+              const i=items[0].dataIndex;
+              const t=(FY25_AGE.孕期[i]||0)+(FY25_AGE.m036[i]||0)+(FY25_AGE.m36p[i]||0)+(FY25_AGE.none[i]||0);
+              return [`月合計: ${t.toLocaleString()}筆`];
+            }
           }
-        }}
+        }
       },
       scales:{
-        x:{grid:{color:'#F1F3F4'},ticks:{font:{size:11}},stacked:true},
-        y:{grid:{color:'#F1F3F4'},ticks:{callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v,font:{size:11}},stacked:true}
+        x:{ stacked:true, grid:{display:false}, ticks:{color:'#94a3b8'} },
+        y:{ stacked:true, grid:{color:'#f1f5f9'}, ticks:{ callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v, color:'#94a3b8' } }
       }
     }
   });
 }
 
+/* ─── AI CHAT ───────────────────────────────── */
+const SYS = `你是 BCL 智慧分析師，專為 Benesse Taiwan（日商倍樂生台北分公司）巧虎品牌的 LINE BCL 名單管理設計。
 
-// ── API KEY MANAGEMENT ──
-function getApiKey(){return sessionStorage.getItem('bcl_api_key')||'';}
-function saveApiKey(){
-  var k=document.getElementById('apiKeyInput').value.trim();
-  if(k.length < 20){
-    document.getElementById('apiKeyStatus').textContent='❌ 格式不對，請確認 Key 以 sk-ant- 開頭';
-    return;
+【角色】結論先行、數字支撐、可執行建議。繁體中文，300字以內。
+
+【FY25 CUBE 核心數據（2025/4~2026/3）】
+・FY24 收集：20,757筆（主動3,040 / 自辦17,238 / 異業2,479）
+・FY25 收集：32,504筆（主動5,460 / 自辦18,059 / 異業8,985）YoY +56.6%
+・保有：271,056筆（有效180,471 = 66.6%；封鎖33.4%）
+
+【保有月齡組成（四分組）】
+・孕期：2,335（0.9%）有效率87.3%
+・0–36M：35,038（12.9%）有效率82.6%
+・3歲以上：225,214（83.1%）有效率63.3%
+・無生日9999：8,469（3.1%）有效率79.6%
+
+【FY25 收集品質（均分越高=月齡越甜）】
+・主動 5.48：孕期7.6% / 0-36M 69.3% / 3歲以上0.8% / 無生日22.3%（無生日是均分偏低主因）
+・自辦 7.22（最高）：孕期9.7% / 0-36M 87.4% / 3歲以上0.6% / 無生日2.3%
+・異業 4.55（最低）：孕期34.6% / 0-36M 51.5% / 3歲以上1.9% / 無生日12.0%`;
+
+const hist = [];
+
+function appendMsg(role, txt) {
+  const box = document.getElementById('chat-box');
+  const d = document.createElement('div');
+  d.className = 'chat-bubble-row' + (role==='user'?' me':'');
+  d.innerHTML = `<div class="av ${role==='user'?'av-me':'av-ai'}">${role==='user'?'你':'AI'}</div>
+    <div class="bubble ${role==='user'?'bubble-me':'bubble-ai'}">${txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`;
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+}
+
+function showTyping() {
+  const box = document.getElementById('chat-box');
+  const d = document.createElement('div');
+  d.id='typing'; d.className='chat-bubble-row';
+  d.innerHTML=`<div class="av av-ai">AI</div><div class="bubble bubble-ai"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  box.appendChild(d); box.scrollTop=box.scrollHeight;
+}
+
+async function sendMsg() {
+  const inp = document.getElementById('chat-in');
+  const txt = inp.value.trim(); if(!txt) return;
+  inp.value=''; inp.style.height='auto';
+  document.getElementById('send-btn').disabled=true;
+  appendMsg('user', txt);
+  hist.push({role:'user', content:txt});
+  showTyping();
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, system:SYS, messages:hist })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || '暫時無法回應，請稍後再試。';
+    document.getElementById('typing')?.remove();
+    appendMsg('ai', reply);
+    hist.push({role:'assistant', content:reply});
+    if(hist.length>=4) document.getElementById('qp-area').style.display='none';
+  } catch(e) {
+    document.getElementById('typing')?.remove();
+    appendMsg('ai',`⚠️ 連線錯誤：${e.message}`);
   }
-  sessionStorage.setItem('bcl_api_key',k);
-  document.getElementById('apiKeyStatus').textContent='✅ 已儲存，頁面關閉後需重新輸入';
-  document.getElementById('apiKeyInput').value='';
-  document.getElementById('apiKeyBar').classList.add('hidden');
-  genBrief();
-}
-function checkApiKey(){
-  var k=getApiKey();
-  if(k){document.getElementById('apiKeyBar').classList.add('hidden');}
-  else{document.getElementById('apiKeyBar').classList.remove('hidden');}
+  document.getElementById('send-btn').disabled=false;
 }
 
-// ── INIT ──
-document.addEventListener('DOMContentLoaded',()=>{
-  checkApiKey();
-  applyBCLData();
-  aN('k1',271038);aN('k3',32486);
-  recalc();
-  iSp();iSp2();
-  genBrief();
-});
+function ask(q) { document.getElementById('chat-in').value=q; sendMsg(); }
+
+function clearChat() {
+  hist.length=0;
+  document.getElementById('chat-box').innerHTML=`<div class="chat-bubble-row"><div class="av av-ai">AI</div><div class="bubble bubble-ai">對話已清除，請繼續提問 👋</div></div>`;
+  document.getElementById('qp-area').style.display='flex';
+}
 </script>
-
-<div id="apiKeyBar">
-  <span style="font-size:12px;color:#5F6368;font-weight:500;white-space:nowrap">🔑 Anthropic API Key</span>
-  <input id="apiKeyInput" type="password" placeholder="貼上你的 Anthropic API Key...i03-...）"/>
-  <button id="apiKeySave" onclick="saveApiKey()">儲存</button>
-  <span id="apiKeyStatus"></span>
-</div>
 </body>
 </html>
