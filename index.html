@@ -1018,6 +1018,14 @@ body {
         <button class="qp" onclick="ask('83.1%是3歲以上，有哪些再活化方法？')">3歲以上再活化</button>
         <button class="qp" onclick="ask('FY26三個管道的名單目標應該怎麼分配？')">FY26 策略建議</button>
       </div>
+      <!-- API Key 設定列 -->
+      <div id="key-bar" style="padding:8px 16px;background:var(--bg);border-top:1px solid var(--border);display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:var(--text-m);white-space:nowrap;flex-shrink:0">🔑 API Key</span>
+        <input id="key-input" type="password" placeholder="輸入 Anthropic API Key（sk-ant-...）"
+          style="flex:1;font-size:11px;padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text-b);outline:none;font-family:'DM Mono',monospace"/>
+        <button onclick="saveKey()" style="font-size:11px;padding:5px 12px;background:var(--blue);color:#fff;border:none;border-radius:6px;cursor:pointer;white-space:nowrap">儲存</button>
+        <button onclick="clearKey()" style="font-size:11px;padding:5px 10px;background:none;border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--text-m);white-space:nowrap">清除</button>
+      </div>
       <div class="chat-footer">
         <textarea class="chat-textarea" id="chat-in" placeholder="輸入問題，例如：主動管道封鎖率偏低代表什麼？" rows="1"
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"
@@ -1097,6 +1105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateDailyUI();
   updateStockUI();
   updateQualityUI();
+  initKeyBar();
 });
 
 function showLoading(on) {
@@ -1485,7 +1494,41 @@ function showTyping() {
   box.appendChild(d); box.scrollTop=box.scrollHeight;
 }
 
+/* ─── API Key 管理 ─────────────────────────── */
+function getKey() { return localStorage.getItem('bcl_api_key') || ''; }
+function saveKey() {
+  const v = document.getElementById('key-input').value.trim();
+  if (!v.startsWith('sk-ant-')) {
+    alert('Key 格式不對，應以 sk-ant- 開頭');
+    return;
+  }
+  localStorage.setItem('bcl_api_key', v);
+  document.getElementById('key-input').value = '';
+  document.getElementById('key-bar').style.background = '#ecfdf5';
+  setTimeout(() => { document.getElementById('key-bar').style.background = ''; }, 1500);
+  appendMsg('ai', '✅ API Key 已儲存到你的瀏覽器，可以開始提問了！');
+}
+function clearKey() {
+  localStorage.removeItem('bcl_api_key');
+  document.getElementById('key-input').value = '';
+  appendMsg('ai', '🗑️ API Key 已清除。');
+}
+function initKeyBar() {
+  const k = getKey();
+  const bar = document.getElementById('key-bar');
+  if (k) {
+    bar.style.background = '#ecfdf5';
+    const inp = document.getElementById('key-input');
+    if (inp) inp.placeholder = '✅ Key 已設定（輸入新 Key 可覆蓋）';
+  }
+}
+
 async function sendMsg() {
+  const key = getKey();
+  if (!key) {
+    appendMsg('ai', '⚠️ 請先在下方輸入框填入 Anthropic API Key 並按「儲存」，才能使用 AI 分析功能。');
+    return;
+  }
   const inp = document.getElementById('chat-in');
   const txt = inp.value.trim(); if(!txt) return;
   inp.value=''; inp.style.height='auto';
@@ -1495,10 +1538,12 @@ async function sendMsg() {
   showTyping();
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},
       body:JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, system:SYS, messages:hist })
     });
     const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
     const reply = data.content?.[0]?.text || '暫時無法回應，請稍後再試。';
     document.getElementById('typing')?.remove();
     appendMsg('ai', reply);
@@ -1506,7 +1551,7 @@ async function sendMsg() {
     if(hist.length>=4) document.getElementById('qp-area').style.display='none';
   } catch(e) {
     document.getElementById('typing')?.remove();
-    appendMsg('ai',`⚠️ 連線錯誤：${e.message}`);
+    appendMsg('ai',`⚠️ 連線錯誤：${e.message}。請確認 API Key 是否正確。`);
   }
   document.getElementById('send-btn').disabled=false;
 }
