@@ -12,34 +12,50 @@
    TOKENS
 ══════════════════════════════════════ */
 :root {
-  --bg:        #f4f6f9;
+  /* ── Lavender Aroma Palette ── */
+  --bg:        #f4f2f3;   /* 暖白背景 */
   --card:      #ffffff;
-  --border:    #e8edf2;
-  --text-h:    #0f172a;   /* headlines */
-  --text-b:    #334155;   /* body */
-  --text-m:    #64748b;   /* muted */
-  --text-d:    #94a3b8;   /* dim */
+  --border:    #e4dfe2;   /* 帶粉感的邊框 */
+  --border2:   #cfc7cc;
 
-  --blue:      #2563eb;
-  --blue-s:    #eff6ff;
-  --purple:    #7c3aed;
-  --purple-s:  #f5f3ff;
-  --teal:      #0891b2;
-  --teal-s:    #ecfeff;
-  --green:     #059669;
-  --green-s:   #ecfdf5;
-  --amber:     #d97706;
-  --amber-s:   #fffbeb;
-  --red:       #dc2626;
-  --red-s:     #fef2f2;
-  --slate:     #475569;
-  --slate-s:   #f1f5f9;
+  --text-h:    #2d2630;   /* 深紫灰 headline */
+  --text-b:    #4a4050;   /* 中紫灰 body */
+  --text-m:    #7a6e78;   /* 淡紫灰 muted */
+  --text-d:    #a89faa;   /* 最淡 dim */
+
+  /* 主色：藕紫 Mauve */
+  --blue:      #b096ae;   /* 藕紫主色 */
+  --blue-s:    #f3eef2;   /* 藕紫極淺底 */
+  --blue-mid:  #e0d2de;   /* 藕紫中淺 */
+
+  /* 輔色：鼠尾草藍 Sage Blue */
+  --purple:    #94a7ae;
+  --purple-s:  #edf2f3;
+
+  /* 強調：深鼠尾草綠 */
+  --teal:      #64766a;
+  --teal-s:    #edf1ee;
+
+  /* 成功：保留綠色語義 */
+  --green:     #64766a;
+  --green-s:   #edf1ee;
+
+  /* 警示：暖橘（保留語義不變） */
+  --amber:     #b08060;
+  --amber-s:   #fdf4ec;
+
+  /* 危險：保留紅色語義 */
+  --red:       #b06070;
+  --red-s:     #fceef1;
+
+  --slate:     #7a6e78;
+  --slate-s:   #f0ecef;
 
   --r-sm: 8px;
   --r-md: 14px;
   --r-lg: 20px;
-  --shadow: 0 1px 4px rgba(15,23,42,.07), 0 0 1px rgba(15,23,42,.06);
-  --shadow-md: 0 4px 16px rgba(15,23,42,.08), 0 0 1px rgba(15,23,42,.05);
+  --shadow: 0 1px 4px rgba(45,38,48,.06), 0 0 1px rgba(45,38,48,.04);
+  --shadow-md: 0 4px 16px rgba(45,38,48,.08), 0 0 1px rgba(45,38,48,.04);
 }
 
 /* ══════════════════════════════════════
@@ -76,7 +92,7 @@ body {
   flex-shrink: 0;
 }
 .brand-pill {
-  background: linear-gradient(135deg, var(--blue), var(--purple));
+  background: linear-gradient(135deg, #c0a9bd, #94a7ae);
   color: #fff;
   font-family: 'DM Mono', monospace;
   font-size: 11px; font-weight: 500;
@@ -100,8 +116,8 @@ body {
 }
 .nav-tab:hover { color: var(--text-b); }
 .nav-tab.on {
-  color: var(--blue);
-  border-bottom-color: var(--blue);
+  color: #8a6e88;
+  border-bottom-color: #c0a9bd;
   font-weight: 600;
 }
 .nav-tab .tab-icon { font-size: 15px; }
@@ -115,11 +131,11 @@ body {
 }
 .pulse {
   width: 7px; height: 7px; border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 0 2px rgba(5,150,105,.2);
+  background: #94a7ae;
+  box-shadow: 0 0 0 2px rgba(148,167,174,.3);
   animation: pulse 2.5s ease infinite;
 }
-@keyframes pulse { 0%,100%{box-shadow:0 0 0 2px rgba(5,150,105,.2)} 50%{box-shadow:0 0 0 5px rgba(5,150,105,.08)} }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 2px rgba(148,167,174,.3)} 50%{box-shadow:0 0 0 5px rgba(148,167,174,.12)} }
 
 /* ══════════════════════════════════════
    MAIN CONTAINER
@@ -198,12 +214,12 @@ body {
   content: '';
   position: absolute; top: 0; left: 0; right: 0; height: 3px;
 }
-.hero-blue::before   { background: linear-gradient(90deg, var(--blue), #60a5fa); }
-.hero-purple::before { background: linear-gradient(90deg, var(--purple), #a78bfa); }
-.hero-teal::before   { background: linear-gradient(90deg, var(--teal), #22d3ee); }
-.hero-green::before  { background: linear-gradient(90deg, var(--green), #34d399); }
-.hero-amber::before  { background: linear-gradient(90deg, var(--amber), #fbbf24); }
-.hero-slate::before  { background: linear-gradient(90deg, var(--slate), #94a3b8); }
+.hero-blue::before   { background: linear-gradient(90deg, #c0a9bd, #d4bfd2); }
+.hero-purple::before { background: linear-gradient(90deg, #94a7ae, #afc0c5); }
+.hero-teal::before   { background: linear-gradient(90deg, #64766a, #7f9385); }
+.hero-green::before  { background: linear-gradient(90deg, #64766a, #85998b); }
+.hero-amber::before  { background: linear-gradient(90deg, #b08060, #c8a07a); }
+.hero-slate::before  { background: linear-gradient(90deg, #7a6e78, #9a8e98); }
 
 .hero-label { font-size: 12px; font-weight: 600; color: var(--text-m); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 10px; }
 .hero-num {
@@ -239,12 +255,12 @@ body {
   position: relative;
 }
 .stat-card::before { content:''; position:absolute; top:0;left:0;right:0;height:2px; border-radius:var(--r-md) var(--r-md) 0 0; }
-.stat-blue::before   { background:var(--blue); }
-.stat-purple::before { background:var(--purple); }
-.stat-teal::before   { background:var(--teal); }
-.stat-green::before  { background:var(--green); }
-.stat-amber::before  { background:var(--amber); }
-.stat-slate::before  { background:var(--slate); }
+.stat-blue::before   { background:#c0a9bd; }
+.stat-purple::before { background:#94a7ae; }
+.stat-teal::before   { background:#64766a; }
+.stat-green::before  { background:#64766a; }
+.stat-amber::before  { background:#b08060; }
+.stat-slate::before  { background:#7a6e78; }
 
 .stat-label { font-size: 11px; font-weight: 600; color: var(--text-m); letter-spacing: .4px; text-transform: uppercase; margin-bottom: 6px; }
 .stat-num {
@@ -269,8 +285,8 @@ body {
   font-size: 11px; font-weight: 500;
   padding: 3px 8px; border-radius: 20px;
 }
-.d-up   { background: #dcfce7; color: #166534; }
-.d-dn   { background: #fee2e2; color: #991b1b; }
+.d-up   { background: #e8f0eb; color: #4a6654; }
+.d-dn   { background: #f5e8ec; color: #8a3a4a; }
 .d-neu  { background: var(--slate-s); color: var(--slate); }
 
 /* ══════════════════════════════════════
@@ -315,10 +331,10 @@ body {
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
 }
-.age-prenatal::after { background: #c084fc; }
-.age-sweet::after    { background: var(--green); }
-.age-old::after      { background: var(--amber); }
-.age-nobday::after   { background: #94a3b8; }
+.age-prenatal::after { background: #c0a9bd; }
+.age-sweet::after    { background: #64766a; }
+.age-old::after      { background: #b08060; }
+.age-nobday::after   { background: #94a7ae; }
 
 .age-icon  { font-size: 28px; margin-bottom: 10px; }
 .age-pct   {
@@ -326,10 +342,10 @@ body {
   font-size: 38px; font-weight: 500;
   line-height: 1; margin-bottom: 4px;
 }
-.age-prenatal .age-pct { color: #c084fc; }
-.age-sweet    .age-pct { color: var(--green); }
-.age-old      .age-pct { color: var(--amber); }
-.age-nobday   .age-pct { color: #94a3b8; }
+.age-prenatal .age-pct { color: #c0a9bd; }
+.age-sweet    .age-pct { color: #64766a; }
+.age-old      .age-pct { color: #b08060; }
+.age-nobday   .age-pct { color: #94a7ae; }
 
 .age-abs   { font-family: 'DM Mono', monospace; font-size: 16px; color: var(--text-h); margin-bottom: 2px; }
 .age-lbl   { font-size: 12px; color: var(--text-m); font-weight: 500; }
@@ -389,7 +405,7 @@ body {
   color:var(--text-m); border-radius:5px;
   font-family:'Noto Sans TC',sans-serif; transition:all .15s;
 }
-.tgl.on { background:var(--card); color:var(--blue); box-shadow:var(--shadow); }
+.tgl.on { background:var(--card); color:#b096ae; box-shadow:var(--shadow); }
 
 /* ══════════════════════════════════════
    AI CHAT
@@ -399,39 +415,39 @@ body {
 .chat-bubble-row { display:flex; gap:10px; }
 .chat-bubble-row.me { flex-direction:row-reverse; }
 .av { width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
-.av-ai { background:linear-gradient(135deg,var(--blue),var(--purple)); color:#fff; }
-.av-me { background:var(--amber-s); color:var(--amber); border:1px solid rgba(217,119,6,.2); }
+.av-ai { background:linear-gradient(135deg,#c0a9bd,#94a7ae); color:#fff; }
+.av-me { background:var(--amber-s); color:#b08060; border:1px solid rgba(176,128,96,.2); }
 .bubble { max-width:82%; padding:11px 15px; border-radius:12px; font-size:13px; line-height:1.6; }
 .bubble-ai { background:var(--bg); border:1px solid var(--border); border-radius:3px 12px 12px 12px; }
 .bubble-me { background:var(--blue-s); border:1px solid #bfdbfe; border-radius:12px 3px 12px 12px; }
 .typing { display:flex; align-items:center; gap:4px; padding:4px 0; }
-.typing span { width:6px;height:6px;border-radius:50%;background:var(--blue);opacity:.5;animation:ty 1.2s infinite; }
+.typing span { width:6px;height:6px;border-radius:50%;background:#b096ae;opacity:.5;animation:ty 1.2s infinite; }
 .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
 @keyframes ty{0%,60%,100%{transform:none}30%{transform:translateY(-6px)}}
 .chat-footer { border-top:1px solid var(--border); padding:12px 16px; display:flex; gap:8px; align-items:flex-end; }
 .chat-textarea { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:9px 13px; font-family:'Noto Sans TC',sans-serif; font-size:13px; color:var(--text-b); resize:none; outline:none; transition:border-color .15s; min-height:40px; max-height:100px; }
-.chat-textarea:focus { border-color:var(--blue); }
-.chat-send { width:38px;height:38px;background:var(--blue);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s; }
+.chat-textarea:focus { border-color:#b096ae; }
+.chat-send { width:38px;height:38px;background:#b096ae;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s; }
 .chat-send:hover{opacity:.85}.chat-send:disabled{opacity:.35;cursor:not-allowed}
 .chat-send svg{width:15px;height:15px;fill:#fff}
 .qp-row { display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 10px; }
 .qp { font-size:11px;padding:5px 11px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text-m);cursor:pointer;transition:all .15s;font-family:'Noto Sans TC',sans-serif; }
-.qp:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-s)}
+.qp:hover{border-color:#b096ae;color:#b096ae;background:var(--blue-s)}
 .insight-panel-list { display:flex;flex-direction:column;gap:8px;padding:16px; }
 .insight { padding:10px 12px;border-radius:8px;border-left:3px solid;font-size:12px;line-height:1.6; }
-.ins-ok   { background:var(--green-s);border-color:var(--green);color:#065f46; }
-.ins-warn { background:var(--amber-s);border-color:var(--amber);color:#92400e; }
-.ins-info { background:var(--blue-s);border-color:var(--blue);color:#1e40af; }
+.ins-ok   { background:#edf1ee;border-color:#64766a;color:#3d5045; }
+.ins-warn { background:#fdf4ec;border-color:#b08060;color:#7a4a2a; }
+.ins-info { background:#f3eef2;border-color:#c0a9bd;color:#6a4a68; }
 
 /* ══════════════════════════════════════
    MISC
 ══════════════════════════════════════ */
 .divider { height:1px; background:var(--border); margin:16px 0; }
 .chip { display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600; }
-.chip-blue   { background:var(--blue-s);color:var(--blue); }
-.chip-purple { background:var(--purple-s);color:var(--purple); }
-.chip-amber  { background:var(--amber-s);color:var(--amber); }
-.chip-green  { background:var(--green-s);color:var(--green); }
+.chip-blue   { background:#f3eef2;color:#9a7898; }
+.chip-purple { background:#edf2f3;color:#6a8890; }
+.chip-amber  { background:#fdf4ec;color:#9a6840; }
+.chip-green  { background:#edf1ee;color:#4a6654; }
 .chip-slate  { background:var(--slate-s);color:var(--slate); }
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 </style>
@@ -472,7 +488,7 @@ body {
   </div>
 </nav>
 
-<div id="loading-bar" style="display:none;position:fixed;top:56px;left:0;right:0;height:3px;background:linear-gradient(90deg,#2563eb,#7c3aed);z-index:200;animation:ldbar 1.5s ease infinite alternate">
+<div id="loading-bar" style="display:none;position:fixed;top:56px;left:0;right:0;height:3px;background:linear-gradient(90deg,#c0a9bd,#94a7ae);z-index:200;animation:ldbar 1.5s ease infinite alternate">
 </div>
 <style>@keyframes ldbar{from{opacity:.4}to{opacity:1}}</style>
 <div class="main">
@@ -520,22 +536,22 @@ body {
       <div class="card-body">
         <div class="ch-rows">
           <div class="ch-row">
-            <div class="ch-name" style="color:var(--blue)">🎯 主動</div>
-            <div><div class="ch-bar"><div class="ch-bar-fill" id="ch-active-bar" style="width:0%;background:var(--blue)"></div></div></div>
-            <div class="ch-val" id="ch-active-val" style="color:var(--blue)">—</div>
+            <div class="ch-name" style="color:#b096ae">🎯 主動</div>
+            <div><div class="ch-bar"><div class="ch-bar-fill" id="ch-active-bar" style="width:0%;background:#b096ae"></div></div></div>
+            <div class="ch-val" id="ch-active-val" style="color:#b096ae">—</div>
             <div class="ch-avg" id="ch-active-avg">—</div>
             <div class="ch-delta"><span id="ch-active-delta" class="delta d-dn">—</span></div>
           </div>
           <div class="ch-row">
-            <div class="ch-name" style="color:var(--purple)">🏢 自辦</div>
+            <div class="ch-name" style="color:#94a7ae">🏢 自辦</div>
             <div><div class="ch-bar"><div class="ch-bar-fill" id="ch-self-bar" style="width:0%;background:var(--purple)"></div></div></div>
             <div class="ch-val" id="ch-self-val" style="color:var(--text-d)">—</div>
             <div class="ch-avg" id="ch-self-avg">—</div>
             <div class="ch-delta"><span id="ch-self-delta" class="delta d-dn">—</span></div>
           </div>
           <div class="ch-row">
-            <div class="ch-name" style="color:var(--amber)">🤝 異業</div>
-            <div><div class="ch-bar"><div class="ch-bar-fill" id="ch-cross-bar" style="width:0%;background:var(--amber)"></div></div></div>
+            <div class="ch-name" style="color:#b08060">🤝 異業</div>
+            <div><div class="ch-bar"><div class="ch-bar-fill" id="ch-cross-bar" style="width:0%;background:#b08060"></div></div></div>
             <div class="ch-val" id="ch-cross-val" style="color:var(--text-d)">—</div>
             <div class="ch-avg" id="ch-cross-avg">—</div>
             <div class="ch-delta"><span id="ch-cross-delta" class="delta d-dn">—</span></div>
@@ -636,7 +652,7 @@ body {
         <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div>FY25 主動</div>
         <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>FY25 自辦</div>
         <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>FY25 異業</div>
-        <div class="legend-item" style="opacity:.6"><div class="legend-dot" style="background:#94a3b8"></div>FY24 主動</div>
+        <div class="legend-item" style="opacity:.6"><div class="legend-dot" style="background:#94a7ae"></div>FY24 主動</div>
         <div class="legend-item" style="opacity:.6"><div class="legend-dot" style="background:#c4b5fd"></div>FY24 自辦</div>
         <div class="legend-item" style="opacity:.6"><div class="legend-dot" style="background:#fbbf24"></div>FY24 異業</div>
       </div>
@@ -652,7 +668,7 @@ body {
         <tr>
           <td><span class="chip chip-blue">主動</span></td>
           <td class="mono">3,040</td>
-          <td class="mono" style="font-weight:600;color:var(--blue)">5,460</td>
+          <td class="mono" style="font-weight:600;color:#b096ae">5,460</td>
           <td class="mono">+2,420</td>
           <td><span class="delta d-up">↑ 79.6%</span></td>
           <td class="mono">16.8%</td>
@@ -660,7 +676,7 @@ body {
         <tr>
           <td><span class="chip chip-purple">自辦</span></td>
           <td class="mono">17,238</td>
-          <td class="mono" style="font-weight:600;color:var(--purple)">18,059</td>
+          <td class="mono" style="font-weight:600;color:#94a7ae">18,059</td>
           <td class="mono">+821</td>
           <td><span class="delta d-up">↑ 4.8%</span></td>
           <td class="mono">55.6%</td>
@@ -668,7 +684,7 @@ body {
         <tr>
           <td><span class="chip chip-amber">異業</span></td>
           <td class="mono">2,479</td>
-          <td class="mono" style="font-weight:600;color:var(--amber)">8,985</td>
+          <td class="mono" style="font-weight:600;color:#b08060">8,985</td>
           <td class="mono">+6,506</td>
           <td><span class="delta d-up">↑ 263%</span></td>
           <td class="mono">27.6%</td>
@@ -676,7 +692,7 @@ body {
         <tr style="background:var(--bg)">
           <td><strong>合計</strong></td>
           <td class="mono">20,757</td>
-          <td class="mono" style="font-weight:700;color:var(--blue)">32,504</td>
+          <td class="mono" style="font-weight:700;color:#b096ae">32,504</td>
           <td class="mono">+11,747</td>
           <td><span class="delta d-up">↑ 56.6%</span></td>
           <td class="mono">100%</td>
@@ -737,7 +753,7 @@ body {
           <div class="donut-wrap" style="height:220px;width:220px;flex-shrink:0">
             <canvas id="stockDonut"></canvas>
             <div class="donut-center">
-              <div class="donut-main" style="color:var(--blue)">271K</div>
+              <div class="donut-main" style="color:#b096ae">271K</div>
               <div class="donut-sub">保有總計</div>
             </div>
           </div>
@@ -758,19 +774,19 @@ body {
           <div>
             <div style="display:flex;justify-content:space-between;margin-bottom:5px">
               <span style="font-size:13px">🤰 孕期</span>
-              <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--green);font-weight:500">12.7%</span>
+              <span style="font-family:'DM Mono',monospace;font-size:13px;color:#64766a;font-weight:500">12.7%</span>
             </div>
             <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
-              <div style="height:100%;width:12.7%;background:var(--green);border-radius:4px"></div>
+              <div style="height:100%;width:12.7%;background:#64766a;border-radius:4px"></div>
             </div>
           </div>
           <div>
             <div style="display:flex;justify-content:space-between;margin-bottom:5px">
               <span style="font-size:13px">🍼 0–36M</span>
-              <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--amber);font-weight:500">17.4%</span>
+              <span style="font-family:'DM Mono',monospace;font-size:13px;color:#b08060;font-weight:500">17.4%</span>
             </div>
             <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
-              <div style="height:100%;width:17.4%;background:var(--amber);border-radius:4px"></div>
+              <div style="height:100%;width:17.4%;background:#b08060;border-radius:4px"></div>
             </div>
           </div>
           <div>
@@ -779,7 +795,7 @@ body {
               <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--red);font-weight:500">36.7%</span>
             </div>
             <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
-              <div style="height:100%;width:36.7%;background:var(--red);border-radius:4px"></div>
+              <div style="height:100%;width:36.7%;background:#b06070;border-radius:4px"></div>
             </div>
           </div>
           <div>
@@ -788,7 +804,7 @@ body {
               <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--slate);font-weight:500">20.4%</span>
             </div>
             <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
-              <div style="height:100%;width:20.4%;background:#94a3b8;border-radius:4px"></div>
+              <div style="height:100%;width:20.4%;background:#94a7ae;border-radius:4px"></div>
             </div>
           </div>
         </div>
@@ -819,7 +835,7 @@ body {
     <div class="hero-card hero-blue">
       <div class="hero-label">整體均分</div>
       <div class="score-badge">
-        <div class="score-num" id="q-overall" style="color:var(--blue)">—</div>
+        <div class="score-num" id="q-overall" style="color:#b096ae">—</div>
         <div class="score-of">/ 12</div>
       </div>
       <div class="hero-unit">32,504 筆</div>
@@ -827,7 +843,7 @@ body {
     <div class="hero-card hero-purple">
       <div class="hero-label">主動均分</div>
       <div class="score-badge">
-        <div class="score-num" id="q-active" style="color:var(--purple)">—</div>
+        <div class="score-num" id="q-active" style="color:#94a7ae">—</div>
         <div class="score-of">/ 12</div>
       </div>
       <div class="hero-unit">5,460 筆</div>
@@ -835,7 +851,7 @@ body {
     <div class="hero-card hero-green">
       <div class="hero-label">自辦均分 ✦ 最高</div>
       <div class="score-badge">
-        <div class="score-num" id="q-self" style="color:var(--green)">—</div>
+        <div class="score-num" id="q-self" style="color:#64766a">—</div>
         <div class="score-of">/ 12</div>
       </div>
       <div class="hero-unit">18,059 筆</div>
@@ -843,7 +859,7 @@ body {
     <div class="hero-card hero-amber">
       <div class="hero-label">異業均分 ▼ 最低</div>
       <div class="score-badge">
-        <div class="score-num" id="q-cross" style="color:var(--amber)">—</div>
+        <div class="score-num" id="q-cross" style="color:#b08060">—</div>
         <div class="score-of">/ 12</div>
       </div>
       <div class="hero-unit">8,985 筆</div>
@@ -855,10 +871,10 @@ body {
     <div class="card-head">
       <div class="card-title">FY25 各月收集月齡組成</div>
       <div style="display:flex;gap:10px;align-items:center">
-        <div class="legend-item"><div class="legend-dot" style="background:#c084fc"></div>孕期</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>0–36M</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#fb923c"></div>3歲以上</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div>無生日</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c0a9bd"></div>孕期</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7f9385"></div>0–36M</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c8a07a"></div>3歲以上</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#94a7ae"></div>無生日</div>
       </div>
     </div>
     <div class="card-body">
@@ -875,37 +891,37 @@ body {
       <div style="display:flex;flex-direction:column;gap:20px">
         <!-- LEGEND for bars -->
         <div style="display:flex;gap:14px;margin-bottom:14px;font-size:12px;color:var(--text-m)">
-          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#c084fc;border-radius:50%;display:inline-block"></span>孕期</span>
-          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#34d399;border-radius:50%;display:inline-block"></span>0–36M</span>
-          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#fb923c;border-radius:50%;display:inline-block"></span>3歲以上</span>
-          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#94a3b8;border-radius:50%;display:inline-block"></span>無生日</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#c0a9bd;border-radius:50%;display:inline-block"></span>孕期</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#7f9385;border-radius:50%;display:inline-block"></span>0–36M</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#c8a07a;border-radius:50%;display:inline-block"></span>3歲以上</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;background:#94a7ae;border-radius:50%;display:inline-block"></span>無生日</span>
         </div>
 
         <!-- 主動 -->
         <div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
             <div><span class="chip chip-purple" style="font-size:13px;padding:3px 12px">主動</span> <span style="font-size:13px;color:var(--text-m);margin-left:8px">5,460 筆 · 均分 5.48</span></div>
-            <div style="font-size:12px;color:var(--text-m)">孕期 <strong>7.6%</strong> · 0–36M <strong>69.3%</strong> · 3歲 <strong>0.8%</strong> · 無生日 <strong style="color:var(--amber)">22.3%</strong></div>
+            <div style="font-size:12px;color:var(--text-m)">孕期 <strong>7.6%</strong> · 0–36M <strong>69.3%</strong> · 3歲 <strong>0.8%</strong> · 無生日 <strong style="color:#b08060">22.3%</strong></div>
           </div>
           <div class="seg-stack">
-            <div class="seg-piece" id="seg-a-pre" style="width:7.6%;background:#c084fc">7.6%</div>
-            <div class="seg-piece" id="seg-a-m036" style="width:69.3%;background:#34d399">69.3%</div>
-            <div class="seg-piece" id="seg-a-m36p" style="width:0.8%;background:#fb923c"></div>
-            <div class="seg-piece" id="seg-a-nb" style="width:22.3%;background:#94a3b8">22.3%</div>
+            <div class="seg-piece" id="seg-a-pre" style="width:7.6%;background:#c0a9bd">7.6%</div>
+            <div class="seg-piece" id="seg-a-m036" style="width:69.3%;background:#7f9385">69.3%</div>
+            <div class="seg-piece" id="seg-a-m36p" style="width:0.8%;background:#c8a07a"></div>
+            <div class="seg-piece" id="seg-a-nb" style="width:22.3%;background:#94a7ae">22.3%</div>
           </div>
         </div>
 
         <!-- 自辦 -->
         <div style="margin-top:16px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <div><span class="chip" style="font-size:13px;padding:3px 12px;background:var(--green-s);color:var(--green)">自辦</span> <span style="font-size:13px;color:var(--text-m);margin-left:8px">18,059 筆 · 均分 7.22</span></div>
+            <div><span class="chip" style="font-size:13px;padding:3px 12px;background:var(--green-s);color:#64766a">自辦</span> <span style="font-size:13px;color:var(--text-m);margin-left:8px">18,059 筆 · 均分 7.22</span></div>
             <div style="font-size:12px;color:var(--text-m)">孕期 <strong>9.7%</strong> · 0–36M <strong>87.4%</strong> · 3歲 <strong>0.6%</strong> · 無生日 <strong>2.3%</strong></div>
           </div>
           <div class="seg-stack">
-            <div class="seg-piece" id="seg-s-pre" style="width:9.7%;background:#c084fc">9.7%</div>
-            <div class="seg-piece" id="seg-s-m036" style="width:87.4%;background:#34d399">87.4%</div>
-            <div class="seg-piece" id="seg-s-m36p" style="width:0.6%;background:#fb923c"></div>
-            <div class="seg-piece" id="seg-s-nb" style="width:2.3%;background:#94a3b8">2.3%</div>
+            <div class="seg-piece" id="seg-s-pre" style="width:9.7%;background:#c0a9bd">9.7%</div>
+            <div class="seg-piece" id="seg-s-m036" style="width:87.4%;background:#7f9385">87.4%</div>
+            <div class="seg-piece" id="seg-s-m36p" style="width:0.6%;background:#c8a07a"></div>
+            <div class="seg-piece" id="seg-s-nb" style="width:2.3%;background:#94a7ae">2.3%</div>
           </div>
         </div>
 
@@ -916,10 +932,10 @@ body {
             <div style="font-size:12px;color:var(--text-m)">孕期 <strong>34.6%</strong> · 0–36M <strong>51.5%</strong> · 3歲 <strong>1.9%</strong> · 無生日 <strong>12.0%</strong></div>
           </div>
           <div class="seg-stack">
-            <div class="seg-piece" id="seg-c-pre" style="width:34.6%;background:#c084fc">34.6%</div>
-            <div class="seg-piece" id="seg-c-m036" style="width:51.5%;background:#34d399">51.5%</div>
-            <div class="seg-piece" id="seg-c-m36p" style="width:1.9%;background:#fb923c"></div>
-            <div class="seg-piece" id="seg-c-nb" style="width:12.0%;background:#94a3b8">12.0%</div>
+            <div class="seg-piece" id="seg-c-pre" style="width:34.6%;background:#c0a9bd">34.6%</div>
+            <div class="seg-piece" id="seg-c-m036" style="width:51.5%;background:#7f9385">51.5%</div>
+            <div class="seg-piece" id="seg-c-m36p" style="width:1.9%;background:#c8a07a"></div>
+            <div class="seg-piece" id="seg-c-nb" style="width:12.0%;background:#94a7ae">12.0%</div>
           </div>
         </div>
       </div>
@@ -934,23 +950,23 @@ body {
             <tr>
               <td><span class="chip chip-purple">主動</span></td>
               <td class="mono">414 <span style="color:var(--text-d)">(7.6%)</span></td>
-              <td class="mono" style="color:var(--green)">3,783 <span style="color:var(--text-d)">(69.3%)</span></td>
+              <td class="mono" style="color:#64766a">3,783 <span style="color:var(--text-d)">(69.3%)</span></td>
               <td class="mono">44 <span style="color:var(--text-d)">(0.8%)</span></td>
-              <td class="mono" style="color:var(--amber);font-weight:600">1,219 <span style="color:var(--text-d)">(22.3%)</span></td>
+              <td class="mono" style="color:#b08060;font-weight:600">1,219 <span style="color:var(--text-d)">(22.3%)</span></td>
               <td class="mono" style="font-weight:600">5,460</td>
             </tr>
             <tr>
               <td><span class="chip chip-green">自辦</span></td>
               <td class="mono">1,744 <span style="color:var(--text-d)">(9.7%)</span></td>
-              <td class="mono" style="color:var(--green)">15,779 <span style="color:var(--text-d)">(87.4%)</span></td>
+              <td class="mono" style="color:#64766a">15,779 <span style="color:var(--text-d)">(87.4%)</span></td>
               <td class="mono">117 <span style="color:var(--text-d)">(0.6%)</span></td>
               <td class="mono">419 <span style="color:var(--text-d)">(2.3%)</span></td>
               <td class="mono" style="font-weight:600">18,059</td>
             </tr>
             <tr>
               <td><span class="chip chip-amber">異業</span></td>
-              <td class="mono" style="color:var(--amber)">3,111 <span style="color:var(--text-d)">(34.6%)</span></td>
-              <td class="mono" style="color:var(--green)">4,623 <span style="color:var(--text-d)">(51.5%)</span></td>
+              <td class="mono" style="color:#b08060">3,111 <span style="color:var(--text-d)">(34.6%)</span></td>
+              <td class="mono" style="color:#64766a">4,623 <span style="color:var(--text-d)">(51.5%)</span></td>
               <td class="mono">170 <span style="color:var(--text-d)">(1.9%)</span></td>
               <td class="mono">1,081 <span style="color:var(--text-d)">(12.0%)</span></td>
               <td class="mono" style="font-weight:600">8,985</td>
@@ -958,10 +974,10 @@ body {
             <tr style="background:var(--bg)">
               <td><strong>合計</strong></td>
               <td class="mono">5,269</td>
-              <td class="mono" style="color:var(--green);font-weight:700">24,185</td>
+              <td class="mono" style="color:#64766a;font-weight:700">24,185</td>
               <td class="mono">331</td>
               <td class="mono">2,719</td>
-              <td class="mono" style="color:var(--blue);font-weight:700">32,504</td>
+              <td class="mono" style="color:#b096ae;font-weight:700">32,504</td>
             </tr>
           </tbody>
         </table>
@@ -970,15 +986,15 @@ body {
       <!-- 3 observations -->
       <div class="grid-3">
         <div style="padding:14px;background:var(--purple-s);border-radius:8px;border-left:3px solid var(--purple)">
-          <div style="font-size:12px;font-weight:700;color:var(--purple);margin-bottom:5px">⚠️ 主動（5.48）— 注意</div>
+          <div style="font-size:12px;font-weight:700;color:#94a7ae;margin-bottom:5px">⚠️ 主動（5.48）— 注意</div>
           <div style="font-size:12px;color:var(--text-b);line-height:1.6">無生日高達 <strong>22.3%（1,219 筆）</strong>是均分偏低的主因，真實 3 歲以上僅 0.8%。建議優先補齊出生日資料</div>
         </div>
         <div style="padding:14px;background:var(--green-s);border-radius:8px;border-left:3px solid var(--green)">
-          <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:5px">✅ 自辦（7.22 最高）</div>
+          <div style="font-size:12px;font-weight:700;color:#64766a;margin-bottom:5px">✅ 自辦（7.22 最高）</div>
           <div style="font-size:12px;color:var(--text-b);line-height:1.6">0–36M 佔 87.4%，月齡最精準。無生日僅 2.3%，品質最可信</div>
         </div>
         <div style="padding:14px;background:var(--amber-s);border-radius:8px;border-left:3px solid var(--amber)">
-          <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:5px">⚠️ 異業（4.55 最低）</div>
+          <div style="font-size:12px;font-weight:700;color:#b08060;margin-bottom:5px">⚠️ 異業（4.55 最低）</div>
           <div style="font-size:12px;color:var(--text-b);line-height:1.6">孕期 34.6%（3,111筆）+ 無生日 12.0%（1,081筆）合計佔 46.6%。優先選婦幼展等 0–12M 場景</div>
         </div>
       </div>
@@ -998,7 +1014,7 @@ body {
   <div class="chat-outer">
     <div class="card">
       <div class="card-head">
-        <div class="card-title">對話 <span style="font-size:10px;padding:2px 8px;background:var(--blue-s);color:var(--blue);border-radius:20px;font-weight:500;margin-left:4px">Claude Sonnet</span></div>
+        <div class="card-title">對話 <span style="font-size:10px;padding:2px 8px;background:var(--blue-s);color:#b096ae;border-radius:20px;font-weight:500;margin-left:4px">Claude Sonnet</span></div>
         <button onclick="clearChat()" style="font-size:11px;color:var(--text-d);background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:5px;hover:background:var(--bg)">清除</button>
       </div>
       <div class="chat-messages" id="chat-box">
@@ -1023,7 +1039,7 @@ body {
         <span style="font-size:11px;color:var(--text-m);white-space:nowrap;flex-shrink:0">🔑 API Key</span>
         <input id="key-input" type="password" placeholder="輸入 Anthropic API Key（sk-ant-...）"
           style="flex:1;font-size:11px;padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text-b);outline:none;font-family:'DM Mono',monospace"/>
-        <button onclick="saveKey()" style="font-size:11px;padding:5px 12px;background:var(--blue);color:#fff;border:none;border-radius:6px;cursor:pointer;white-space:nowrap">儲存</button>
+        <button onclick="saveKey()" style="font-size:11px;padding:5px 12px;background:#b096ae;color:#fff;border:none;border-radius:6px;cursor:pointer;white-space:nowrap">儲存</button>
         <button onclick="clearKey()" style="font-size:11px;padding:5px 10px;background:none;border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--text-m);white-space:nowrap">清除</button>
       </div>
       <div class="chat-footer">
@@ -1310,12 +1326,12 @@ function buildTrend() {
     data: {
       labels: FY_LBL,
       datasets: [
-        { label:'FY25 主動', data:FY25.主動, backgroundColor:s?'rgba(37,99,235,.8)':'transparent', borderColor:'#2563eb', borderWidth:s?0:2.5, pointRadius:s?0:3, tension:.3, stack:s?'f25':undefined },
-        { label:'FY25 自辦', data:FY25.自辦, backgroundColor:s?'rgba(124,58,237,.8)':'transparent', borderColor:'#7c3aed', borderWidth:s?0:2.5, pointRadius:s?0:3, tension:.3, stack:s?'f25':undefined },
-        { label:'FY25 異業', data:FY25.異業, backgroundColor:s?'rgba(217,119,6,.8)':'transparent', borderColor:'#d97706', borderWidth:s?0:2.5, pointRadius:s?0:3, tension:.3, stack:s?'f25':undefined },
-        { label:'FY24 主動', data:FY24.主動, backgroundColor:s?'rgba(148,163,184,.4)':'transparent', borderColor:'#94a3b8', borderWidth:s?0:1.5, borderDash:s?[]:[5,3], pointRadius:s?0:2, tension:.3, stack:s?'f24':undefined },
-        { label:'FY24 自辦', data:FY24.自辦, backgroundColor:s?'rgba(196,181,253,.4)':'transparent', borderColor:'#c4b5fd', borderWidth:s?0:1.5, borderDash:s?[]:[5,3], pointRadius:s?0:2, tension:.3, stack:s?'f24':undefined },
-        { label:'FY24 異業', data:FY24.異業, backgroundColor:s?'rgba(251,191,36,.4)':'transparent', borderColor:'#fbbf24', borderWidth:s?0:1.5, borderDash:s?[]:[5,3], pointRadius:s?0:2, tension:.3, stack:s?'f24':undefined },
+        { label:'FY25 主動', data:FY25.主動, backgroundColor:s?'rgba(192,169,189,.82)':'transparent', borderColor:'#c0a9bd', borderWidth:s?0:2.5, pointRadius:s?0:3, tension:.3, stack:s?'f25':undefined },
+        { label:'FY25 自辦', data:FY25.自辦, backgroundColor:s?'rgba(148,167,174,.8)':'transparent', borderColor:'#94a7ae', borderWidth:s?0:2.5, pointRadius:s?0:3, tension:.3, stack:s?'f25':undefined },
+        { label:'FY25 異業', data:FY25.異業, backgroundColor:s?'rgba(200,160,122,.8)':'transparent', borderColor:'#b08060', borderWidth:s?0:2.5, pointRadius:s?0:3, tension:.3, stack:s?'f25':undefined },
+        { label:'FY24 主動', data:FY24.主動, backgroundColor:s?'rgba(180,175,178,.35)':'transparent', borderColor:'#b8b0b6', borderWidth:s?0:1.5, borderDash:s?[]:[5,3], pointRadius:s?0:2, tension:.3, stack:s?'f24':undefined },
+        { label:'FY24 自辦', data:FY24.自辦, backgroundColor:s?'rgba(196,181,253,.4)':'transparent', borderColor:'#cad5d9', borderWidth:s?0:1.5, borderDash:s?[]:[5,3], pointRadius:s?0:2, tension:.3, stack:s?'f24':undefined },
+        { label:'FY24 異業', data:FY24.異業, backgroundColor:s?'rgba(251,191,36,.4)':'transparent', borderColor:'#d4b898', borderWidth:s?0:1.5, borderDash:s?[]:[5,3], pointRadius:s?0:2, tension:.3, stack:s?'f24':undefined },
       ]
     },
     options: {
@@ -1337,8 +1353,8 @@ function buildTrend() {
         }
       },
       scales:{
-        x:{ stacked:s, grid:{display:false}, ticks:{color:'#94a3b8'} },
-        y:{ stacked:s, grid:{color:'#f1f5f9'}, ticks:{ color:'#94a3b8', callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v } }
+        x:{ stacked:s, grid:{display:false}, ticks:{color:'#94a7ae'} },
+        y:{ stacked:s, grid:{color:'#f1f5f9'}, ticks:{ color:'#94a7ae', callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v } }
       }
     }
   });
@@ -1359,7 +1375,7 @@ function buildDonut() {
     type:'doughnut',
     data:{
       labels:['孕期','0–36M','3歲以上','無生日'],
-      datasets:[{ data:[2335,35038,225214,8469], backgroundColor:['#c084fc','#34d399','#fb923c','#94a3b8'], borderWidth:2, borderColor:'#fff', hoverOffset:6 }]
+      datasets:[{ data:[2335,35038,225214,8469], backgroundColor:['#c084fc','#34d399','#fb923c','#94a7ae'], borderWidth:2, borderColor:'#fff', hoverOffset:6 }]
     },
     options:{
       responsive:true, maintainAspectRatio:false, cutout:'68%',
@@ -1377,8 +1393,8 @@ function buildValid() {
     data:{
       labels:['孕期','0–36M','3歲以上','無生日'],
       datasets:[
-        { label:'有效', data:[2038,28950,142740,6743], backgroundColor:['rgba(192,132,252,.8)','rgba(52,211,153,.8)','rgba(251,146,60,.8)','rgba(148,163,184,.8)'], borderRadius:4, stack:'a' },
-        { label:'封鎖', data:[297,6088,82474,1726], backgroundColor:['rgba(192,132,252,.25)','rgba(52,211,153,.25)','rgba(251,146,60,.25)','rgba(148,163,184,.25)'], borderRadius:4, stack:'a' },
+        { label:'有效', data:[2038,28950,142740,6743], backgroundColor:['rgba(192,169,189,.85)','rgba(127,147,133,.85)','rgba(200,160,122,.85)','rgba(148,167,174,.85)'], borderRadius:4, stack:'a' },
+        { label:'封鎖', data:[297,6088,82474,1726], backgroundColor:['rgba(192,169,189,.25)','rgba(127,147,133,.25)','rgba(200,160,122,.25)','rgba(148,167,174,.25)'], borderRadius:4, stack:'a' },
       ]
     },
     options:{
@@ -1422,10 +1438,10 @@ function buildFY25Age() {
     data:{
       labels: FY_LBL,
       datasets:[
-        { label:'孕期',   data:FY25_AGE.孕期, backgroundColor:'rgba(192,132,252,.85)', borderRadius:3, stack:'a' },
-        { label:'0–36M', data:FY25_AGE.m036, backgroundColor:'rgba(52,211,153,.85)',  borderRadius:3, stack:'a' },
-        { label:'3歲以上', data:FY25_AGE.m36p, backgroundColor:'rgba(251,146,60,.85)',  borderRadius:3, stack:'a' },
-        { label:'無生日',  data:FY25_AGE.none, backgroundColor:'rgba(148,163,184,.85)', borderRadius:3, stack:'a' },
+        { label:'孕期',   data:FY25_AGE.孕期, backgroundColor:'rgba(192,169,189,.85)', borderRadius:3, stack:'a' },
+        { label:'0–36M', data:FY25_AGE.m036, backgroundColor:'rgba(127,147,133,.85)',  borderRadius:3, stack:'a' },
+        { label:'3歲以上', data:FY25_AGE.m36p, backgroundColor:'rgba(200,160,122,.85)',  borderRadius:3, stack:'a' },
+        { label:'無生日',  data:FY25_AGE.none, backgroundColor:'rgba(148,167,174,.85)', borderRadius:3, stack:'a' },
       ]
     },
     options:{
@@ -1446,8 +1462,8 @@ function buildFY25Age() {
         }
       },
       scales:{
-        x:{ stacked:true, grid:{display:false}, ticks:{color:'#94a3b8'} },
-        y:{ stacked:true, grid:{color:'#f1f5f9'}, ticks:{ callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v, color:'#94a3b8' } }
+        x:{ stacked:true, grid:{display:false}, ticks:{color:'#94a7ae'} },
+        y:{ stacked:true, grid:{color:'#f1f5f9'}, ticks:{ callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v, color:'#94a7ae' } }
       }
     }
   });
@@ -1504,7 +1520,7 @@ function saveKey() {
   }
   localStorage.setItem('bcl_api_key', v);
   document.getElementById('key-input').value = '';
-  document.getElementById('key-bar').style.background = '#ecfdf5';
+  document.getElementById('key-bar').style.background = '#edf1ee';
   setTimeout(() => { document.getElementById('key-bar').style.background = ''; }, 1500);
   appendMsg('ai', '✅ API Key 已儲存到你的瀏覽器，可以開始提問了！');
 }
@@ -1517,7 +1533,7 @@ function initKeyBar() {
   const k = getKey();
   const bar = document.getElementById('key-bar');
   if (k) {
-    bar.style.background = '#ecfdf5';
+    bar.style.background = '#edf1ee';
     const inp = document.getElementById('key-input');
     if (inp) inp.placeholder = '✅ Key 已設定（輸入新 Key 可覆蓋）';
   }
