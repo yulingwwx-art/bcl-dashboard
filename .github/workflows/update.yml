@@ -1,0 +1,38 @@
+name: 更新儀表板資料
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.xlsm'
+      - '**.xlsx'
+  workflow_dispatch:
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 取出程式碼
+        uses: actions/checkout@v4
+
+      - name: 安裝 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝套件
+        run: pip install pandas openpyxl
+
+      - name: 執行資料轉換
+        run: python scripts/convert.py
+
+      - name: 提交更新後的 JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/bcl_data.json
+          git diff --staged --quiet || git commit -m "自動更新儀表板資料 $(date '+%Y/%m/%d %H:%M')"
+          git push
